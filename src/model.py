@@ -49,8 +49,8 @@ reMetaData = re.compile('^(?P<meta>.*?):\s*(?P<value>.*)\s*$')
 def goodActivity(match):
     """ utility function used with 'reStartActivity' regex pattern to determine wether the 'type' variable of the given matched pattern fits the name of class defined in this module
 
-    Keyword arguments:
-    match -- result of reStartActivity.match(some_parsed_line) (see Regex expressions defined above)
+    :param match: result of reStartActivity.match(some_parsed_line) (see Regex expressions defined above)
+    :type match: re.MatchObject
      """
     m = sys.modules[__name__]
     typeSection = re.sub('[ ._-]','',unidecode(match.group('type')).title())
@@ -79,6 +79,10 @@ class ComplexEncoder(json.JSONEncoder):
 class Subsection:
     """
     Abstract class for any type of subsection: lectures and activities
+
+    :param section: section object to which this subsection belongs
+    :type section: Section object
+
     """
     num = 1 #class-wise instance counter
     def __init__(self, section):
@@ -88,6 +92,12 @@ class Subsection:
         Subsection.num +=1
 
     def getFilename(self, term='html'):
+        """returns the filename associated to this subsection
+
+        :param term: termination of the file ('html' or 'xml')
+        :type term: string
+
+         """
         self.filename = slugify(self.num+self.title)+'_'+self.folder+'.'+term
         return self.filename
 
@@ -105,21 +115,20 @@ class Subsection:
 
 class Cours(Subsection):
     """
-    Class for a lecture
+    Class for a lecture. If src is not empty and no file is given, then this means that the content has already been parsed in Section.parse().
+    Else if a file pointer is given and param 'src' is empty,this means that Section.parse() has detected a new 'Cours' instance that we keep on parsing here.
+
+    :param section:  containing section object (to be deleted in JSON representation, see ComplexEncoder class)
+    :type section: Section object
+
+    :param file:  parsed file (default None)
+    :type file: File pointer
+
+    :param src: text string with source of the parsed subsection (default: empty string)
+
+    :param title: text string that gives the Cours title (default 'Cours')
     """
     def __init__(self, section, file=None, src='' ,title = 'Cours'):
-        """Initialize a new instance.
-            If src is not empty and no file is given, then the content has already been parsed in Section parse.
-            Else (file pointer given and src empty), Section parser has detected a new Cours instance that we keep on parsing here.
-
-        Keyword arguments:
-
-        * section -- containing section object (to be deleted in JSON representation, see ComplexEncoder class)
-        * file --  parsed file (default None)
-        * src -- text string (default empty)
-        * title -- string (default 'Cours')
-
-        """
         Subsection.__init__(self,section)
         self.title = title
         self.folder = 'webcontent'
@@ -133,7 +142,7 @@ class Cours(Subsection):
 
 
     def parse(self,f):
-        """Read lines in file f until:
+        """Read lines in file pointer 'f' until:
 
             - start of a new section
             - start of another subsection
@@ -186,7 +195,14 @@ class Cours(Subsection):
 
 
 class AnyActivity(Subsection):
-    """ Abstract class for any activity. Responsible for parsing questions from the gift code in src attribute """
+    """ Abstract class for any activity. Responsible for parsing questions from the gift code in src attribute
+
+    :param section:  containing section object (to be deleted in JSON representation, see ComplexEncoder class)
+    :type section: Section object
+
+    :param file:  parsed file (default None)
+    :type file: File pointer
+    """
     def __init__(self,section,f):
         Subsection.__init__(self,section)
         self.src = ''
@@ -196,7 +212,7 @@ class AnyActivity(Subsection):
 
 
     def parse(self,f):
-        """Read lines in f until the end of the activity"""
+        """Read lines in file pointer f until the end of the activity"""
         self.lastLine = f.readline()
         while self.lastLine and not reEndActivity.match(self.lastLine):
             self.src += self.lastLine
@@ -212,7 +228,12 @@ class AnyActivity(Subsection):
 
 
     def toHTML(self, feedback_option=False):
-        """Assign and return the html_src attribute, i.e. the concatenation of the HTML representation of all questions of this activity. Takes feedback_option as keyword argument
+        """Assign and return the html_src attribute, i.e. the concatenation of the HTML representation of all questions of this activity.
+
+        :param feedback_option: wether or not output should include feedbacks to the questions of the activity
+        :type feedback_option: Boolean
+
+        :rtype: text string with html code
         """
         self.html_src = ''
         for question in self.questions:
@@ -227,7 +248,10 @@ class AnyActivity(Subsection):
 
 
     def toEdxProblemsList(self):
-        """Returns xml source code of all the questions in EDX XML format. *depends on toEdx.py module*"""
+        """Returns xml source code of all the questions in EDX XML format. *depends on toEdx.py module*
+
+        :rtype: texte string of xml code
+        """
         edx_xml_problem_list = ""
         for question in self.questions:
             edx_xml_problem_list += '\n'+toEDX.toEdxProblemXml(question)+'\n'
@@ -235,7 +259,10 @@ class AnyActivity(Subsection):
 
 
     def toXMLMoodle(self):
-        """Returns the XML representation following IMS QTI standard of all the questions in this activity. *depends on toIMS.py module*"""
+        """Returns the XML representation following IMS QTI standard of all the questions in this activity. *depends on toIMS.py module*
+
+        :rtype: texte string of xml code
+        """
         # a) depending on the type, get max number of attempts for the test
         if isinstance(self, Comprehension):
             max_attempts = '1'
@@ -247,7 +274,7 @@ class AnyActivity(Subsection):
 
 class Comprehension(AnyActivity):
     """Subclass of AnyActivity defining a 'compréhension' type of activity"""
-    actnum = 0
+    actnum = 0 # specific counter for this subclass of AnyActivity
     def __init__(self, section, src):
         AnyActivity.__init__(self,section,src)
         self.title = 'Compréhension'
@@ -256,7 +283,7 @@ class Comprehension(AnyActivity):
 
 class Activite(AnyActivity):
     """Subclass of AnyActivity defining a simple 'activité' type of activity"""
-    actnum = 0
+    actnum = 0  # specific counter for this subclass of AnyActivity
     def __init__(self, section, src):
         AnyActivity.__init__(self,section,src)
         self.title = 'Activité'
@@ -265,7 +292,7 @@ class Activite(AnyActivity):
 
 class ActiviteAvancee(AnyActivity):
     """Subclass of AnyActivity defining an 'activité avancée' type of activity"""
-    actnum = 0
+    actnum = 0  # specific counter for this subclass of AnyActivity
     def __init__(self, section, src):
         AnyActivity.__init__(self,section,src)
         self.title = 'Activité avancée'
@@ -273,20 +300,23 @@ class ActiviteAvancee(AnyActivity):
         ActiviteAvancee.actnum+=1
 
 class Section:
-    """Class defining the section level in the course module model of Esc@pad"""
+    """Class defining the section level in the course module model of Esc@pad
+
+    :param  title:  text string title
+    :type title: string
+
+    :param  f:  module source file pointer
+    :type f: File
+
+    :param  module:  text string of the module name
+    :type module: string
+
+    :param  base_url:  base url for building absolute paths for relative media (default: DEFAULT_BASE_URL defined in model.py)
+    :type base_url: string
+    """
     num = 1
 
     def __init__(self,title,f,module, base_url=DEFAULT_BASE_URL):
-        """Initialize a Section instance
-
-        Keyword arguments:
-
-        * title -- text string title
-        * f -- file pointer
-        * module -- text string of the module name
-        * base_url -- base url for building absolute paths for relative media
-
-        """
         self.title = title
         self.subsections = []
         self.num = str(Section.num)
@@ -297,11 +327,7 @@ class Section:
         Subsection.num=1
 
     def parse(self, f):
-        """Read lines in f until the start of a new section.
-
-            If the start of a new subsection or new activity is detected, parsing is continued in
-            corresponding subsection parse method that returns the newly created object
-
+        """Read lines in file pointer 'f' until the start of a new section. If the start of a new subsection or new activity is detected, parsing is continued in corresponding subsection parse method that returns the newly created object
         """
         body = ''
         self.lastLine = f.readline()
@@ -358,7 +384,10 @@ class Section:
 
     # FIXME: is this usefull ??
     def toCourseHTML(self):
-        """Loops through Cours subsections only. Returns a string of the concatenation of their HTML output"""
+        """Loops through Cours subsections only.
+
+        :rtype: a string concatenating subsections HTML output
+        """
         courseHTML = ""
         for sub in self.subsections:
             if isinstance(sub, Cours):
@@ -385,7 +414,7 @@ class Section:
         return video_list
 
     def toEdxProblemsList(self):
-        """Returns the xml source code of all questions in EDX XML format"""
+        """Returns the xml source code (string) of all questions in EDX XML format"""
         edx_xml_problem_list = ""
         for sub in self.subsections:
             if isinstance(sub, AnyActivity):
@@ -395,18 +424,20 @@ class Section:
         return edx_xml_problem_list
 
 class Module:
-    """ Module structure"""
+    """ Module structure.
+
+    :param  f:  module source file pointer
+    :type f: File
+
+    :param  module:  module name
+    :type module: string
+
+    :param  base_url:  the base url to build absolute media paths (default to DEFAULT_BASE_URL)
+    :type base_url: string
+
+    """
 
     def __init__(self,f, module, base_url=DEFAULT_BASE_URL):
-        """Initializes a Module object from :
-
-        - f -- source file pointer
-        - module -- module name
-        - base_url -- the base url to build absolute media paths (default to DEFAULT_BASE_URL)
-
-        Then triggers the parsing of the file f.
-
-        """
         self.sections = []
         Section.num = 1
         self.module = module
@@ -421,7 +452,13 @@ class Module:
         self.act_counter = { c.__name__ : c.actnum for c in [Comprehension, Activite, ActiviteAvancee]}
 
     def parseHead(self,f) :
-        """Called by module.parse() method. Captures meta-data within the first lines of the source file. Stops and return the first line starting with #, which means the start of the first section"""
+        """Called by module.parse() method. Captures meta-data within the first lines of the source file. Stops and return the first line starting with #, which means the start of the first section
+
+        :param  f :  module source file pointer
+        :type f: File
+
+        :rtype: string, last line parsed
+        """
         l = f.readline()
         while l and not reEndHead.match(l) :
             m = reMetaData.match(l)
@@ -437,10 +474,7 @@ class Module:
 
 
     def parse(self,f):
-        """Parse module source file, starting by the head to retrieve the meta-data.
-
-        Read all the lines until the start of a new section (see reStartSection regex). In this case, parsing is
-         continued in Section.parse() method that returns a new Section object and the
+        """Parse module source file, starting by the head to retrieve the meta-data. Read all the lines until the start of a new section (see reStartSection regex). In this case, parsing is continued in Section.parse() method that returns a new Section object and the
          last line parsed. Parsing goes on until that last line returned is not the start of a new Section.
         """
         l = self.parseHead(f) ## up to first section
@@ -458,7 +492,9 @@ class Module:
             s.toHTML(feedback_option)
 
     def toCourseHTML(self):
-        """Loops through all sections. Returns a string of the concatenation of their HTML output"""
+        """Loops through all sections.
+
+        :rtype: Returns a string of the concatenation of their HTML output"""
         courseHTML = ""
         for sec in self.sections:
             courseHTML += "\n\n<!-- Section "+sec.num+" -->\n"
@@ -489,19 +525,18 @@ class Module:
         edx_xml_problem_list += "\n</library>"
         return edx_xml_problem_list
 
-
+# param syntax
+# :param mode: Specifies the mode of transport to use when calculating
+#     directions. One of "driving", "walking", "bicycling" or "transit"
+# :type mode: string
 class CourseProgram:
-    """ A course program is made of one or several course modules """
+    """A course program is made of one or several course modules. A CP is initiated from a repository containing global paramaters file (logo.jpg, title.md, home.md) and folders moduleX containing module file and medias
 
+    :param repository: path to the folder containing the modules
+    :type repository: string
+
+    """
     def __init__(self, repository):
-        """ A CP is initiated from a repository containing global paramaters file (logo.jpg, title.md, home.md)
-         and folders moduleX containing module file and medias
-
-         Keyword arguments:
-
-         - repository -- path to the folder containing the modules
-
-         """
         self.modules = []
         self.repository = repository
         self.title = 'Culture Numérique'

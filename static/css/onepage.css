@@ -75,7 +75,7 @@ body {
 /* Pages paires */
 
 .btn-even {
-    padding: 3% 10%;
+    /*padding: 3% 10%;*/
     border: 2px solid #09384b;
     border-radius: 0;
 }
@@ -367,9 +367,10 @@ body {
 }
 
 .btn-modules{
-	min-width: 250px;
-	padding-left: 1em;
-padding-right: 1em;
+  display: inline-block;
+  margin-bottom: 1em;
+  padding: 8px 10px 8px 10px;
+
 }
 /* ---------------------------------------------------------*/
 
@@ -388,7 +389,7 @@ padding-right: 1em;
 }
 .email:after {
     content: '@univ-lille3.fr';
-	
+
 }
 .email {
     display: inline-block;
@@ -397,7 +398,7 @@ padding-right: 1em;
 }
 .iamnotadot:after{
     content: '.';
-    
+
 }
 .no_display:after {
     content: '.';

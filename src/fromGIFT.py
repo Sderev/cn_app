@@ -11,6 +11,7 @@ import random
 from datetime import datetime
 import time
 import logging
+import uuid
 
 from lxml import etree
 from lxml import html
@@ -59,8 +60,7 @@ class GiftQuestion():
 
     """
     def __init__(self):
-        now = datetime.utcnow()
-        self.id = int(utils.totimestamp(now))
+        self.id = uuid.uuid4()
         self.gift_src = ''
         self.type = ''
         self.title = ''
@@ -74,9 +74,6 @@ class GiftQuestion():
         self.feedback_for_right = '' # for TRUEFALSE questions, given when giving the right answer
         self.feedback_for_wrong = '' # for TRUEFALSE questions, given when giving the wrong answer
 
-
-
-
     def md_src_to_html(self):
         """ Convert question or feedback src from markdown to html ( useful for easier export) """
         new_src = self.gift_src
@@ -84,7 +81,7 @@ class GiftQuestion():
         m1 = re.search('(?P<titre>::.*::){0,1}\s*(?P<format>\[[^\]]*\]){0,1}\s*(?P<qtext>[^\{]*)', new_src, flags=re.M)
         if m1:
             if m1.group('qtext'):
-                qtext = markdown.markdown(m1.group('qtext'), MARKDOWN_EXT)
+                qtext = markdown.markdown(m1.group('qtext'), MARKDOWN_EXT, output_format='xhtml')
                 qtext = utils.add_target_blank(qtext)
                 new_src = new_src.replace(m1.group('qtext'), qtext)
             if m1.group('format'):
@@ -124,7 +121,7 @@ class GiftQuestion():
                     doc.asis(self.text)
                 else:
                     logging.info ("printing Markdown/ source = %s" % (self.text))
-                    html_text = markdown.markdown(self.text, MARKDOWN_EXT)
+                    html_text = markdown.markdown(self.text, MARKDOWN_EXT, output_format='xhtml')
                     doc.asis(html_text)
             # If type MULTICHOICE, MULTIANSWER give choices
             if self.type in ['MULTICHOICE', 'MULTIANSWER', 'TRUEFALSE']:
@@ -152,6 +149,7 @@ class GiftQuestion():
                     doc.asis('<b><em>Feedback:</em></b><br/>'+self.global_feedback)
         doc.asis('\n\n')
         return((doc.getvalue()))
+
 
     def parse_gift_src(self):
         # 1. Separate in 3 parts: q_prestate { q_answers } q_poststate
@@ -207,7 +205,8 @@ class GiftQuestion():
                 new_answers = [{'answer_text' : 'Vrai', 'is_right' :False, 'feedback' : self.feedback_for_wrong, 'credit':0},
                     {'answer_text' : 'Faux', 'is_right' :True, 'feedback' : self.feedback_for_right, 'credit':100}]
             else:
-                new_answers = [{'answer_text' : 'Vrai', 'is_right' :True, 'feedback' : self.feedback_for_right, 'credit':100},                      {'answer_text' : 'Faux', 'is_right' :False, 'feedback' : self.feedback_for_wrong, 'credit':0}]
+                new_answers = [{'answer_text' : 'Vrai', 'is_right' :True, 'feedback' : self.feedback_for_right, 'credit':100},
+                    {'answer_text' : 'Faux', 'is_right' :False, 'feedback' : self.feedback_for_wrong, 'credit':0}]
             self.answers = new_answers
             return
         ## NUMERIC questions
@@ -314,7 +313,6 @@ def process_questions(questions_src):
 def main(argv):
     """
         fromGIFT : take Gift file 'filein' and turn it into  'filein.html'
-
     """
     if len(sys.argv) != 2:
         print(" mini 1 argument")

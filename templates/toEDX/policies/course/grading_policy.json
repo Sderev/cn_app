@@ -1,0 +1,28 @@
+{
+    "GRADER": [
+        {
+            "drop_count": 2,
+            "min_count": {{ module.act_counter.Comprehension }},
+            "short_label": "Comp",
+            "type": "Comprehension",
+            "weight": 0.4
+        },
+        {
+            "drop_count": 2,
+            "min_count": {{ module.act_counter.Activite }},
+            "short_label": "Act",
+            "type": "Activite",
+            "weight": 0.3
+        },
+        {
+            "drop_count": 2,
+            "min_count": {{ module.act_counter.ActiviteAvancee }},
+            "short_label": "ActAv",
+            "type": "Activite Avancee",
+            "weight": 0.3
+        }
+    ],
+    "GRADE_CUTOFFS": {
+        "Pass": 0.5
+    }
+}

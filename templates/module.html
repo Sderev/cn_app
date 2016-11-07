@@ -15,7 +15,7 @@
             <ul class="nav list-group">
                 {% for subsection in section.subsections %}
                     <li class="list-group-item">
-                        <a class="icon-{{ subsection.folder|lower  }}" href="#subsec_{{ subsection.num|replace('-','_') }}">{{ subsection.title }}</a>
+                        <a class="icon-{{ subsection.folder|lower  }}" href="#subsec_{{ subsection.num|replace('-','_') }}">{{ subsection.num|replace('-', '.')}} {{ subsection.title }}</a>
                     </li>
                 {% endfor %}
             </ul>
@@ -73,10 +73,10 @@
                         {% if sub.videos|length > 0  %}
                             {% for video in sub.videos %}
                             <!--  TODO : check video here and add fancy text -->
-                                
+
                                 <div class="iframe_cont">
                                     {% if not firstsec %}{% include 'player_button.html'%}{%endif%}
-                                    <iframe allowfullscreen="" mozallowfullscreen="" webkitallowfullscreen="" {% if not firstsec %}data-{%endif%}src="{{video.video_src_link}}" 
+                                    <iframe allowfullscreen="" mozallowfullscreen="" webkitallowfullscreen="" {% if not firstsec %}data-{%endif%}src="{{video.video_src_link}}"
                                         {%if not firstsec%}style="display:none"{%endif%}></iframe></div>
                             {% endfor %}
                         {% endif %}
@@ -105,15 +105,24 @@
         <!-- download section here -->
         <section  id="sec_A">
             <h1 class="icon-section title blue">Annexe : réutiliser ce module</h1>
-            <section id="subsec_A1">
-                <p>
-                    Archive IMS CC utilisable dans les LMS Moodle, Claroline, Blackboard, etc:
-                </p>
-                <a href="{{module.module}}/{{module.ims_archive_path}}">{{module.ims_archive_path}}</a>
-            </section>
-                
+            {% if module.ims_archive_path %}
+              <section id="subsec_A1">
+                  <p>
+                      Archive IMS CC utilisable dans les LMS Moodle, Claroline, Blackboard, etc: <a href="{{module.module}}/{{module.ims_archive_path}}">{{module.ims_archive_path}}</a>
+                  </p>
+
+              </section>
+            {%endif%}
+            {% if module.edx_archive_path %}
+              <section id="subsec_A1">
+                  <p>
+                      Archive EDX : <a href="{{module.module}}/{{module.edx_archive_path}}">{{module.edx_archive_path}}</a>
+                  </p>
+
+              </section>
+            {%endif%}
         </section>
-    
+
     </div>
     <!-- Fin contenu droite -->
 

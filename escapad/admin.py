@@ -1,3 +1,4 @@
+
 import os
 
 from django.contrib import admin
@@ -28,21 +29,27 @@ class RepositoryAdmin(admin.ModelAdmin):
     build_url.short_description = 'Build link'
 
     def build_url_long(self, obj):
-        url = self.request.build_absolute_uri(reverse('build_repo', args=(obj.slug,)))
-        return '<a href="%s" target="_blank">%s<a>' % (url, url)
+        """ used in detailed view """
+        if obj.slug:
+            url = self.request.build_absolute_uri(reverse('build_repo', args=(obj.slug,)))
+            return '<a href="%s" target="_blank">%s<a>' % (url, url)
+        else:
+            return ''
     build_url_long.allow_tags = True
     build_url_long.short_description = 'Build link'
 
     def site_url(self, obj):
-        #url = reverse('visit_site', args=(obj.git_username, obj.git_name,))
         url = reverse('visit_site', args=(obj.slug,))
         return '<a href="%s">%s<a>' % (url, 'visit')
     site_url.allow_tags = True
     site_url.short_description = 'Site link'
 
     def site_url_long(self, obj):
-        url = self.request.build_absolute_uri(reverse('visit_site', args=(obj.slug,)))
-        return '<a href="%s" target="_blank">%s<a>' % (url, url)
+        if obj.slug:
+            url = self.request.build_absolute_uri(reverse('visit_site', args=(obj.slug,)))
+            return '<a href="%s" target="_blank">%s<a>' % (url, url)
+        else:
+            return ''
     site_url_long.allow_tags = True
     site_url_long.short_description = 'Site link'
 

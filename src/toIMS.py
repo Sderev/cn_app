@@ -18,6 +18,7 @@ from yattag import indent
 from yattag import Doc
 
 import model
+import utils
 
 # utf8 hack, python 2 only !!
 if sys.version_info[0] == 2:
@@ -25,7 +26,7 @@ if sys.version_info[0] == 2:
     sys.setdefaultencoding('utf8')
 
 ######
-##   reférences : 
+##   reférences :
 #       - http://www.imsglobal.org/cc/ccv1p2/imscc_profilev1p2-Implementation.html
 #       - http://www.imsglobal.org/question/qtiv1p2/imsqti_asi_bindv1p2.html
 #############
@@ -64,7 +65,7 @@ CC_PROFILES = {
     'MATCH' : 'cc.pattern_match.v0p1'
 }
 
-IMS_HEADER = """<?xml version="1.0" encoding="UTF-8"?><manifest xmlns="http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1" 
+IMS_HEADER = """<?xml version="1.0" encoding="UTF-8"?><manifest xmlns="http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1"
     xmlns:lomimscc="http://ltsc.ieee.org/xsd/imsccv1p1/LOM/manifest" xmlns:lom="http://ltsc.ieee.org/xsd/imsccv1p1/LOM/resource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" identifier="M_3E1AEC6D" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1 http://www.imsglobal.org/profile/cc/ccv1p1/ccv1p1_imscp_v1p2_v1p0.xsd http://ltsc.ieee.org/xsd/imsccv1p1/LOM/manifest http://www.imsglobal.org/profile/cc/ccv1p1/LOM/ccv1p1_lommanifest_v1p0.xsd http://ltsc.ieee.org/xsd/imsccv1p1/LOM/resource http://www.imsglobal.org/profile/cc/ccv1p1/LOM/ccv1p1_lomresource_v1p0.xsd">
     """
 
@@ -79,11 +80,11 @@ DEFAULT_QTI_META = {
     'qmd_feedbackpermitted':'Yes',
     'qmd_hintspermitted':'Yes',
     'qmd_solutionspermitted':'Yes',
-    'cc_maxattempts':'unlimited'   
+    'cc_maxattempts':'unlimited'
 }
 
 def set_qti_metadata(max_attempts):
-    
+
     meta, tag, text = Doc().tagtext()
     meta.asis("<!--  Metadata  -->")
     metadata = DEFAULT_QTI_META
@@ -95,19 +96,19 @@ def set_qti_metadata(max_attempts):
                     text(key)
                 with tag('fieldentry'):
                     text(value)
-    
+
     return indent(meta.getvalue())
 
 def create_ims_test(questions, test_id, test_title):
     """
-    Supported types : ESSAY, MULTICHOICE, MULTIANSWER, TRUEFALSE, DESCRIPTION 
-    
+    Supported types : ESSAY, MULTICHOICE, MULTIANSWER, TRUEFALSE, DESCRIPTION
+
     """
     # create magic yattag triple
     doc, tag, text = Doc().tagtext()
     doc.asis(HEADER_TEST+'\n')
     if 'ESSAY' in questions[0].type:
-        max_attempts = 'unlimited' 
+        max_attempts = 'unlimited'
     else:
         max_attempts = 1
     with tag('assessment', ident=test_id, title=test_title):
@@ -139,12 +140,12 @@ def create_ims_test(questions, test_id, test_title):
                                     text("cc_question_category")
                                 with tag('fieldentry'):
                                     text('Quiz Bank '+test_title)
-                    #Contenu de la question 
+                    #Contenu de la question
                     with tag('presentation'):
                         # Enoncé
                         with tag('material'):
                             with tag('mattext', texttype='text/html'):
-                                text(question.text)
+                                text(question.text )
                         # réponses possibles
                         if 'ESSAY' in question.type:
                             with tag('response_str', rcardinality='Single', ident='response_'+str(question.id)):
@@ -154,7 +155,7 @@ def create_ims_test(questions, test_id, test_title):
                                 rcardinality = 'Multiple'
                             else:
                                 rcardinality = 'Single'
-                            # rcardinality optional, but a priori 'Single' form MChoice, 'Multiple' for Manswer; 
+                            # rcardinality optional, but a priori 'Single' form MChoice, 'Multiple' for Manswer;
                             with tag('response_lid', rcardinality=rcardinality, ident='response_'+str(question.id)):
                                 with tag('render_choice', shuffle='No'):
                                     for id_a, answer in enumerate(question.answers):
@@ -214,15 +215,15 @@ def create_ims_test(questions, test_id, test_title):
                                     text('100')
                                 doc.stag('displayfeedback', feedbacktype='Response', linkrefid='general_fb')
                             # default processing in any case
-                            for id_a, answer in enumerate(question.answers):    
+                            for id_a, answer in enumerate(question.answers):
                                 with tag('respcondition', kontinue='No'):
                                     with tag('conditionvar'):
-                                        with tag('varequal', respident='response_'+str(question.id), case="Yes"):    
-                                            text('answer_'+str(question.id)+'_'+str(id_a))     
-                                    doc.stag('displayfeedback', feedbacktype='Response', linkrefid='feedb_'+str(id_a))      
+                                        with tag('varequal', respident='response_'+str(question.id), case="Yes"):
+                                            text('answer_'+str(question.id)+'_'+str(id_a))
+                                    doc.stag('displayfeedback', feedbacktype='Response', linkrefid='feedb_'+str(id_a))
                         else:
                             pass
-                    # liste les feedbacks 
+                    # liste les feedbacks
                     ## feedback general
                     if question.global_feedback != '':
                         with tag('itemfeedback', ident='general_fb'):
@@ -239,7 +240,7 @@ def create_ims_test(questions, test_id, test_title):
                                         text(answer['feedback'])
                     ## FIXME add wrong and correct feedbacks for TRUEFALSE
     doc.asis('</questestinterop>\n')
-    doc_value = indent(doc.getvalue())
+    doc_value = indent(doc.getvalue().replace('\n', '')) #pre-escaping new lines because of a bug in moodle that turn them in <br>
     doc_value = doc_value.replace('kontinue', 'continue')
     return doc_value
 
@@ -254,24 +255,14 @@ def create_empty_ims_test(id, num, title, max_attempts):
 
     return src
 
-def replaceLink(link):
-    """ Replace __BASE__ in urls with base given in config file toIMSconfig.json """
-    return link.replace("__BASE__/", '')
 
-def get_sec_videos(section):
-    videos_list = []
-    for sub in section["subsections"]:
-        for vid in sub["videos"]:
-            videos_list.append(vid)
-    return videos_list
-
-def generateIMSManifest(data):
-    """ parse data from config file 'moduleX.config.json' and recreate imsmanifest.xml """
+def generateIMSManifest(m):
+    """ parse m from config file 'moduleX.config.json' and recreate imsmanifest.xml """
     # create magic yattag triple
     doc, tag, text = Doc().tagtext()
     # open tag 'manifest' with default content:
     doc.asis(IMS_HEADER)
-    # Print metadata
+    # Print metam
     with tag('metadata'):
         with tag('schema'):
             text('IMS Common Cartridge')
@@ -280,18 +271,18 @@ def generateIMSManifest(data):
         with tag('lomimscc:lom'):
             with tag('lomimscc:general'):
                 with tag('lomimscc:title'):
-                    with tag('lomimscc:string', language=data["language"]):
-                        text(data["menutitle"])
+                    with tag('lomimscc:string', language=m.language):
+                        text(m.menutitle)
                 with tag('lomimscc:language'):
-                    text(data["language"])
+                    text(m.language)
                 with tag('lomimscc:description'):
-                    doc.stag('lomimscc:string', language=data["language"])
+                    doc.stag('lomimscc:string', language=m.language)
                 with tag('lomimscc:identifier'):
                     with tag('lomimscc:catalog'):
                         text('category')
                     with tag('lomimscc:entry'):
                         try:
-                            text(data["category"])
+                            text(m.category)
                         except:
                             text('D')
     # Print organization
@@ -302,89 +293,84 @@ def generateIMSManifest(data):
                 # add empty section as section "0 . Généralités" to avoid wrong numbering
                 with tag('item', identifier='section_generalites'):
                     with tag('title'):
-                        # doc.asis('<![CDATA[<span class="ban-sec ban-howto"></span>]]>')
+                        # doc.asis('<![Cm[<span class="ban-sec ban-howto"></span>]]>')
                         doc.asis('')
-                for idA, section in enumerate(data["sections"]):
+                for idA, section in enumerate(m.sections):
                     section_id = "sec_"+(str(idA))
-                    # sec_videos = get_sec_videos(section)
                     with tag('item', identifier=section_id):
                         with tag('title'):
-                            doc.asis('<![CDATA[<span class="sumtitle">'+section['num']+' '+section['title']+'</span>]]>')
+                            doc.asis('<![CDATA[<span class="sumtitle">'+section.num+' '+section.title+'</span>]]>')
                         subsec_type_old = ''
                         subsec_type = ''
-                        for idB, subsection in enumerate(section["subsections"]):
+                        for idB, subsection in enumerate(section.subsections):
                             subsec_type_old = subsec_type
-                            subsec_type = subsection["folder"]
-                            href = subsection["folder"]+'/'+subsection["filename"]
+                            subsec_type = subsection.folder
+                            href = subsection.folder+'/'+subsection.filename
                             # when adding moodle-test type change file suffix from .html.xml
-                            if subsec_type in ['auto-evaluation', 'devoirs', 'Activite', 'ActiviteAvancee', 'Comprehension']:
+                            if subsec_type in ['Activite', 'ActiviteAvancee', 'Comprehension']:
                                 href = href.replace('html', 'xml')
                             filename = href.rsplit('/',1)[1]
                             resources.append(filename)
                             with tag('item', identifier=("subsec_"+str(idA)+"_"+str(idB)), identifierref=("doc_"+str(idA)+"_"+str(idB))):
                                 with tag('title'):
                                     if subsec_type == 'webcontent':
-                                        try: 
-                                            if len(subsection["videos"]) > 0:
-                                                for video in subsection["videos"]:
-                                                    doc.asis('<![CDATA['+subsection['num']+' '+subsection["title"]+'<span class="video-link"><a href="'+video["video_link"]+'"></a></span>]]>')
-                                            else:
-                                                text(subsection['num']+' '+subsection["title"])
-                                        except Exception as e:
-                                            text(subsection['num']+' '+subsection["title"])
+                                        text(subsection.num+' '+subsection.title)
                                     else:
                                         # subsec_type != 'webcontent':
                                         if subsec_type != subsec_type_old:
-                                            doc.asis('<![CDATA[<span class="ban-sub ban-'+FOLDERS_ACTIVITY[subsec_type]+'">'+subsection['num']+' '+subsection["title"]+'</span>]]>')
+                                            doc.asis('<![CDATA[<span class="ban-sub ban-'+FOLDERS_ACTIVITY[subsec_type]+'">'+subsection.num+' '+subsection.title+'</span>]]>')
                                         else:
-                                            text(subsection['num']+' '+subsection["title"])
-                                
+                                            text(subsection.num+' '+subsection.title)
+
     # Print resources
     with tag('resources'):
         doc.asis("<!-- Webcontent -->")
-        for idA, section in enumerate(data["sections"]):
-            for idB, subsection in enumerate(section["subsections"]):
+        for idA, section in enumerate(m.sections):
+            for idB, subsection in enumerate(section.subsections):
                 doc_id = "doc_"+str(idA)+"_"+str(idB)
-                file_type = FILETYPES[subsection["folder"]]
+                file_type = FILETYPES[subsection.folder]
                 # When adding moodle test resource change file suffix from .html to .xml
-                href = subsection["folder"]+'/'+subsection["filename"]
-                if subsection["folder"] in ['auto-evaluation', 'devoirs', 'Activite', 'ActiviteAvancee', 'Comprehension']:
+                href = subsection.folder+'/'+subsection.filename
+                if subsection.folder in ['Activite', 'ActiviteAvancee', 'Comprehension']:
                     href = href.replace('html', 'xml')
                 with tag('resource', identifier=doc_id, type=file_type, href=href):
                      doc.stag('file', href=href)
 
-    doc.asis("</manifest>")
-    imsfile = open('imsmanifest.xml', 'w', encoding='utf-8')
-    imsfile.write(indent(doc.getvalue()))
-    imsfile.close()
-    return True
+    doc.asis("</manifest>") # IMS footer
+    return indent(doc.getvalue())
 
-def generateImsArchive(module_name, module_directory):
-    # Now this script has to get full path to module dir containing module_name.config.json
-    fileout = module_name+'.imscc.zip'
-    filein = os.path.join(module_directory, module_name+'.config.json')
-    
-    # load data from filin
-    with open(filein, encoding='utf-8') as data_file:
-        data = json.load(data_file)
-    
-    # change directory to builded module dir
+def generateImsArchive(module_object, module_name, module_directory):
+    # Prepare paths and directories
     cur_dir = os.getcwd()
     os.chdir(module_directory)
+    ims_outdir = os.path.join(module_directory, 'IMS')
+    os.makedirs(ims_outdir)
+    utils.createDirs(ims_outdir, FOLDERS)
+
+    # Generate Html and XML files
+    for section in module_object.sections:
+        for sub in section.subsections:
+            if sub.folder == 'webcontent':
+                utils.write_file(sub.html_src, ims_outdir, sub.folder, sub.getFilename())
+            else:
+                utils.write_file(sub.toXMLMoodle(), ims_outdir, sub.folder, sub.getFilename('xml'))
 
     # parse data and generate imsmanifest.xml
-    generateIMSManifest(data)
+    imsfilename = os.path.join(ims_outdir, 'imsmanifest.xml')
+    imsfile = open(imsfilename, 'w', encoding='utf-8')
+    imsfile.write(generateIMSManifest(module_object))
+    imsfile.close()
     logging.warning("[toIMS] imsmanifest.xml saved for module %s", module_directory)
 
     # Compress relevant files
+    fileout = module_name+'.imscc.zip'
     zipf = zipfile.ZipFile(fileout, 'w')
-    zipf.write(os.getcwd()+'/imsmanifest.xml')
+    zipf.write(imsfilename)
     for dir_name in FOLDERS:
         try:
-            if os.listdir(dir_name):
-                for file in os.listdir(dir_name):
-                    filepath = os.path.join(os.getcwd(), dir_name)
-                    filepath = os.path.join(filepath, file)
+            if os.listdir(os.path.join(ims_outdir, dir_name)):
+                for afile in os.listdir(os.path.join(ims_outdir, dir_name)):
+                    filepath = os.path.join(ims_outdir, dir_name, afile)
                     logging.info("[toIMS] Adding %s to archive " % (filepath))
                     zipf.write(filepath)
         except:
@@ -392,18 +378,18 @@ def generateImsArchive(module_name, module_directory):
 
     zipf.close()
     os.chdir(cur_dir)
-    return fileout  
+    return fileout
 
 def main(argv):
-    """ 
+    """
     """
     import argparse
     parser = argparse.ArgumentParser(description="toIMS is a utility to help building imscc archives for exporting curent material to Moodle. Usage: $ python toIMS.py -d module_directory -n module_name .")
     parser.add_argument("-d", "--module_directory", help="Set the module directory", default='.')
-    parser.add_argument("-n", "--module_name", help="Set the name of the module", default='module')    
-    
+    parser.add_argument("-n", "--module_name", help="Set the name of the module", default='module')
+
     args = parser.parse_args()
-    
+
     fileout_path = generateImsArchive(args.module_name, args.module_directory)
     print("archive generated %s" % fileout_path)
     exit(0)

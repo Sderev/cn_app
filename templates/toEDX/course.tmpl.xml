@@ -1,0 +1,31 @@
+<course name="course"
+org="{{ module.author|slugify }}" course="{{ module.menutitle|slugify }}" language="{{module.language}}"
+advanced_modules="{{ module.advanced_EDX_module_list|replace('\'', '&quot;') }}"
+cert_html_view_enabled="true"  display_name="{{ module.title }}" graceperiod="" minimum_grade_credit="0.8" start="&quot;2030-01-01T00:00:00+00:00&quot;" >
+
+    {%  for s in module.sections %}
+    <chapter url_name="{{s.title|slugify}}" display_name="{{s.title}}">
+        {% for sub in s.subsections %}
+            {% if sub.folder == 'webcontent' %}
+            <sequential url_name="{{sub.title|slugify}}" display_name="{{sub.title}}">
+                <vertical url_name="vertical_{{sub.title|slugify}}" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                    {% for video in sub.videos %}{% set vidname = loop.index|string+'_'+sub.num+'_'+video.video_link %}
+                    <cnvideo url_name="{{ vidname|slugify }}" xblock-family="xblock.v1" href="{{ video.video_link }}"/>
+                    {% endfor %}
+                    <html url_name="{{ sub.filename|replace('.html', '') }}" filename="html/{{ sub.filename }}" display_name="Raw HTML" editor="raw"/>
+                </vertical>
+            </sequential>
+            {% else %}
+            <sequential url_name="{{sub.title|slugify}}" display_name="{{sub.title}}"  format="{{ grademap[sub.folder]}}" graded="true">
+                <vertical url_name="vertical_{{sub.title|slugify}}" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                {% for question in sub.questions %}
+                  <problem url_name="{{ question.id }}"/>
+                {% endfor %}
+                </vertical>
+            </sequential>
+            {% endif %}
+        {% endfor %}
+    </chapter>
+    {% endfor %}
+
+</course>

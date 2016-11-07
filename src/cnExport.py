@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!cnappenv/bin/python
 # -*- coding: utf-8 -*-
 import argparse
 import json
@@ -7,6 +7,7 @@ import sys
 import logging
 import shutil
 import glob
+import tarfile
 
 from lxml import etree
 from lxml import html
@@ -19,10 +20,12 @@ from jinja2 import Template, Environment, FileSystemLoader
 
 import utils
 import toIMS
+import toEDX
 import model
 
+
 MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
-BASE_PATH = os.path.abspath(os.getcwd())
+BASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 TEMPLATES_PATH = os.path.join(BASE_PATH, 'templates' )
 LOGFILE = 'logs/cnExport.log'
 
@@ -38,7 +41,6 @@ def processModule(args, repoDir, outDir, module):
 
     moduleDir = os.path.join(repoDir, module)
     moduleOutDir = os.path.join(outDir,module)
-    utils.createDirs(moduleOutDir)
     utils.copyMediaDir(repoDir, moduleOutDir, module)
 
     # Fetch and parse md file
@@ -46,25 +48,21 @@ def processModule(args, repoDir, outDir, module):
     with open(filein, encoding='utf-8') as md_file:
         m = model.Module(md_file, module, args.baseUrl)
 
-    # FIXME : simplify process
+    m.toHTML(args.feedback) # only generate html for all subsections
+
     # write html, XML, and JSon files
-    m.toHTMLFiles(moduleOutDir, args.feedback)
-    m.toXMLMoodle(moduleOutDir) # FIXME: xmlMoodle should not be written if no IMS option
     utils.write_file(m.toGift(), moduleOutDir, '', module+'.questions_bank.gift.txt')
     utils.write_file(m.toVideoList(), moduleOutDir, '', module+'.video_iframe_list.txt')
     mod_config = utils.write_file(m.toJson(), moduleOutDir, '',  module+'.config.json') # FIXME : this file should be optionnaly written
 
+    # EDX files
+    if args.edx:
+        m.edx_archive_path = toEDX.generateEDXArchive(m, moduleOutDir)
+
     # if chosen, generate IMS archive
     if args.ims:
-        m.ims_archive_path = toIMS.generateImsArchive(module, moduleOutDir)
+        m.ims_archive_path = toIMS.generateImsArchive(m, module, moduleOutDir)
         logging.warn('*Path to IMS = %s*' % m.ims_archive_path)
-
-    # Generate module html file from JSON file
-    jenv = Environment(loader=FileSystemLoader(TEMPLATES_PATH))
-    module_template = jenv.get_template("module.html")
-    html = module_template.render(module=m)
-    # FIXME: we should simply pass the html string and not write a file
-    writeHtml(module, moduleOutDir, html)
 
     # return module object
     return m
@@ -89,6 +87,7 @@ def buildSite(course_obj, repoDir, outDir):
     """ Generate full site from result of parsing repository """
 
     jenv = Environment(loader=FileSystemLoader(TEMPLATES_PATH))
+    jenv.filters['slugify'] = utils.cnslugify
     site_template = jenv.get_template("site_layout.html")
     #if found, copy logo.png, else use default
     logo_files = glob.glob(os.path.join(repoDir, 'logo.*'))
@@ -131,10 +130,9 @@ def buildSite(course_obj, repoDir, outDir):
 
     # Loop through modules
     for module in course_obj.modules:
-        in_module_file = os.path.join(outDir, module.module, module.module+".html")
-        with open(in_module_file, 'r', encoding='utf-8') as f:
-            data=f.read()
-        html = site_template.render(course=course_obj, module_content=data, body_class="modules", logo=logo)
+        module_template = jenv.get_template("module.html")
+        module_html_content = module_template.render(module=module)
+        html = site_template.render(course=course_obj, module_content=module_html_content, body_class="modules", logo=logo)
         utils.write_file(html, os.getcwd(), outDir, module.module+'.html')
 
 
@@ -155,12 +153,13 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--repository", help="Set the repositorie source dir containing the moduleX dirs, given as absolute or relative to cn_app dir", default='repositories/culturenumerique/cn_modules')
     parser.add_argument("-d", "--destination", help="Set the destination dir", default='build')
     parser.add_argument("-u", "--baseUrl", help="Set the base url for absolute url building", default='http://culturenumerique.univ-lille3.fr')
-    parser.add_argument("-f", "--feedback", action='store_true', help="Set the destination dir", default=False)
+    parser.add_argument("-f", "--feedback", action='store_true', help="Add feedbacks for all questions in web export", default=False)
     parser.add_argument("-i", "--ims", action='store_true', help="Also generate IMS archive for each module", default=False)
+    parser.add_argument("-e", "--edx", action='store_true', help="Also generate EDX archive for each module", default=False)
     args = parser.parse_args()
 
     # ** Logging **
-    logfile = utils.create_empty_file('logs', 'cnExport.log')
+    logfile = utils.create_empty_file(os.path.join(BASE_PATH, 'logs'), 'cnExport.log')
     logging.basicConfig(filename=logfile,filemode='w',level=getattr(logging, args.logLevel))
 
     # ** Paths and directories **
@@ -177,7 +176,7 @@ if __name__ == "__main__":
         outDir = args.destination
     else:
         outDir = os.path.join(repoDir, args.destination)
-    utils.prepareDestination(outDir)
+    utils.prepareDestination(BASE_PATH, outDir)
 
     # ** Process repository **
     course_obj = processRepository(args, repoDir, outDir)

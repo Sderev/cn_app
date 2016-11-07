@@ -1,0 +1,51 @@
+{
+    "course/course": {
+        "advanced_modules": [
+            "cnvideo",
+            "library_content"
+        ],
+        "cert_html_view_enabled": true,
+        "discussion_topics": {
+            "General": {
+                "id": "course"
+            }
+        },
+        "display_name": "{{ module.title }}",
+        "graceperiod": "",
+        "language": "{{ module.language }}",
+        "minimum_grade_credit": 0.8,
+        "start": "2030-01-01T00:00:00Z",
+        "tabs": [
+            {
+                "name": "Home",
+                "type": "course_info"
+            },
+            {
+                "name": "Course",
+                "type": "courseware"
+            },
+            {
+                "name": "Textbooks",
+                "type": "textbooks"
+            },
+            {
+                "name": "Discussion",
+                "type": "discussion"
+            },
+            {
+                "name": "Wiki",
+                "type": "wiki"
+            },
+            {
+                "name": "Progress",
+                "type": "progress"
+            }
+        ],
+        "xml_attributes": {
+            "filename": [
+                "course.xml",
+                "course.xml"
+            ]
+        }
+    }
+}

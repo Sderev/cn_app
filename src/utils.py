@@ -1,9 +1,13 @@
 from __future__ import division
 # -*- coding: utf-8 -*-
+#!cnappenv/bin/python
+
 
 import os
 import shutil
+import tarfile
 import requests
+import markdown
 
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
@@ -11,17 +15,18 @@ from io import open
 from lxml import etree
 from lxml import html
 from urlparse import urlparse
-
-
+from slugify import slugify
 
 import model
 import logging
 
+MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
 
 FOLDERS = ['Comprehension', 'Activite', 'ActiviteAvancee', 'webcontent']
 STATIC_FOLDERS = ['static/js', 'static/img', 'static/svg', 'static/css', 'static/fonts']
 VERBOSITY = False
 DEFAULT_VIDEO_THUMB_URL = 'https://i.vimeocdn.com/video/536038298_640.jpg'
+
 
 def fetch_vimeo_thumb(video_link):
     """ fetch video thumbnail for vimeo videos """
@@ -38,22 +43,26 @@ def fetch_vimeo_thumb(video_link):
         image_link = DEFAULT_VIDEO_THUMB_URL
     return image_link
 
+
 def get_embed_code_for_url(url):
     """
-    parses a given url and retrieve embed code
+    parses a given url and retrieve embed code.
     """
     hostname = url and urlparse(url).hostname
     # VIMEO case
     if hostname == "vimeo.com":
-        # For vimeo videos, use OEmbed API
-        params = { 'url': url, 'format':'json', 'api':False }
-        try:
-            r = requests.get('https://vimeo.com/api/oembed.json', params=params)
-            r.raise_for_status()
-        except Exception as e:
-            return hostname, '<p>Error getting video from provider ({error})</p>'.format(error=e)
-        res = r.json()
-        return hostname, res['html']
+        # For vimeo videos, one can use OEmbed API, but it slows down the code enormously (from <1s to 4s+ for rendering one module)
+            # params = { 'url': url, 'format':'json', 'api':False }
+            # try:
+            #     r = requests.get('https://vimeo.com/api/oembed.json', params=params)
+            #     r.raise_for_status()
+            # except Exception as e:
+            #     return hostname, '<p>Error getting video from provider ({error})</p>'.format(error=e)
+            # res = r.json()
+            # return hostname, res['html']
+        vid_id = url.strip('/').rsplit('/', 1)[1]
+        embed_code = """<iframe src="https://player.vimeo.com/video/{0}" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>""".format(vid_id)
+        return hostname, embed_code
 
     # CanalU.tv
     elif hostname == "www.canal-u.tv":
@@ -77,16 +86,13 @@ def get_video_src(video_link):
         src_link = ''
     return src_link
 
-
 def add_target_blank(html_src):
-    try:
-        tree = html.fromstring(html_src)
-        for link in tree.xpath('//a'):
-            link.attrib['target']="_blank"
-        html_src = html.tostring(tree, encoding='utf-8').decode('utf-8')
-    except:
-        logging.exception("=== Error finding anchors in html src: %s" % html_src)
-    return html_src
+    """ add target="_blank" attribute to anchors in html_src """
+    soup = BeautifulSoup(html_src, 'html.parser')
+    anchor_list = soup.find_all('a')
+    for anchor in anchor_list:
+        anchor['target'] = "_blank"
+    return soup.prettify()
 
 
 def iframize_video_anchors(htmlsrc, anchor_class):
@@ -116,13 +122,16 @@ def totimestamp(dt, epoch=datetime(1970,1,1)):
     # return td.total_seconds()
     return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
 
-
+#FIXME: make it simpler with no current_dir param, but only target_folder
 def write_file(src, current_dir, target_folder, name):
     """
         given a "src" source string, write a file with "name" located in
         "current_dir"/"target_folder"
     """
-    filename = os.path.join(current_dir, target_folder, name)
+    target_folder = os.path.join(current_dir, target_folder)
+    if not(os.path.isdir(target_folder)):
+        os.makedirs(target_folder)
+    filename = os.path.join(target_folder, name)
     try:
         outfile = open(filename, 'wb')
         outfile.write(src)
@@ -140,8 +149,9 @@ def stitch_files(files, filename):
                 outfile.write(infile.read())
     return outfile
 
-def createDirs(outDir):
-    for folder in FOLDERS :
+def createDirs(outDir, folders):
+    """ create anew all dirs in folders within target outdir"""
+    for folder in folders:
         new_folder = os.path.join(outDir, folder)
         # create and overwrite
         try:
@@ -173,7 +183,7 @@ def create_empty_file(filedir, filename):
     open(filepath, 'a').close()
     return filepath
 
-def prepareDestination(outDir):
+def prepareDestination(BASE_PATH, outDir):
     """ Create outDir and copy mandatory files"""
     # first erase exising dir
     if os.path.exists(outDir):
@@ -185,13 +195,15 @@ def prepareDestination(outDir):
            print ("Cannot create %s " % (outDir))
            sys.exit(0)
     for d in STATIC_FOLDERS:
+        """ build absolute path independant of current working dir """
+        source = os.path.join(BASE_PATH, d)
         dest = os.path.join(outDir, d)
         try :
-            shutil.copytree(d, dest)
+            shutil.copytree(source, dest)
         except OSError as e:
             logging.warn("%s already exists, going to overwrite it",d)
             shutil.rmtree(dest)
-            shutil.copytree(d, dest)
+            shutil.copytree(source, dest)
 
 
 def fetchMarkdownFile(moduleDir):
@@ -203,8 +215,16 @@ def fetchMarkdownFile(moduleDir):
             break
     if not filein:
         logging.error(" No MarkDown file found, MarkDown file should end with '.md'")
-        return false
+        return False
     else:
         logging.info ("found MarkDown file : %s" % filein)
 
     return filein
+
+def cnslugify(value):
+    """ Meant to be used as a tag in Jinja2 template, return the input string "value" turned into slugified version """
+    return slugify(value)
+
+def cntohtml(value):
+    """ filter taking input in md or html and rendering it anyway """
+    return markdown.markdown(value, MARKDOWN_EXT, output_format='xhtml')

@@ -11,3 +11,5 @@ venv
 site_settings.py
 cnappenv
 apache_conf
+documentation/_*
+documentation/conf.py

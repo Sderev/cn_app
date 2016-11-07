@@ -8,3 +8,7 @@ MarkdownSuperscript
 flask
 requests
 beautifulsoup4
+# used only to generate doc with Sphinx+recommonmark
+Sphinx
+sphinx-rtd-theme
+recommonmark

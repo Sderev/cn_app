@@ -13,8 +13,15 @@ Cette section est destinée à tous ceux souhaitant utiliser la solution Esc@pad
 
 Le principe d'Esc@pad consiste à transformer une arborescence de modules de cours en différents formats d'exports (mini-site web et archives pour LMS). Le point de départ est donc un dossier contenant un ou plusieurs modules de cours, appelé "programme de cours", à l'instar des cours [Culture Numérique](https://culturenumerique.univ-lille3.fr/) qui comprennent plusieurs modules et qui sont générés par Esc@pad à partir des sources disponibles sur [ce dépôt GitHub](https://github.com/CultureNumerique/cn_modules).
 
-Chaque module de cours doit suivre la syntaxe et la structuration définie dans la [section syntaxe](syntaxe.html). Le résultat de l'export est un dossier contenant un mini-site Web (un dossier de fichiers HTML) reprenant tous les modules de cours et incluant les liens vers des archives IMSCC et EDX (e.g [réutiliser le module CultureNumerique - Internet](https://culturenumerique.univ-lille3.fr/module1.html#sec_A) ). Pour plus de détails sur l'usage des archives EDX et IMSCC-Moodle, et les correspondances adoptés avec le modèle Esc@pad, voir le chapitre  [export](export.html).
+Chaque module de cours doit suivre la syntaxe qui est basée sur le format Markdown pour le contenu de cours, et sur le format GIFT pour la rédaction de quiz. Les fichiers source doivent ensuite suivre une structuration définie dans la [section syntaxe](syntaxe.html). Le résultat de l'export est un dossier contenant un mini-site Web (un dossier de fichiers HTML) reprenant tous les modules de cours et incluant les liens vers des archives IMSCC et EDX (e.g [réutiliser le module CultureNumerique - Internet](https://culturenumerique.univ-lille3.fr/module1.html#sec_A) ). Pour plus de détails sur l'usage des archives EDX et IMSCC-Moodle, et les correspondances adoptés avec le modèle Esc@pad, voir le chapitre  [export](export.html).
 
+L'illustration ci-dessous reprend la chaine éditoriale complète:
+
+1. Le point de départ est un fichier source au format Markdown+GIFT et structuré selon les guides Culture Numérique. Il peut s'éditer depuis n'importe quel éditeur de texte.
+2. Les fichiers sources sont synchronisé sur une plateforme git
+3. à chaque modification, le service hébérgé sur escapad.univ-lille3.fr régénère le mini-site web et les archives IMSCC-Moodle et EDX.
+
+![workflow](media/cn_workflow.jpg)
 
 ## Obtenir les fichiers sources des modules de cours
 

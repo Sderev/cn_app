@@ -16,6 +16,7 @@ class ModuleParsingTestCase(unittest.TestCase):
         Does not treat the generation of IMS or EDX archive """
 
     def setUp(self):
+        self.longMessage=True
         with open('tests.config.json', encoding='utf-8') as jsf:
             self.control_module = json.load(jsf, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
 
@@ -28,37 +29,50 @@ class ModuleParsingTestCase(unittest.TestCase):
 
     def check_number_of_sections(self):
         """for  sample module 'sample_m', match the number of sections with control module 'control_m'"""
-        return len(self.control_module.sections) == len(self.sample_module.sections)
+        self.assertEqual(len(self.control_module.sections),len(self.sample_module.sections), "Not the same number of sections")
+        print("-- Number of sections OK --")
 
-    def check_number_of_subsections(control_s, sample_s):
-        """for  sample section 'sample_s', match the number of subsections with control section 'control_s'"""
+    def check_headers_parsing(self):
         pass
 
+
     def check_subsections_split_and_types(self):
-        """for  sample section 'sample_s', match the number of subsections with control section 'control_s'"""
+        """Loop through all subsections and check types and source split
+            we catch and keep each type of exception to separate checks
+        """
+        typeMatchingError = None
+        srcSplitError = None
         for i,sec in enumerate(self.sample_module.sections):
             for j,sub in enumerate(sec.subsections):
+                self.assertIsNotNone(self.control_module.sections[i].subsections[j], "actual subsection out of bound for sec[%d].sub[%d]" % (i,j))
                 control_sub = self.control_module.sections[i].subsections[j]
-                if sub.folder != control_sub.folder:
-                    return False
-                if sub.src != control_sub.src:
-                    return False
-        return True
+                try:
+                    self.assertEqual(sub.folder,control_sub.folder, "no matching type for sec[%d].sub[%d]" % (i,j))
+                except AssertionError as typeMatchingError:
+                    pass
+                try:
+                    self.assertMultiLineEqual(sub.src,control_sub.src,"src string do not match for sec[%d].sub[%d]" % (i,j))
+                except Exception as srcSplitError:
+                    pass
+        if not typeMatchingError:
+            print("-- Subsections types OK --")
+        else:
+            raise typeMatchingError
+        if not srcSplitError:
+            print("-- Subsections split OK --")
+        else:
+            raise srcSplitError
 
     def runTest(self):
         #check number of sections
-        self.assertTrue(self.check_number_of_sections(), "Not the same number of sections")
+        self.check_number_of_sections()
         #check subsections are splited right and with right types
-        self.assertTrue(self.check_subsections_split_and_types(), "One subsection split or type is not right")
+        self.check_subsections_split_and_types()
         #Module object exact match
-        self.assertEqual(self.control_module, self.sample_module,msg="Module objects do not match")
+        self.assertEqual(self.control_module, self.sample_module,msg="Module objects do not match exactly")
+        print("-- Exact match OK --")
 
 
-
+# Main
 if __name__ == '__main__':
-    unittest.main()
-
-    # def test_config_json(self):
-    #     test_json =
-    #
-    #     self.assertEqual(fun(3), 4)
+    unittest.main(verbosity=1)

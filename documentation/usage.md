@@ -82,6 +82,13 @@ Une fois que vous avez modifié votre contenu et mis à jour votre dépôt git, 
 ## Intégration continue avec le webhook
 
 
-Le lien "Build site" peut être utilisé comme webhook pour les plateformes Git le supportant (framagit, github). Ce mécanisme de webhook est proposé par certaines plateformes git (GitHub, FramaGit, etc.) et permet de renseigner une url qui sera appelé (requête POST) à chaque fois qu'un certains nombres d'actions (paramétrables) sont réalisées sur votre dépôt.
+Sur la page détaillée de chaque dépôt, accessible en cliquant sur le nom du dépôt, le lien "Build link" peut être utilisé comme webhook pour les plateformes Git le supportant (framagit, github). Ce mécanisme de webhook est proposé par certaines plateformes git (GitHub, FramaGit, etc.) et permet de renseigner une url qui sera appelée (requête POST) à chaque fois qu'un certains nombres d'actions (paramétrables) sont réalisées sur votre dépôt.
+
+Dans le cas de GitHub, l'ajout de webhook se fait de la manière suivante depuis la page d'un dépôt:
+- Settings
+- Webhooks
+- Add webhook
+- coller le lien "build" copié depuis Esc@pad dans le champ "Payload URL"
+- laisser les autres champs à leur valeurs par défaut et cliquer sur "Add webhook"
 
 Généralement l'action par défaut est le "push" qui correspond à la publication des dernières mises à jour d'un dépôt par l'un des contributeurs au dépôt de code. Ainsi, après avoir ajouté l'adresse "Build" de votre dépôt Esc@pad comme webhook, à chaque mise à jour de votre code source de cours, le site vitrine sera régénéré et visible à l'adresse "Visit".

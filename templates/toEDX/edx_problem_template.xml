@@ -8,7 +8,9 @@
         <choicegroup type="MultipleChoice">
             {% for a in q.answers %}
             <choice correct="{{ 'true' if a.is_right else 'false'}}">{{a.answer_text|striptags}}
+                {% if a.feedback|length > 1 %}
                 <choicehint>{{a.feedback|striptags}}</choicehint>
+                {% endif %}
             </choice>
             {% endfor %}
         </choicegroup>

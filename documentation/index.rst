@@ -17,6 +17,7 @@ Contents:
    installation
    parser_api
    testing
+   full_code_doc
 
 
 Index et tables des matières

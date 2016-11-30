@@ -606,5 +606,4 @@ apres activite
     module_folder = "tmp"
     utils.createDirs(module_folder)
 
-    m.toHTMLFiles(module_folder)
     m.toXMLMoodle(module_folder)

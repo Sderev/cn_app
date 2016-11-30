@@ -30,7 +30,7 @@ class BuildView(View):
     """
     http_method_names = ['get', 'post']
 
-    @csrf_exempt
+    @csrf_exempt #this is needed to allow unauthenticated access to this view
     def dispatch(self, *args, **kwargs):
         return super(BuildView, self).dispatch(*args, **kwargs)
 
@@ -81,6 +81,7 @@ def visit_site(request, slug):
     """ Just a redirection to generated site """
     return redirect(os.path.join(settings.GENERATED_SITES_URL, slug, 'index.html'))
 
-def index(request):
-    # FIXME : useless now
-    return HttpResponse(u"Liste des dépôt")
+def home(request):
+    """Simple home page view"""
+    # Template is in app-local folder escapad/templates/homepage.html
+    return render(request, 'homepage.html', {})

@@ -16,6 +16,7 @@ Contents:
    export
    installation
    parser_api
+   testing
 
 
 Index et tables des matières

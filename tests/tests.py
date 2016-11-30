@@ -29,12 +29,12 @@ class ModuleParsingTestCase(unittest.TestCase):
             # outfile = open('sample.config.json', 'wb')
             # outfile.write(self.sample_object.toJson())
             self.sample_module = json.loads(self.sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-        del self.sample_object
+            del self.sample_object
 
-    def tearDown(self):
-        print("-- tearing down %s --" % self.__class__)
-        self.control_module = None
-        self.sample_module = None
+    # def tearDown(self):
+    #
+    #     self.control_module = None
+    #     self.sample_module = None
 
     def check_number_of_sections(self):
         """for  sample module 'sample_m', match the number of sections with control module 'control_m'"""
@@ -110,15 +110,7 @@ class HtmlGenerationTestCase(ModuleParsingTestCase):
         print("[HtmlGenerationTestCase] (nothing) OK")
 
 
-class XmlComparator():
-    """ Class to compare two XML snipets """
-    def init():
-        """load xml1 and xml2 from string"""
-        pass
 
-    def compare(self):
-        """compare xml1 and xml2 and return empty string if they're equal, False otherwise"""
-        pass
 
 # Main
 if __name__ == '__main__':

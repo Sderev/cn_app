@@ -451,6 +451,12 @@ class Module:
         self.parse(f)
         self.act_counter = { c.__name__ : c.actnum for c in [Comprehension, Activite, ActiviteAvancee]}
 
+
+    def __del__(self):
+        for c in [Comprehension, Activite, ActiviteAvancee]:
+            c.actnum = 0
+
+
     def parseHead(self,f) :
         """Called by module.parse() method. Captures meta-data within the first lines of the source file. Stops and return the first line starting with #, which means the start of the first section
 
@@ -600,5 +606,4 @@ apres activite
     module_folder = "tmp"
     utils.createDirs(module_folder)
 
-    m.toHTMLFiles(module_folder)
     m.toXMLMoodle(module_folder)

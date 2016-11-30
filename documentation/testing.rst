@@ -14,6 +14,11 @@ La stratégie de tests présente différent aspects:
 3. le test des web services développés en Django: dans ce cas il s'agit de contrôler la manipulation des fichiers et l'exécution des appels web.
 4. enfin, une stratégie de test plus granulaire qui consiste à tester chaque méthode séparemment en vérifiant la cohérence des entrées et sorties (WIP).
 
+Pour lancer les tests:
+
+- ``$ cd tests``
+- ``$ python tests.py``
+
 
 Développer / écrire de nouveaux tests
 -------------------------------------
@@ -32,7 +37,7 @@ Le test :class:`tests.ModuleParsingTestCase` récupère d'un côté l'objet sér
 Ajouter des tests
 ~~~~~~~~~~~~~~~~~
 
-Le test :class:`tests.HtmlGenerationTestCase` (en cours) vise quant à lui à comparer un export web de contrôle avec un export web généré à partir du fichier source de test. Pour développer un nouveau test, il est possible de définir des sous-classes de :class:`tests.ModuleParsingTestCase`, ce qui permet de réutiliser le mécanisme de lancement du test (setUp). 
+Le test :class:`tests.HtmlGenerationTestCase` (en cours) vise quant à lui à comparer un export web de contrôle avec un export web généré à partir du fichier source de test. Pour développer un nouveau test, il est possible de définir des sous-classes de :class:`tests.ModuleParsingTestCase`, ce qui permet de réutiliser le mécanisme de lancement du test (setUp).
 
 Documentation des tests
 -----------------------

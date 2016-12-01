@@ -11,14 +11,29 @@ from .forms import RepositoryForm
 
 
 class RepositoryAdmin(admin.ModelAdmin):
+    """Custom Admin class used to administer Repository objects  """
+    # fields displayed in the Repository list page admin/escapad/repository/
     list_display = ('repository',  'repo_synced', 'default_branch', 'last_compiled', 'git_url', 'build_url', 'site_url', )
-    readonly_fields = ('slug', 'git_username', 'git_name', 'repo_synced', 'last_compiled','provider','site_url_long', 'build_url_long', )
+
+    # Form method we use to process some custom chekings. See forms.py
     form = RepositoryForm
 
     def get_readonly_fields(self, request, obj):
+        """
+        Method in charge of populating the readonly_fields from the list given in above attribute
+        We override this method just to make the request object available in the methods defining
+        the custom read-only fields below, specifically build_url_long and site_url_long
+        """
         self.request = request
-        return super(RepositoryAdmin, self).get_readonly_fields(request, obj)
+        # fields that won't be editable. Just remove one to make it editable
+        readonly_fields = ('git_username','git_name','repo_synced','last_compiled','provider','site_url_long','build_url_long','slug')
+        if obj:
+            readonly_fields = ('git_url',)+readonly_fields
+        return readonly_fields
+        #return super(RepositoryAdmin, self).get_readonly_fields(request, obj)
 
+    #========  custom fields  =============#
+    # Below are the method used to define the custom fields, i.e those not defined in model.py
     def repository(self, obj):
         return '%s/%s' % (obj.git_username, obj.git_name)
 
@@ -52,5 +67,6 @@ class RepositoryAdmin(admin.ModelAdmin):
             return ''
     site_url_long.allow_tags = True
     site_url_long.short_description = 'Site link'
+    #========== End of custom fields  =================#
 
 admin.site.register(Repository, RepositoryAdmin)

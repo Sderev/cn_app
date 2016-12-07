@@ -7,7 +7,7 @@ Esc@pad Web Service : Architecture et administration
 
 
 # Administration
-L'interface d'administration d'Escapad comprend 2 applications principipales:
+L'interface d'administration d'Escapad comprend 2 applications principales:
 
 - Authentification et Autorisation
 - Escapad et la gestion des Repository

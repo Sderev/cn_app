@@ -13,10 +13,11 @@ Contents:
 
    usage
    syntaxe
+   escapad_webservice
    export
    installation
-   parser_api
    testing
+   parser_api
    full_code_doc
 
 

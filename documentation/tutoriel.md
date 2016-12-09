@@ -8,16 +8,16 @@ Ce chapitre propose un parcours type permettant de prendre en main les outils et
 - l'usage de l'application Escapad pour la génération des supports multi-format (web, IMS/Moodle, EDX)
 
 
-# Création d'un compte GitHub et fork
+## Création d'un compte GitHub et fork
 
-## Création du compte
+### Création du compte
 
 - remplissez et validez le formulaire localisé à [https://github.com/join](https://github.com/join)
 - à l'étape suivante "Choose your plan", laissez l'option "Unlimited public repositories for free", cliquez sur "Continue"
 - l'étape suivante "Tailor your experience" peut être sautée ("Skip this step")
 - à l'écran final "Learn Git and GitHub without any code!" qui vous invite à lire le guide (hautement conseillé pour la suite néanmoins), ne faites rien, et passez à la suite de ce tutoriel.
 
-## "Fork" du dépôt-exemple
+### "Fork" du dépôt-exemple
 
 - loguez-vous sur github.com avec votre nouveau `monlogingithub` (login d'exemple utilisé pour la suite, NDR.) et allez sur [https://github.com/CultureNumerique/tutoriel](https://github.com/CultureNumerique/tutoriel)
 - cliquez sur le bouton "Fork" en haut à droite
@@ -35,7 +35,7 @@ Notez à ce stade l'arborescence type d'un dépôt de cours qui contient 1 modul
 - title.md    
 ```
 
-# Rédaction Markdown et premier commit
+## Rédaction Markdown et premier commit
 
 - allez sur la page du fichier `module1/mon_cours.md`. Cette page montre la version "apperçu" du code source markdown du module 1.
 - Pour voir et modifier le  code markdown cliquez sur "🖉 Edit this file". Vous pouvez à partir de cette écran éditer le source dans la zone de texte qui propose une coloration syntaxique permettant de vous guider (cf ci-dessous).
@@ -59,7 +59,7 @@ Quelques suggestions:
 - Vous pouvez reprendre une sous-section de cours d'un des [modules CultureNumerique dont les sources sont également sur github](https://github.com/CultureNumerique/cn_modules). Par exemple la 1ère sous-section "Présentation du cours" du [module 4](https://github.com/CultureNumerique/cn_modules/edit/master/module4/traitementsDeTexteTableur.md)
 - rédigez [2 paragraphes](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#line-breaks), dont l'un contient un [lien hypertexte](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links), et l'autre [une liste à puce ou numérotée](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#lists)
 
-## Premier commit
+### Premier commit
 
 - Une fois que vous avez terminé d'éditer, descendez vers la zone située juste en dessous de la zone d'édition "Commit changes"
 ![tuto_github_02.png](media/tuto_github_03.png)
@@ -73,7 +73,7 @@ Et voilà ! Vous venez de soumettre votre premier **commit** sur la **branche ma
 
 **NB** Pour être sûr que l'affichage correspond à votre intention, vérifier le résultat sur le rendu de la page qui s'affiche après avoir commité.
 
-## Enregistrement sur Escapad
+### Enregistrement et génération du mini-site sur Escapad
 
 - loguez-vous sur [l'interface d'admin d'Escapad](http://escapad.univ-lille3.fr/admin) en utilisant le login et mot de passe qui vous ont été donnés.
 - En cliquant sur ["Repositorys"](http://escapad.univ-lille3.fr/admin/escapad/repository/), vous arrivez sur l'écran suivant:

@@ -1,7 +1,7 @@
 Tutoriel de prise en main de la chaine éditoriale Esc@pad
 =========================================================
 
-Ce chapitre propose un parcours type permettant de prendre en main les outils et technologies qui composent la chaine éditoriale Esc@Pad. L'objectif à l'issu de ce tutoriel est d'être capable d'éditer un contenu pédagogique en autonomie en utilisant Esc@pad. Les outils et notions abordées sont:
+Ce chapitre propose un parcours type permettant de prendre en main les outils et technologies qui composent la chaine éditoriale Esc@Pad. L'objectif à l'issue de ce tutoriel est d'être capable d'éditer un contenu pédagogique en autonomie en utilisant Esc@pad. Les outils et notions abordées sont:
 - les rudiments de `git` et de la plateforme GitHub (création d'un compte, fork, commits)
 - la syntaxe markdown pour la rédaction du contenu
 - la syntaxe GIFT pour la création de quiz
@@ -37,8 +37,8 @@ Notez à ce stade l'arborescence type d'un dépôt de cours qui contient 1 modul
 
 # Rédaction Markdown et premier commit
 
-- allez sur la page du fichier `module1/mon_cours.md`. Cette page montre la version "apperçu" du code source markdown du module 1.
-- Pour voir et modifier le  code markdown cliquez sur "🖉 Edit this file". Vous pouvez à partir de cette écran éditer le source dans la zone de texte qui propose une coloration syntaxique permettant de vous guider (cf ci-dessous).
+- allez sur la page du fichier `module1/mon_cours.md`. Cette page montre la version "aperçu" du code source markdown du module 1.
+- Pour voir et modifier le  code markdown cliquez sur "🖉 Edit this file". Vous pouvez à partir de cet écran éditer le source dans la zone de texte qui propose une coloration syntaxique permettant de vous guider (cf ci-dessous).
 ![tuto_github_02.png](media/tuto_github_02.png)
 
 ## Syntaxe Markdown
@@ -53,7 +53,7 @@ La synaxe Markdown est [présentée sur cette page](https://github.com/adam-p/ma
 etc..
 ```
 
-A présent, et en vous aidant de cette syntaxe et du module 1 cours-modèle [example_module1](https://github.com/CultureNumerique/course_template/blob/master/module1/example_module1.md), modifier le texte et les titres de le première section et sous-section avec le texte de votre choix.
+À présent, et en vous aidant de cette syntaxe et du module 1 cours-modèle [example_module1](https://github.com/CultureNumerique/course_template/blob/master/module1/example_module1.md), modifier le texte et les titres de la première section et sous-section avec le texte de votre choix.
 
 Quelques suggestions:
 - Vous pouvez reprendre une sous-section de cours d'un des [modules CultureNumerique dont les sources sont également sur github](https://github.com/CultureNumerique/cn_modules). Par exemple la 1ère sous-section "Présentation du cours" du [module 4](https://github.com/CultureNumerique/cn_modules/edit/master/module4/traitementsDeTexteTableur.md)
@@ -65,7 +65,7 @@ Quelques suggestions:
 ![tuto_github_02.png](media/tuto_github_03.png)
 - Dans cette zone vous pouvez :
     - [optionnel] saisir un message court dans le premier champ texte ...
-    - [optionnel]... complété au besoin dans le 2e champ texte
+    - [optionnel]... compléter au besoin dans le 2e champ texte
     - [optionnel] modifier ou conserver le choix par défaut " Commit directly to the master branch"
     - [nécessaire] **enregistrer** vos changements **en cliquant sur le bouton "Commit changes"** (i.e "valider les changements" en français)
 

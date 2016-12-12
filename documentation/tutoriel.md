@@ -96,7 +96,7 @@ Et voilà ! Vous venez de soumettre votre premier **commit** sur la **branche ma
 - une fois le fichier EDX sélectionné, cliquez sur "Remplacez mon cours par le contenu sélectionné"
 - une fois l'opération terminée, vous pouvez cliquez sur "Visualiser le plan mis à jour" et explorez les sections de votre cours.
 
-### Syntaxe GIFT et ajout d'activités
+## Syntaxe GIFT et ajout d'activités
 
 La syntaxe GIFT a été mise au point par la communauté des développeurs de Moodle afin de proposer un moyen plus rapide et efficace de créer des quiz en utilisant un format "texte" (un markup). La syntaxe est disponible à [cette adresse](https://docs.moodle.org/30/en/GIFT_format), mais les bases de cette syntaxe peuvent être rapidement acquises en examinant les exemples ci-dessous (liens directs vers [l'image1](_images/tuto_gift_01.png) et [l'image2](_images/tuto_gift_02.png)):
 
@@ -125,7 +125,7 @@ ce qui produira le rendu suivant:
 - retournez sur [l'interface d'admin d'Escapad](http://escapad.univ-lille3.fr/admin/escapad/repository/) et relancez la génération du site en cliquant sur "Build" sur la ligne correspondant à votre dépôt.
 - récupérez ensuite l'archive EDX et remplacez le contenu du cours avec cette archive nouvellement générées comme vu précédemment.
 
-### Ajout d'image et de vidéos
+## Ajout d'image et de vidéos
 
 **Ajouter une image**
 

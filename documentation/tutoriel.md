@@ -146,7 +146,7 @@ Il est possible d'ajouter également une image avec un lien relatif au fichier �
 
 - Depuis votre fork sous GitHub, placez vous sur la page du dossier `module1/media`
 - cliquez sur "Upload files"
-- ajoutez une image de votre choix (_attention, pas d'espace ni d'accents dans le nom de l'image_, i.e `ma_tres_belle_image.png` et non `Ma très belle image.png`)
+- ajoutez une image de votre choix (_attention, pas d'espace ni d'accents dans le nom de l'image_, i.e `ma_tres_belle_image.png` et non `Ma très belle image.png`; téléchargez [cette image si vous le souhaitez](https://culturenumerique.univ-lille3.fr/module3/media/3_1_illustrations-01.png))
 - cliquez sur "Commit changes" --en effet, l'ajout d'image dans le dépôt de cours constitue également un changement du code source du cours et passe donc par un commit.
 - retournez ensuite sur la page du fichier `module1/mon_cours.md`, et éditez-le.
 - à la suite du contenu, ajoutez une sous-section simple `## Exemple d'ajout d'image et de video`

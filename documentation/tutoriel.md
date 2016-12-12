@@ -83,5 +83,91 @@ Et voilà ! Vous venez de soumettre votre premier **commit** sur la **branche ma
 ![escapad liste des repos](media/tuto_escapad_02.png)
 - cliquez ensuite sur "enregistrer" en bas à droite
 - vous devez alors revenir à l'écran listant les dépôts.
-- Pour chaque dépôt, le lien "build" (colonne "BUILD LINK" à droite) permet de générer le site vitrine de votre dépôt. cliquez sur ce lien pour votre dépôt (reconnaissable grâce à l'adresse "GIT URL"); vous devez arriver sur l'écran ci-après qui correspond à la version mini-site web:
+- Pour chaque dépôt, le lien "build" (colonne "BUILD LINK" à droite) permet de générer le site vitrine de votre dépôt. cliquez sur ce lien pour votre dépôt (reconnaissable grâce à l'adresse "GIT URL"); vous devez arriver sur l'écran ci-après qui correspond à la version mini-site web (Le cours généré comprend un seul module "Titre", accessible dans le menu "Modules" en haut à droite):
 ![escapad liste des repos](media/tuto_escapad_03.png)
+
+### Créer un cours sur la plateforme de test EDX-UNR et importer depuis Escapad
+
+- loguez-vous depuis la page d'accueil du [Studio EDX de l'instance UNR](http://studio.edx-test.unr-npdc.fr/home/) avec les accès qui vous ont été donnés;
+- arrivé sur l'écran ci-dessous, cliquez sur "Nouveau Cours" et renseignez les champs marqués par une étoile `*`:
+![edx home](media/tuto_edx_01.png)
+- Téléchargez l'archive EDX du cours que vous avez généré auparavant (Modules > Titre > "Réutiliser ce module" > lien "module1_edx.tar.gz"), et depuis la page d'accueil du cours nouvellement créé sur EDX(cf écran ci-dessous), cliquez sur "Outils" > Importer et choisissez l'archive EDX que vous venez de télécharger
+![edx home](media/tuto_edx_02.png)
+- une fois le fichier EDX sélectionné, cliquez sur "Remplacez mon cours par le contenu sélectionné"
+- une fois l'opération terminée, vous pouvez cliquez sur "Visualiser le plan mis à jour" et explorez les sections de votre cours.
+
+### Syntaxe GIFT et ajout d'activités
+
+La syntaxe GIFT a été mise au point par la communauté des développeurs de Moodle afin de proposer un moyen plus rapide et efficace de créer des quiz en utilisant un format "texte" (un markup). La syntaxe est disponible à [cette adresse](https://docs.moodle.org/30/en/GIFT_format), mais les bases de cette syntaxe peuvent être rapidement acquises en examinant les exemples ci-dessous:
+
+![GIFT exemple](media/tuto_gift_01.png)
+![GIFT exemple](media/tuto_gift_02.png)
+
+Dans les cours Escapad, les activités de type quiz sont rédigées en utilisant la syntaxe GIFT, chaque quiz étant séparé par une ligne vide. Les sous-sections contenant ces activités sont elles délimitées par 2 séries de \`\`\` placées en début de ligne et dont la première est suivie du type d'activité à choisir entre:
+
+- Comprehension
+- Activite
+- ActiviteAvance
+
+Pour ajouter une sous-section d'activité, nous procéderons comme dans l'exemple ci-dessous ( notez le début de la sous-section ````Activite` ligne 11 et la fin avec un simple \`\`\` ligne 28):
+
+![GIFT exemple](media/tuto_gift_03.png)
+
+ce qui produira le rendu suivant:
+![GIFT exemple](media/tuto_gift_04.png)
+
+**Exercice**
+
+- En vous aidant de la syntaxe GIFT ou en reprenant simplement des activités issues des cours Culture numérique, reprenez l'édition sous GitHub du fichier `module1/mon_cours.md` et ajouter à la suite du texte:
+    - une sous-section du type de votre choix
+    - 2 questions rédigées en GIFT
+- Faites ensuite un "commit" comme vu précédemment
+- retournez sur [l'interface d'admin d'Escapad](http://escapad.univ-lille3.fr/admin/escapad/repository/) et relancez la génération du site en cliquant sur "Build" sur la ligne correspondant à votre dépôt.
+- récupérez ensuite l'archive EDX et remplacez le contenu du cours avec cette archive nouvellement générées comme vu précédemment.
+
+### Ajout d'image et de vidéos
+
+**Ajouter une image**
+
+Les images en Markdown s'ajoutent de la manière suivante:
+
+```
+
+![Mon image](http://lien/vers/monimage.png)
+
+```
+
+Il est possible d'ajouter également une image avec un lien relatif au fichier édité, par exemple le fichier `monimage.png` placé dans le dossier `media` lui-même placé dans le dossier `module1` de votre "fork":
+```
+
+![Mon image](media/monimage.png)
+
+```
+
+- Depuis votre fork sous GitHub, placez vous sur la page du dossier `module1/media`
+- cliquez sur "Upload files"
+- ajoutez une image de votre choix (_attention, pas d'espace ni d'accents dans le nom de l'image_, i.e `ma_tres_belle_image.png` et non `Ma très belle image.png`)
+- cliquez sur "Commit changes" --en effet, l'ajout d'image dans le dépôt de cours constitue également un changement du code source du cours et passe donc par un commit.
+- retournez ensuite sur la page du fichier `module1/mon_cours.md`, et éditez-le.
+- à la suite du contenu, ajoutez une sous-section simple `## Exemple d'ajout d'image et de video`
+- dans cette sous-section ajoutez une image en suivant la syntaxe ci-avant en utilisant le lien relatif de l'image que vous venez d'uploader.
+
+
+**Ajout d'une vidéo**
+
+Pour ajouter une vidéo à partir du lien `https://vimeo.com/93350435`:
+
+```
+## Vidéo de cours
+
+[Nom de video]( https://vimeo.com/93350435 ){: .cours_video }
+
+```
+
+- Depuis votre fork, ajoutez donc une nouvelle sous section avec le code d'une vidéo, en remplçant le lien ci-avant par le lien d'une vidéo de votre choix
+
+** Rebuild et ré-import dans EDX**
+
+- une fois l'édition terminée, refaites un commit,
+- relancez la génération depuis Escapad
+- téléchargez la nouvelle archive EDX et remplacez à nouveau le cours par cette nouvelle version.

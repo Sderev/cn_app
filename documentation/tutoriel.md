@@ -98,7 +98,7 @@ Et voilà ! Vous venez de soumettre votre premier **commit** sur la **branche ma
 
 ### Syntaxe GIFT et ajout d'activités
 
-La syntaxe GIFT a été mise au point par la communauté des développeurs de Moodle afin de proposer un moyen plus rapide et efficace de créer des quiz en utilisant un format "texte" (un markup). La syntaxe est disponible à [cette adresse](https://docs.moodle.org/30/en/GIFT_format), mais les bases de cette syntaxe peuvent être rapidement acquises en examinant les exemples ci-dessous:
+La syntaxe GIFT a été mise au point par la communauté des développeurs de Moodle afin de proposer un moyen plus rapide et efficace de créer des quiz en utilisant un format "texte" (un markup). La syntaxe est disponible à [cette adresse](https://docs.moodle.org/30/en/GIFT_format), mais les bases de cette syntaxe peuvent être rapidement acquises en examinant les exemples ci-dessous (liens directs vers [l'image1](_images/tuto_gift_01.png) et [l'image2](_images/tuto_gift_02.png)):
 
 ![GIFT exemple](media/tuto_gift_01.png)
 ![GIFT exemple](media/tuto_gift_02.png)

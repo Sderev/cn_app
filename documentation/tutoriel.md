@@ -1,5 +1,4 @@
-Tutoriel de prise en main de la chaine éditoriale Esc@pad
-=========================================================
+## Tutoriel de prise en main de la chaine éditoriale Esc@pad
 
 Ce chapitre propose un parcours type permettant de prendre en main les outils et technologies qui composent la chaine éditoriale Esc@Pad. L'objectif à l'issue de ce tutoriel est d'être capable d'éditer un contenu pédagogique en autonomie en utilisant Esc@pad. Les outils et notions abordées sont:
 - les rudiments de `git` et de la plateforme GitHub (création d'un compte, fork, commits)
@@ -41,9 +40,9 @@ Notez à ce stade l'arborescence type d'un dépôt de cours qui contient 1 modul
 - Pour voir et modifier le  code markdown cliquez sur "🖉 Edit this file". Vous pouvez à partir de cet écran éditer le source dans la zone de texte qui propose une coloration syntaxique permettant de vous guider (cf ci-dessous).
 ![tuto_github_02.png](media/tuto_github_02.png)
 
-## Syntaxe Markdown
+### Syntaxe Markdown
 
-La synaxe Markdown est [présentée sur cette page](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet). La première chose est de repérer la structuration du document en section qui peut se faire à l'aide des niveaux d'en-têtes:
+La syntaxe Markdown est [présentée sur cette page](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet). La première chose est de repérer la structuration du document en section qui peut se faire à l'aide des niveaux d'en-têtes:
 
 ```
 # section
@@ -64,8 +63,8 @@ Quelques suggestions:
 - Une fois que vous avez terminé d'éditer, descendez vers la zone située juste en dessous de la zone d'édition "Commit changes"
 ![tuto_github_02.png](media/tuto_github_03.png)
 - Dans cette zone vous pouvez :
-    - [optionnel] saisir un message court dans le premier champ texte ...
-    - [optionnel]... compléter au besoin dans le 2e champ texte
+    - [optionnel] saisir un message court dans le premier champ texte
+    - [optionnel] compléter au besoin dans le 2e champ texte
     - [optionnel] modifier ou conserver le choix par défaut " Commit directly to the master branch"
     - [nécessaire] **enregistrer** vos changements **en cliquant sur le bouton "Commit changes"** (i.e "valider les changements" en français)
 
@@ -73,7 +72,7 @@ Et voilà ! Vous venez de soumettre votre premier **commit** sur la **branche ma
 
 **NB** Pour être sûr que l'affichage correspond à votre intention, vérifier le résultat sur le rendu de la page qui s'affiche après avoir commité.
 
-### Enregistrement et génération du mini-site sur Escapad
+## Enregistrement et génération du mini-site sur Escapad
 
 - loguez-vous sur [l'interface d'admin d'Escapad](http://escapad.univ-lille3.fr/admin) en utilisant le login et mot de passe qui vous ont été donnés.
 - En cliquant sur ["Repositorys"](http://escapad.univ-lille3.fr/admin/escapad/repository/), vous arrivez sur l'écran suivant:
@@ -86,7 +85,7 @@ Et voilà ! Vous venez de soumettre votre premier **commit** sur la **branche ma
 - Pour chaque dépôt, le lien "build" (colonne "BUILD LINK" à droite) permet de générer le site vitrine de votre dépôt. cliquez sur ce lien pour votre dépôt (reconnaissable grâce à l'adresse "GIT URL"); vous devez arriver sur l'écran ci-après qui correspond à la version mini-site web (Le cours généré comprend un seul module "Titre", accessible dans le menu "Modules" en haut à droite):
 ![escapad liste des repos](media/tuto_escapad_03.png)
 
-### Créer un cours sur la plateforme de test EDX-UNR et importer depuis Escapad
+## Créer un cours sur la plateforme de test EDX-UNR et importer depuis Escapad
 
 - loguez-vous depuis la page d'accueil du [Studio EDX de l'instance UNR](http://studio.edx-test.unr-npdc.fr/home/) avec les accès qui vous ont été donnés;
 - arrivé sur l'écran ci-dessous, cliquez sur "Nouveau Cours" et renseignez les champs marqués par une étoile `*`:
@@ -96,8 +95,9 @@ Et voilà ! Vous venez de soumettre votre premier **commit** sur la **branche ma
 - une fois le fichier EDX sélectionné, cliquez sur "Remplacez mon cours par le contenu sélectionné"
 - une fois l'opération terminée, vous pouvez cliquez sur "Visualiser le plan mis à jour" et explorez les sections de votre cours.
 
-## Syntaxe GIFT et ajout d'activités
+## Ajout d'activités et syntaxe GIFT
 
+### Gift en exemples
 La syntaxe GIFT a été mise au point par la communauté des développeurs de Moodle afin de proposer un moyen plus rapide et efficace de créer des quiz en utilisant un format "texte" (un markup). La syntaxe est disponible à [cette adresse](https://docs.moodle.org/30/en/GIFT_format), mais les bases de cette syntaxe peuvent être rapidement acquises en examinant les exemples ci-dessous (liens directs vers [l'image1](_images/tuto_gift_01.png) et [l'image2](_images/tuto_gift_02.png)):
 
 ![GIFT exemple](media/tuto_gift_01.png)
@@ -116,7 +116,7 @@ Pour ajouter une sous-section d'activité, nous procéderons comme dans l'exempl
 ce qui produira le rendu suivant:
 ![GIFT exemple](media/tuto_gift_04.png)
 
-**Exercice**
+### Exercice
 
 - En vous aidant de la syntaxe GIFT ou en reprenant simplement des activités issues des cours Culture numérique, reprenez l'édition sous GitHub du fichier `module1/mon_cours.md` et ajouter à la suite du texte:
     - une sous-section du type de votre choix
@@ -125,9 +125,9 @@ ce qui produira le rendu suivant:
 - retournez sur [l'interface d'admin d'Escapad](http://escapad.univ-lille3.fr/admin/escapad/repository/) et relancez la génération du site en cliquant sur "Build" sur la ligne correspondant à votre dépôt.
 - récupérez ensuite l'archive EDX et remplacez le contenu du cours avec cette archive nouvellement générées comme vu précédemment.
 
-## Ajout d'image et de vidéos
+## Ajout d'image et de vidéo
 
-**Ajouter une image**
+### Ajouter une image
 
 Les images en Markdown s'ajoutent de la manière suivante:
 
@@ -153,7 +153,7 @@ Il est possible d'ajouter également une image avec un lien relatif au fichier �
 - dans cette sous-section ajoutez une image en suivant la syntaxe ci-avant en utilisant le lien relatif de l'image que vous venez d'uploader.
 
 
-**Ajout d'une vidéo**
+### Ajout d'une vidéo
 
 Pour ajouter une vidéo à partir du lien `https://vimeo.com/93350435`:
 

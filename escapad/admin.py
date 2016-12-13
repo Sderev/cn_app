@@ -13,7 +13,7 @@ from .forms import RepositoryForm
 class RepositoryAdmin(admin.ModelAdmin):
     """Custom Admin class used to administer Repository objects  """
     # fields displayed in the Repository list page admin/escapad/repository/
-    list_display = ('repository',  'repo_synced', 'default_branch', 'last_compiled', 'git_url', 'build_url', 'site_url', )
+    list_display = ('git_url',  'repo_synced', 'default_branch', 'last_compiled',  'build_url', 'site_url', )
 
     # Form method we use to process some custom chekings. See forms.py
     form = RepositoryForm
@@ -34,9 +34,6 @@ class RepositoryAdmin(admin.ModelAdmin):
 
     #========  custom fields  =============#
     # Below are the method used to define the custom fields, i.e those not defined in model.py
-    def repository(self, obj):
-        return '%s/%s' % (obj.git_username, obj.git_name)
-
     def build_url(self, obj):
         url = reverse('build_repo', args=(obj.slug,))
         return '<a href="%s" target="_blank">%s<a>' % (url, 'build')

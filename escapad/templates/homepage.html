@@ -4,6 +4,24 @@
     <title>Accueil Esc@pad</title>
     <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
     <link rel="stylesheet" type="text/css" href="/static/admin/css/login.css" />
+    <script type="text/javascript" src="/static/admin/js/vendor/jquery/jquery.js"></script>
+    <style type="text/css">
+        /* ---  email hiding ---- */
+        .email-span:after {
+          content: '@univ-lille3.fr';
+        }
+        .email {
+          display: inline-block;
+          font-weight: bold;
+          cursor: pointer;
+        }
+        .no_display p {
+          display: none;
+        }
+        .no_display:after {
+          content: '.';
+        }
+    </style>
     <meta name="robots" content="NONE,NOARCHIVE" />
 </head>
 <body class="login" data-admin-utc-offset="0">
@@ -23,14 +41,21 @@
                 <br class="clear" />
                 <h2><a class="button" style="padding:0.5em;" href="http://escapad.univ-lille3.fr/documentation">Voir la documentation Esc@pad</a> </h2>
                 <br class="clear" />
-                <h2><a class="button email" style="padding:0.5em;" href="mailto:alain.preux[arobase]univ-lille3.fr">Contactez nous pour obtenir un accès</a> </h2>
+                <h2><a class="button email" style="padding:0.5em;">
+                      Contactez <span class="email-span">alain<span class="no_display"><p>point</p></span>preux</span> pour obtenir un accès
+                    </a>
+                </h2>
             </div>
             <br class="clear" />
         </div>
         <!-- END Content -->
         <div id="footer"></div>
     </div>
+    <script>
+    $('.email').click(function(){
+      window.location.href='mailto:'+$(this).find(".email-span").html().replace('point', '.')+'@univ-lille3.fr';
+    });
+    </script>
     <!-- END Container -->
-
 </body>
 </html>

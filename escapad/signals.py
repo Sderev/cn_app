@@ -16,6 +16,7 @@ from escapad.utils import cnrmtree, run_shell_command
 
 logger = logging.getLogger(__name__) # see in cn_app.settings.py logger declaration
 
+# utility used by signal receivers below
 def create_repo_dir(dir_name, repo_url):
     """ function to create and sync a git repo(repo_url) with local dir (dir_name) """
     repo_path = os.path.join(settings.REPOS_DIR, dir_name)
@@ -38,21 +39,9 @@ def create_repo_dir(dir_name, repo_url):
     logger.warning("%s | successful creation of repo %s with url %s" % (timezone.now(), dir_name, repo_url))
     return True
 
+# == signal receivers == see https://docs.djangoproject.com/en/1.10/topics/signals/#
 
-@receiver(post_delete, sender=Repository)
-def delete_repo_dir(instance, **kwargs):
-    """ utility function to delete repo and sites dir """
-    repo_path = os.path.join(settings.REPOS_DIR, instance.slug)
-    sites_path = os.path.join(settings.GENERATED_SITES_DIR, instance.slug)
-    for path in [repo_path, sites_path]:
-        try:
-            run_shell_command('rm -fR %s' % path)
-        except Exception as e:
-            logger.error("%s | Problem when deleting dir %s | error = %s" %  (timezone.now(), path, e))
-            return False
-    return True
-
-
+# do this *before* saving a Repository object (either creating or editing)
 @receiver(pre_save, sender=Repository)
 def resync_repo_dir(sender, instance, update_fields, **kwargs):
     """ when updating a Repo, resync dir if url has changed """
@@ -67,15 +56,30 @@ def resync_repo_dir(sender, instance, update_fields, **kwargs):
             return
         # FIXME if default branch changed resync it!
 
+#do this *after* saving a Repository
 @receiver(post_save, sender=Repository)
 def sync_repo_dir(sender, instance, created, update_fields, **kwargs):
-    """ Create a dir named [slug] with clone of repo_url """
+    """ Create a dir named [slug] and git clone [git_url] within it """
     logger.warning(" %s | creating repo dir ?= %s | update_fields = %s" % (timezone.now(), created, update_fields))
-    if update_fields == {'repo_synced'}:
+    if update_fields == {'repo_synced'}: #just to avoid infinite recursion because of successive saving (see below)
         return
-    if created: #new record
+    if created: #meaning we're creating a new record
         instance.repo_synced = create_repo_dir(instance.slug, instance.git_url)
         instance.save(update_fields={'repo_synced'})
         return
     else: # updating a repo object => see above pre_save receiver
         return
+
+# do this *after* one has deleted a Repository object
+@receiver(post_delete, sender=Repository)
+def delete_repo_dir(instance, **kwargs):
+    """ utility function to delete repo and sites dir """
+    repo_path = os.path.join(settings.REPOS_DIR, instance.slug)
+    sites_path = os.path.join(settings.GENERATED_SITES_DIR, instance.slug)
+    for path in [repo_path, sites_path]:
+        try:
+            run_shell_command('rm -fR %s' % path)
+        except Exception as e:
+            logger.error("%s | Problem when deleting dir %s | error = %s" %  (timezone.now(), path, e))
+            return False
+    return True

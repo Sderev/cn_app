@@ -20,7 +20,7 @@ class Repository(models.Model):
     @staticmethod
     def set_slug(url):
         try:
-            slug = slugify(url.lstrip('htpps://').replace('.','_').replace('/','__').lower())
+            slug = slugify(url.rstrip('/').lstrip('htpps://').replace('.','-').replace('/','_').lower())
         except Exception as e:
             slug = slugify(url)
         return slug

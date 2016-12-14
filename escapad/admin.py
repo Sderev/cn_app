@@ -20,7 +20,7 @@ class RepositoryAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj):
         """
-        Method in charge of populating the readonly_fields from the list given in above attribute
+        Method in char  ge of populating the readonly_fields from the list given in above attribute
         We override this method just to make the request object available in the methods defining
         the custom read-only fields below, specifically build_url_long and site_url_long
         """

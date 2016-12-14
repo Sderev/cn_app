@@ -131,7 +131,7 @@ class GiftQuestion():
                             if answer['is_right'] and bool(feedback_option):
                                 answer_class = 'right_answer'
                             else:
-                                answer_class = ''
+                                answer_class = 'wrong_answer'
                             with tag('li', klass=answer_class):
                                 doc.stag('input', type='radio', name="name")
                                 doc.asis(answer['answer_text'].strip('</p>'))
@@ -139,7 +139,7 @@ class GiftQuestion():
                             if float(answer['credit']) > 0.0 and feedback_option:
                                 answer_class = 'right_answer'
                             else:
-                                answer_class = ''
+                                answer_class = 'wrong_answer'
                             with tag('li', klass=answer_class):
                                 doc.stag('input', type='checkbox', name="name")
                                 doc.asis(answer['answer_text'].strip('</p>'))

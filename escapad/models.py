@@ -26,13 +26,15 @@ class Repository(models.Model):
         return slug
 
     def save(self, *args, **kwargs):
-        """ populate some fields from git url before saving"""
-        fieldsReg = reGit.search(self.git_url)
-        if fieldsReg:
-            self.git_name = fieldsReg.group('repo') if fieldsReg.group('repo') else "default_name"
-            self.git_username = fieldsReg.group('user') if fieldsReg.group('user') else "default_user"
-            self.provider = fieldsReg.group('provider') if fieldsReg.group('provider') else "github.com"
-        self.slug = self.set_slug(self.git_url)
+        """ populate some fields from git url before saving, but only when creating new objects"""
+        if self.pk is None:#this is true when object does not exist yet
+            # use regex to retrieve infos
+            fieldsReg = reGit.search(self.git_url)
+            if fieldsReg:
+                self.git_name = fieldsReg.group('repo') if fieldsReg.group('repo') else "default_name"
+                self.git_username = fieldsReg.group('user') if fieldsReg.group('user') else "default_user"
+                self.provider = fieldsReg.group('provider') if fieldsReg.group('provider') else "github.com"
+            self.slug = self.set_slug(self.git_url)
         super(Repository, self).save(*args, **kwargs)
 
     git_url = models.URLField(max_length=200, unique=True)
@@ -42,4 +44,5 @@ class Repository(models.Model):
     default_branch = models.CharField(max_length=200, blank=True, null=True, default="master")
     last_compiled = models.DateTimeField(blank=True, null=True)
     repo_synced = models.BooleanField(default=False)
+    show_feedback = models.BooleanField(default=False)
     provider = models.URLField(max_length=200, blank=True, null=True)

@@ -57,7 +57,8 @@ class BuildView(View):
 
         # 3. build with BASE_PATH/src/toHTML.py
         os.chdir(settings.BASE_DIR)
-        build_cmd = ("python src/cnExport.py -r %s -d %s -u %s -i -e" % (repo_path, build_path, base_url))
+        feedback_option = '-f' if repo_object.show_feedback else ''
+        build_cmd = ("python src/cnExport.py -r %s -d %s -u %s -i -e %s" % (repo_path, build_path, base_url, feedback_option))
         success, output = run_shell_command(build_cmd)
         # go back to BASE_DIR and check output
         os.chdir(settings.BASE_DIR)

@@ -13,14 +13,14 @@ from .forms import RepositoryForm
 class RepositoryAdmin(admin.ModelAdmin):
     """Custom Admin class used to administer Repository objects  """
     # fields displayed in the Repository list page admin/escapad/repository/
-    list_display = ('git_url',  'repo_synced', 'default_branch', 'last_compiled',  'build_url', 'site_url', )
+    list_display = ('git_url', 'show_feedback', 'repo_synced', 'default_branch', 'last_compiled',  'build_url', 'site_url', )
 
     # Form method we use to process some custom chekings. See forms.py
     form = RepositoryForm
 
     def get_readonly_fields(self, request, obj):
         """
-        Method in char  ge of populating the readonly_fields from the list given in above attribute
+        Method in charge of populating the readonly_fields from the list given in above attribute
         We override this method just to make the request object available in the methods defining
         the custom read-only fields below, specifically build_url_long and site_url_long
         """

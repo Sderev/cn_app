@@ -17,6 +17,7 @@ Contents:
    escapad_webservice
    export
    installation
+   contribuer
    maj_doc
    testing
    parser_api

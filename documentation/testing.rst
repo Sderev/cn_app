@@ -20,7 +20,7 @@ Pour lancer les tests:
 - ``$ python tests.py``
 
 
-Développer / écrire de nouveaux tests
+Tests globaux controllant le résultat
 -------------------------------------
 
 Tests opérationnels
@@ -38,6 +38,13 @@ Ajouter des tests
 ~~~~~~~~~~~~~~~~~
 
 Le test :class:`tests.HtmlGenerationTestCase` (en cours) vise quant à lui à comparer un export web de contrôle avec un export web généré à partir du fichier source de test. Pour développer un nouveau test, il est possible de définir des sous-classes de :class:`tests.ModuleParsingTestCase`, ce qui permet de réutiliser le mécanisme de lancement du test (setUp).
+
+Tests unitaires au niveau des méthodes du parser
+------------------------------------------------
+
+Un autre type de test doit être développé pour permettre de vérifier le bon fonctionnement du parsing à partir de la formalisation du bon déroulement de chaque étape du parsing au niveau des méthodes des classes définies dans ``src/model.py``.
+
+
 
 Documentation des tests
 -----------------------

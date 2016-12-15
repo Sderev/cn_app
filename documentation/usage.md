@@ -78,6 +78,18 @@ Une fois que vous avez modifié votre contenu et mis à jour votre dépôt git, 
 3. depuis la page listant les "repositories", les liens "build" et "visit" permettent de respectivement générer et de visiter le mini-site généré par Esc@pad.
 2. Les archives d'export IMS et EDX sont disponibles pour chaque module du site généré (menu en haut à droite), à la section "Réutilisez ce module".
 
+## Afficher les bonnes réponses et les feedbacks
+
+Il est possible d'activer l'option permettant d'afficher les réponses et les feedbacks des questions des tests inclus dans *tous* les modules pour la version Web uniquement (les autres exports LMS contiennent dans tous les cas les bonnes réponses, mais qui ne s'affichent que sous certains conditions, selon les réglages propre à votre instance de LMS).
+
+Usage :
+
+- Pour activer l'option "show feedback" au niveau d'un dépôt sur escapad, il faut éditer la fiche de ce dépôt
+- depuis la liste des dépôts cliquer sur le dépot de son choix
+- cocher la case "show feedback"
+- Enregistrer
+- ensuite chaque "build" intégrera les feedbacks; il n'y a pas de sous-dossier "staging" ou autre supplémentaire
+- pour revenir en arrière, il suffit d'éditer à nouveau la fiche détaillée d'un dépôt et de décocher la case puis enregistrer ET de régénérer le site, sinon les feedbacks et réponses seront encore visibles
 
 ## Intégration continue avec le webhook
 

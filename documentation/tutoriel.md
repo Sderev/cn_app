@@ -1,4 +1,5 @@
-## Tutoriel de prise en main de la chaine éditoriale Esc@pad
+# Tutoriel de prise en main de la chaine éditoriale Esc@pad
+===========================================================
 
 Ce chapitre propose un parcours type permettant de prendre en main les outils et technologies qui composent la chaine éditoriale Esc@Pad. L'objectif à l'issue de ce tutoriel est d'être capable d'éditer un contenu pédagogique en autonomie en utilisant Esc@pad. Les outils et notions abordées sont:
 - les rudiments de `git` et de la plateforme GitHub (création d'un compte, fork, commits)

@@ -4,10 +4,15 @@ Esc@pad Web Service : Architecture et administration
 
 ## Architecture
 
+Les modules Django sont dans les dossiers:
+
+- cn_app : paramètres globaux
+- escapad : la "sous-application" qui gère les dépôts
+
+## Administration via l'interface web
 
 
-## Administration
-L'interface d'administration d'Escapad comprend 2 applications principales:
+L'interface d'administration d'Escapad, accessible à [`http://escapad.univ-lille3.fr/admin`](http://escapad.univ-lille3.fr/admin) comprend 2 applications principales:
 
 - Authentification et Autorisation
 - Escapad et la gestion des Repository
@@ -35,3 +40,140 @@ En cliquant sur "Repository" depuis l'acueuil d'Escapad, on arrive sur la page l
 - en cliquant sur "Ajouter Repository", on arrive sur le formulaire permettant de créer un nouveau dépôt simplement en ajoutant le lien "git" de ce dépôt.
 - pour supprimer un dépôt, cochez la case devant le nom de ce dépôt, et dans la liste "Action", sélectionnez l'action "Supprimer les repositorys sélectionnés", puis faites "Envoyer". Un écran vous demande de confirmer, cliquez sur "oui je suis sûr"
 - en cliquant sur le nom d'un dépôt, on arrive sur la fiche détaillée d'un dépôt. A noter que l'url git n'est plus modifiable une fois le dépôt créé, et que seul la branche par défaut est modifiable.
+
+## Administration sur le serveur escapad
+
+### Se connecter
+
+```
+$ ssh escapad@escapad.univ-lille3.fr
+```
+Ensuite une fois logué, se placer dans le dossier `cnapp`:
+```
+escapad@escapad:~$ cd cnapp/
+escapad@escapad:~$ pwd (pour savoir où je suis)
+/home/escapad/cnapp
+```
+
+Ce dossier contient 3 sous-dossiers ayant les droits suivants:
+```
+escapad@escapad:~/cnapp$ ll
+total 12
+drwxr-xr-x 13 escapad  www-data 4096 nov.  30 17:26 cn_app
+drwxr-xr-x  6 escapad  escapad  4096 sept.  5 12:55 cnapp_env
+drwxrwxr-x  3 www-data escapad  4096 déc.  15 16:49 data
+```
+
+- `cn_app` contient le code
+- `cnapp_env` contient les binaires du virtualenv, i.e de l'environnement Python avec toutes les dépendences
+- `data` contient les données:
+    - `db.sqlite3` le fichier de base de données en SQLite
+    - `debug.log` le fichier de log Django (différent du fichier de log du script `cnExport` lui placé dans `cn_app/logs`)
+    - `repo-data` dossier ou sont synchronisés et générés les dépôts de cours
+```
+ll data/
+total 376
+-rwxrwxr-x 1 www-data escapad  82944 déc.  15 16:49 db.sqlite3
+-rwxrwxr-x 1 www-data escapad 286345 déc.  15 16:49 debug.log
+drwxrwxr-x 4 www-data escapad   4096 sept. 22 17:24 repo-data
+```
+
+### Activer l'environnement
+
+Depuis le dossier `cnapp`:
+```
+escapad@escapad:~/cnapp$ source cnapp_env/bin/activate
+(cnapp_env)escapad@escapad:~/cnapp$
+```
+
+NB : **(cnapp_env)** devant `escapad@escapad:` montre que l'environnement est activé
+
+### Mettre à jour le code
+
+```
+(cnapp_env)escapad@escapad:~/cnapp$ cd cn_app/
+(cnapp_env)escapad@escapad:~/cnapp/cn_app$ git status
+    Sur la branche develop
+    Votre branche est à jour avec 'origin/develop'.
+    rien à valider, la copie de travail est propre
+(cnapp_env)escapad@escapad:~/cnapp/cn_app$ git pull origin develop
+    Depuis https://github.com/CultureNumerique/cn_app
+     * branch            develop    -> FETCH_HEAD
+    Already up-to-date.
+(cnapp_env)escapad@escapad:~/cnapp/cn_app$
+```
+
+### Créer un user admin
+
+En Django == superuser
+
+En étant dans `cn_app` et avec l'env activé:
+```
+(cnapp_env)escapad@escapad:~/cnapp/cn_app$  ./manage.py createsuperuser
+Username (leave blank to use 'escapad'): numerix
+Email address:
+Password:
+Password (again):
+Superuser created successfully.
+
+```
+
+### Copier en local un export web et le zipper
+
+#### Trouver sur escapad le dossier:
+
+```
+(cnapp_env)escapad@escapad:~/cnapp$ cd data/repo-data/sites/
+(cnapp_env)escapad@escapad:~/cnapp/data/repo-data/sites$ ll
+  total 80
+  drwxr-xr-x 4 www-data www-data 4096 nov.  16 14:45 framagit_org__escapad__course_template_git
+  drwxr-xr-x 8 www-data www-data 4096 sept. 27 08:22 framagit_org__tommasi__cn_modules_git
+  drwxr-xr-x 4 www-data www-data 4096 sept. 30 12:46 github_com__alainpreux__al1kb-test_git
+   ....
+```
+Ensuite copier le chemin vers le dossier choisi:
+```
+$ cd github_com__alainpreux__al1kb-test_git/
+$ pwd
+/home/escapad/cnapp/data/repo-data/sites/github_com__alainpreux__al1kb-test_git
+```
+
+#### Le copier en local avec scp
+
+Se placer sur le dossier cible en local:
+
+```
+$ cd /tmp/
+$ mkdir exportWeb
+$ cd exportWeb/
+```
+
+La commande suit le schéma:
+```
+scp -r login@nom_du_serveur:/chemin/vers/dossier /chemin/dossier/local/cible/
+```
+
+Pour notre dossier exemple:
+```
+$ scp -r escapad@escapad.univ-lille3.fr:/home/escapad/cnapp/data/repo-data/sites/github_com__alainpreux__al1kb-test_git .
+```
+
+Le dossier est donc copié localement:
+```
+flimpens@U201609120:/tmp/exportWeb$ ll
+total 28
+drwxr-xr-x  4 flimpens presidence  4096 déc.  16 11:40 ./
+drwxrwxrwt 21 root     root       16384 déc.  16 11:39 ../
+drwxr-xr-x  4 flimpens presidence  4096 déc.  16 11:40 github_com__alainpreux__al1kb-test_git/
+drwxr-xr-x  8 flimpens presidence  4096 déc.  15 17:24 github_com__culturenumerique__cn_modules_git/
+flimpens@U201609120:/tmp/exportWeb$
+```
+
+Pour zipper le dossier:
+```
+$ zip -r nom_fichier.zip dossier_a_zipper/
+
+soit dans notre cas:
+
+$ zip -r al1kb_test.zip github_com__alainpreux__al1kb-test_git/
+```

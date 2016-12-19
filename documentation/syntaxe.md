@@ -77,7 +77,7 @@ A noter que l'url peut être de 2 formes:
 - **absolue** e.g `https://culturenumerique.univ-lille3.fr/static/img/logo_plat_vert.svg`
 - **relative** au dossier `media` (situé dans le même dossier de module) e.g `media/logo_plat_vert.svg`
 
-De manière générale nous recommendons d'utiliser des liens absolus vers une source stable (wikimedia, sites institutionnels, GED de l'université, etc.) ou une source que vous controllez (owncloud, serveur ftp, etc.). Cependant esc@pad supporte tout à fait l'usage de liens relatifs au dossier `media`. Dans ce dernier cas, les liens sont transformés en lien absolus vers l'hébergement escapad du site généré. E.g `media/img.png` dans le dossier `module1` du dépot `culturenum` sera transformé en `http://escapad.univ-lille.fr/culturenum/module1/media/img.png`
+De manière générale nous recommendons d'utiliser des liens absolus vers une source stable (wikimedia, sites institutionnels, GED de l'université, etc.) ou une source que vous controllez (owncloud, serveur ftp, etc.). Cependant esc@pad supporte tout à fait l'usage de liens relatifs au dossier `media`. Dans ce dernier cas, les liens sont transformés en lien absolus vers l'hébergement escapad du site généré. E.g `media/img.png` dans le dossier `module1` du dépot `culturenum` (slug du depôt) sera transformé en `http://escapad.univ-lille.fr/data/sites/culturenum/module1/media/img.png`
 
 A noter que l'ajout de lien hypertexte simple, par exemple un lien vers un fichier texte ressource `[exempleLaTeX](http://culturenumerique.univ-lille3.fr/module3/media/exempleLaTeX.pdf)` vers des ressources externes est géré de la même manière et il est possible donc d'ajouter simplement ces fichiers ressources dans le dossier `media` de chaque module.
 

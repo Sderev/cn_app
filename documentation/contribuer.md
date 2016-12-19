@@ -14,7 +14,7 @@ En premier lieu, il faut étendre la couverture de tests sur ce module parser, c
 Ensuite le code du parser lui-même peut être amélioré selon différents aspects:
 - intégrer la librairie [pygiftparser](https://github.com/mtommasi/pygiftparser) afin de remplacer `fromGIFT.py` pour le parsing du GIFT.
 - étendre la librairie [pygiftparser](https://github.com/mtommasi/pygiftparser) pour augmenter la couverture de la spécification GIFT (aujourd'hui partielle)
-- proposer une version du script pour produire un site mono-module sans page d'accueil
+- proposer une version du script `cnExport.py` pour produire un site mono-module sans page d'accueil
 - homégénéiser et factoriser le code de génération des archives:
   - passer la génération de l'IMS-CC via un template Jinja2 (comme pour le web et EDX)
   - coder en objet ces "Exporters" qui peuvent se décliner en IMSExporter, WebExporter, etc.
@@ -24,7 +24,7 @@ Ensuite le code du parser lui-même peut être amélioré selon différents aspe
 
 Enrichir les fonctionalités, en particulier du côté de l'application web en Django (contenue dans les sous-dossiers `cn_app` et `escapad`):
 
-- proposer une version sans persistence et monofichier du parsing:
+- proposer une version sans persistence et sans Git et prenant directement un seul fichier markdown:
     - un formulaire prenant un fichier markdown en entrée, plus qqs champs calqués sur les options de `src/cnExport.py` (le script exécuté)
     - validation
     - création d'un dossier temporaire et upload du fichier à l'intérieur

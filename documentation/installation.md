@@ -84,7 +84,7 @@ Pour le déploiement sur un serveur, nous préconisons de suivre les conseils [d
 Par rapport à un déploiement standard, la difficulté ici réside dans le fait que plusieurs fichiers et dossiers sont manipulés à chaque exécution de l'application, ce qui peut poser problème si les droits d'accès ne sont pas gérés de manière cohérente. Nous recommandons d'utiliser l'arborescence suivants pour l'installation d'Esc@pad sur un serveur (considérons pour la suite que `cnuser` est le compte de l'usager, `www-data` le compte lié au serveur --dans notre cas Apache+mod_wsgi--):
 
 ```
-    cnapp_install (dossier d'installation)
+    - cnapp (dossier d'installation)
         - cnappenv/ (owner = cnuser)
               (dossier de l'environement virtuel contenant les binaires et librairies)
         - cn_app/ (owner = cnuser)
@@ -143,7 +143,7 @@ $ ./manage.py runserver
 
 ### Configuration Apache
 
-L'idée ici est d'ajouter un site à la config Apache. Pour ceci créer un fichier escapa.conf dans le dossier `/etc/apache2/sites-enabled`. Le fichier doit ressembler à ceci:
+L'idée ici est d'ajouter un site à la config Apache. Pour ceci créer un fichier escapad.conf dans le dossier `/etc/apache2/sites-enabled`. Le fichier doit ressembler à ceci:
 
 
 ```

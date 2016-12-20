@@ -6,8 +6,12 @@ import mimetypes
 import logging
 import os
 import shlex
+import StringIO
 import subprocess
 import sys
+import zipfile
+
+import shutil
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -77,6 +81,23 @@ class BuildView(View):
     def get(self, request, slug, *args, **kwargs):
         self.build_repo(slug, request)
         return redirect(reverse('visit_site', args=(slug,)))
+
+
+class BuildZipView(BuildView):
+    """ View for building and zipping the whole archive before returning it"""
+
+    def get(self, request, slug, *args, **kwargs):
+        built = self.build_repo(slug, request)
+        if built["success"] == "true":
+            build_path = os.path.join(settings.GENERATED_SITES_DIR, slug)
+            archive_name = shutil.make_archive(build_path, 'zip', build_path)
+            zip_file = open(archive_name, 'r')
+            response = HttpResponse(zip_file, content_type='application/force-download')
+            response['Content-Disposition'] = 'attachment; filename="%s.zip"' % slug
+            return response
+        else:
+            return redirect(reverse('visit_site', args=(slug,)))
+
 
 def visit_site(request, slug):
     """ Just a redirection to generated site """

@@ -77,9 +77,16 @@ A noter que l'url peut être de 2 formes:
 - **absolue** e.g `https://culturenumerique.univ-lille3.fr/static/img/logo_plat_vert.svg`
 - **relative** au dossier `media` (situé dans le même dossier de module) e.g `media/logo_plat_vert.svg`
 
-De manière générale nous recommendons d'utiliser des liens absolus vers une source stable (wikimedia, sites institutionnels, GED de l'université, etc.) ou une source que vous controllez (owncloud, serveur ftp, etc.). Cependant esc@pad supporte tout à fait l'usage de liens relatifs au dossier `media`. Dans ce dernier cas, les liens sont transformés en lien absolus vers l'hébergement escapad du site généré. E.g `media/img.png` dans le dossier `module1` du dépot `culturenum` (slug du depôt) sera transformé en `http://escapad.univ-lille.fr/data/sites/culturenum/module1/media/img.png`
-
 A noter que l'ajout de lien hypertexte simple, par exemple un lien vers un fichier texte ressource `[exempleLaTeX](http://culturenumerique.univ-lille3.fr/module3/media/exempleLaTeX.pdf)` vers des ressources externes est géré de la même manière et il est possible donc d'ajouter simplement ces fichiers ressources dans le dossier `media` de chaque module.
+
+**_REMARQUE IMPORTANTE SUR L'HÉBERGEMENT DES MEDIA_**:
+
+De manière générale **nous recommendons d'utiliser des liens absolus pour insérer des images** depuis une source stable (wikimedia, sites institutionnels, GED de l'université, etc.) ou une source que vous controllez (owncloud, serveur ftp, etc.). Cependant esc@pad supporte tout à fait l'usage de liens relatifs au dossier `media` et dans ce cas:
+
+- les liens relatifs sont transformés en lien absolus vers l'hébergement escapad du site généré. E.g `media/img.png` dans le dossier `module1` du dépot `github_com_culturenumerique_cn_modules` (slug du depôt) sera transformé en `http://escapad.univ-lille.fr/data/sites/github_com_culturenumerique_cn_modules/module1/media/img.png`
+- **les images et medias seront hébergés sur le serveur `escapad.univ-lille3.fr`**. Il n'y pas "d'assemblage", c'est à dire que les images ou fichiers liés ne sont pas intégrés aux archives, et la disponibilité de ces ressources **n'est pas garantie**, le service Esc@pad étant un service expérimental.
+
+
 
 **Positionnement et stylage des images**. En utilisant la syntaxe "special attributes" vue ci-avant et permettant d'ajouter des attributs à des éléments,  il est possible d'ajouter du style à une image pour, par exemple, en diminuer la largeur, spécifier l'affichage, etc:
 

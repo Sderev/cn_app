@@ -39,6 +39,7 @@ def create_repo_dir(dir_name, repo_url):
     logger.warning("%s | successful creation of repo %s with url %s" % (timezone.now(), dir_name, repo_url))
     return True
 
+
 # == signal receivers == see https://docs.djangoproject.com/en/1.10/topics/signals/#
 
 # do this *before* saving a Repository object (either creating or editing)
@@ -55,6 +56,7 @@ def resync_repo_dir(sender, instance, update_fields, **kwargs):
             create_repo_dir(slug, instance.git_url)
             return
         # FIXME if default branch changed resync it!
+
 
 #do this *after* saving a Repository
 @receiver(post_save, sender=Repository)
@@ -76,10 +78,18 @@ def delete_repo_dir(instance, **kwargs):
     """ utility function to delete repo and sites dir """
     repo_path = os.path.join(settings.REPOS_DIR, instance.slug)
     sites_path = os.path.join(settings.GENERATED_SITES_DIR, instance.slug)
+    # delete repo folder and site dir for this repo
     for path in [repo_path, sites_path]:
         try:
             run_shell_command('rm -fR %s' % path)
         except Exception as e:
             logger.error("%s | Problem when deleting dir %s | error = %s" %  (timezone.now(), path, e))
             return False
+    # delete zip if it exists:
+    zip_path = sites_path+'.zip'
+    try:
+        if os.path.isfile(zip_path):
+            run_shell_command('rm -f %s' % zip_path)
+    except Exception as e:
+            pass
     return True

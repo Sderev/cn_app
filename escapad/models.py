@@ -29,12 +29,12 @@ class Repository(models.Model):
         """ populate some fields from git url before saving, but only when creating new objects"""
         if self.pk is None:#this is true when object does not exist yet
             # use regex to retrieve infos
+            self.slug = self.set_slug(self.git_url)
             fieldsReg = reGit.search(self.git_url)
             if fieldsReg:
                 self.git_name = fieldsReg.group('repo') if fieldsReg.group('repo') else "default_name"
                 self.git_username = fieldsReg.group('user') if fieldsReg.group('user') else "default_user"
                 self.provider = fieldsReg.group('provider') if fieldsReg.group('provider') else "github.com"
-            self.slug = self.set_slug(self.git_url)
         super(Repository, self).save(*args, **kwargs)
 
     git_url = models.URLField(max_length=200, unique=True)

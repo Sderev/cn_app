@@ -76,7 +76,8 @@ Une fois que vous avez modifié votre contenu et mis à jour votre dépôt git, 
 6. pour générer votre site, connectez vous sur l'application web Esc@pad http://escapad.univ-lille3.fr/admin, loguez-vous avec les accès qui vous ont été fournis,  et cliquez sur "Ajouter un dépôt".
 7. renseignez le champs "url du dépôt" avec l'adresse de votre url git, modifiez au besoin la branche par défaut. Validez.
 3. depuis la page listant les "repositories", les liens "build" et "visit" permettent de respectivement générer et de visiter le mini-site généré par Esc@pad.
-2. Les archives d'export IMS et EDX sont disponibles pour chaque module du site généré (menu en haut à droite), à la section "Réutilisez ce module".
+5. La fonctionnalité "Build and zip" permet de télécharger un fichier zip contenant le mini-site web généré
+2. Les archives d'export IMS et EDX sont disponibles pour chaque module du site généré (menu en haut à droite), à la section "Réutilisez ce module" (valable aussi lorsque "build and zip" est utilisé)
 
 ## Afficher les bonnes réponses et les feedbacks
 

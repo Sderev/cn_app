@@ -79,7 +79,7 @@ A noter que l'url peut être de 2 formes:
 
 A noter que l'ajout de lien hypertexte simple, par exemple un lien vers un fichier texte ressource `[exempleLaTeX](http://culturenumerique.univ-lille3.fr/module3/media/exempleLaTeX.pdf)` vers des ressources externes est géré de la même manière et il est possible donc d'ajouter simplement ces fichiers ressources dans le dossier `media` de chaque module.
 
-**_REMARQUE IMPORTANTE SUR L'HÉBERGEMENT DES MEDIA_**:
+**_REMARQUE IMPORTANTE SUR L'HÉBERGEMENT DES MEDIA**:
 
 De manière générale **nous recommendons d'utiliser des liens absolus pour insérer des images** depuis une source stable (wikimedia, sites institutionnels, GED de l'université, etc.) ou une source que vous controllez (owncloud, serveur ftp, etc.). Cependant esc@pad supporte tout à fait l'usage de liens relatifs au dossier `media` et dans ce cas:
 

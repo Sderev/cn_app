@@ -13,7 +13,7 @@ from .forms import RepositoryForm
 class RepositoryAdmin(admin.ModelAdmin):
     """Custom Admin class used to administer Repository objects  """
     # fields displayed in the Repository list page admin/escapad/repository/
-    list_display = ('git_url', 'show_feedback', 'repo_synced', 'default_branch', 'last_compiled',  'build_url', 'site_url', )
+    list_display = ('git_url', 'show_feedback', 'repo_synced', 'default_branch', 'last_compiled',  'build_url', 'site_url', 'build_and_zip')
 
     # Form method we use to process some custom chekings. See forms.py
     form = RepositoryForm
@@ -39,6 +39,12 @@ class RepositoryAdmin(admin.ModelAdmin):
         return '<a href="%s" target="_blank">%s<a>' % (url, 'build')
     build_url.allow_tags = True
     build_url.short_description = 'Build link'
+
+    def build_and_zip(self, obj):
+        url = reverse('build_zip_repo', args=(obj.slug,))
+        return '<a href="%s" target="_blank">%s<a>' % (url, 'build and zip')
+    build_and_zip.allow_tags = True
+    build_and_zip.short_description = 'Build and zip link'
 
     def build_url_long(self, obj):
         """ used in detailed view """

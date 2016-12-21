@@ -32,24 +32,26 @@ Cette partie du code réside dans les dossiers:
 Cette application web est écrite au sein du framework Django (version 10). Tout le code écrit suit la documentation au plus près. Il est conseillé de faire au moins le premier tutoriel Django pour prendre en main ce framework.
 
 Son code est situé dans les dossiers:
-    - cn_app : paramètres globaux
-    - escapad : la "sous-application" qui gère les dépôts:
-        - admin.py : paramétrage de l'interface d'admin utilisée et localisée à l'url `/admin`. C'est la seule interface web permettant d'interagir avec l'application Escapad.
-        - apps.py : paramétrage de l'application
-        - forms.py : utilisé par l'interface d'admin pour effectuer certaines opérations avant la soumission d'un nouvel objet Repository
-        - models.py : défini le modèle de Repository
-        - signals.py : exploite le mécanisme de signals de Django et relié donc au évènements de création, édition, ou suppression d'objets Repository
-        - urls.py : définition des patterns d'urls spécifique à l'application escapad
-        - views.py : définition du code permettant de faire exécuter le script pour un dépôt donné. L'emplacement des fichiers sources et les fichiers générés est défini dans le fichier site_settings.py et expliqué dans la documentation d'installation
-        - utils.py : qqs méthodes utilitaires, notamment celle à qui est délégué l'exécuption du script cnExport.py
-    - les logs de l'application Django sont situés dans le fichier debug.log dont l'emplacement est défini dans le fichier cn_app/site_settings.py
-    - le fichier manage.py n'est pas à modifier à priori (sauf cas avancé)
+
+- cn_app : paramètres globaux
+- escapad : la "sous-application" qui gère les dépôts:
+
+    - admin.py : paramétrage de l'interface d'admin utilisée et localisée à l'url `/admin`. C'est la seule interface web permettant d'interagir avec l'application Escapad.
+    - apps.py : paramétrage de l'application
+    - forms.py : utilisé par l'interface d'admin pour effectuer certaines opérations avant la soumission d'un nouvel objet Repository
+    - models.py : défini le modèle de Repository
+    - signals.py : exploite le mécanisme de signals de Django et relié donc au évènements de création, édition, ou suppression d'objets Repository
+    - urls.py : définition des patterns d'urls spécifique à l'application escapad
+    - views.py : définition du code permettant de faire exécuter le script pour un dépôt donné. L'emplacement des fichiers sources et les fichiers générés est défini dans le fichier site_settings.py et expliqué dans la documentation d'installation
+    - utils.py : qqs méthodes utilitaires, notamment celle à qui est délégué l'exécuption du script cnExport.py
+- les logs de l'application Django sont situés dans le fichier debug.log dont l'emplacement est défini dans le fichier cn_app/site_settings.py
+- le fichier manage.py n'est pas à modifier à priori (sauf cas avancé)
 
 
 Couverture de tests
 --------------------
 
-La stratégie de tests présente différent aspects:
+La stratégie de tests présente différents aspects:
 
 1. le test du parsing des fichiers de code source de cours qui aboutit à la construction d'un modèle de cours (cf :class:`model.Module`); dans ce cas on compare les objets générés avec un objet de contrôl sérialisé (`tests.config.json`)
 2. le test de la génération des exports Web (cf :mod:`cnExport`), IMS-CC (:mod:`toIMS`), et EDX (:mod:`toEDX`); ici ce seront les archives générés qui seront comparés avec des archives de contrôle.

@@ -12,16 +12,13 @@ Contents:
    :maxdepth: 2
 
    usage
-   tutoriel
    syntaxe
-   escapad_webservice
-   export
+   tutoriel
+   administration
    installation
    contribuer
-   maj_doc
-   testing
-   parser_api
-   full_code_doc
+   models_mapping
+   code_api
 
 
 Index et tables des matières

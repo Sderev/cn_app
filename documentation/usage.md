@@ -23,7 +23,7 @@ L'illustration ci-dessous reprend la chaine éditoriale complète:
 
 ![workflow](media/cn_workflow.jpg)
 
-## Obtenir les fichiers sources des modules de cours
+## Obtenir et éditer les fichiers sources des modules de cours
 
 ### Dépôt git
 
@@ -69,7 +69,11 @@ Ensuite, pour personnaliser le mini-site qui sera généré par l'application, v
 - enfin, pour personnaliser le titre de votre programme de cours, éditer le fichier `title.md` et, sans le renommer, insérez votre titre en première ligne.
 
 
-## Générer le site et les archives
+### Cas particulier de la page d'accueil
+
+Si aucun fichier `home.md` n'est présent dans le dossier de cours, le parser Escapad utilisera le fichier `default_home.html` situé dans [le code source de cn_app](https://github.com/CultureNumerique/cn_app) dans le dossier `templates`.
+
+## Générer le site vitrine et les archives
 
 Une fois que vous avez modifié votre contenu et mis à jour votre dépôt git, vous pouvez passer à l'étape de génération du site vitrine et des archives IMS et EDX.
 
@@ -77,9 +81,27 @@ Une fois que vous avez modifié votre contenu et mis à jour votre dépôt git, 
 7. renseignez le champs "url du dépôt" avec l'adresse de votre url git, modifiez au besoin la branche par défaut. Validez.
 3. depuis la page listant les "repositories", les liens "build" et "visit" permettent de respectivement générer et de visiter le mini-site généré par Esc@pad.
 5. La fonctionnalité "Build and zip" permet de télécharger un fichier zip contenant le mini-site web généré
-2. Les archives d'export IMS et EDX sont disponibles pour chaque module du site généré (menu en haut à droite), à la section "Réutilisez ce module" (valable aussi lorsque "build and zip" est utilisé)
+2. Les archives d'export IMS (nommées e.g `module5.imscc.zip`) et EDX (e.g `module5_edx.tar.gz`) sont disponibles pour chaque module du site généré (menu en haut à droite), à la section "Réutilisez ce module" (valable aussi lorsque "build and zip" est utilisé)
 
-## Afficher les bonnes réponses et les feedbacks
+
+### Importer dans EDX
+
+Dans le studio EDX, une fois dans la page de votre cours (la fonction "créer un cours
+depuis une archive EDX" n'est à notre connaissance pas encore disponible), cliquez sur "importer".
+Suivez ensuite les étapes. Plus d'explications [ici](http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/releasing_course/export_import_course.html)
+
+
+### Importer l'IMS-CC dans Moodle
+
+Esc@pad peut générer un fichier `module_folder.imscc.zip` qui peut
+être importé dans Moodle en tant que cours (cf [restauration d'un cours
+depuis une archive IMSCC sous Moodle](https://docs.moodle.org/28/en/IMS_Common_Cartridge_import_and_export)).
+
+Cette archive contient également toutes les activités avec les questions
+associées déjà intégrées.
+
+
+### Afficher les bonnes réponses et les feedbacks dans le site vitrine
 
 Il est possible d'activer l'option permettant d'afficher les réponses et les feedbacks des questions des tests inclus dans *tous* les modules pour la version Web uniquement (les autres exports LMS contiennent dans tous les cas les bonnes réponses, mais qui ne s'affichent que sous certains conditions, selon les réglages propre à votre instance de LMS).
 
@@ -94,6 +116,7 @@ Usage :
 
 ## Intégration continue avec le webhook
 
+Cette section s'adresse à ceux souhaitant automatiser la ré-génération des contenus à chaque publication de changement (commit+push) sur leur dépôt de cours.
 
 Sur la page détaillée de chaque dépôt, accessible en cliquant sur le nom du dépôt, le lien "Build link" peut être utilisé comme webhook pour les plateformes Git le supportant (framagit, github). Ce mécanisme de webhook est proposé par certaines plateformes git (GitHub, FramaGit, etc.) et permet de renseigner une url qui sera appelée (requête POST) à chaque fois qu'un certains nombres d'actions (paramétrables) sont réalisées sur votre dépôt.
 
@@ -104,4 +127,4 @@ Dans le cas de GitHub, l'ajout de webhook se fait de la manière suivante depuis
 - coller le lien "build" copié depuis Esc@pad dans le champ "Payload URL"
 - laisser les autres champs à leur valeurs par défaut et cliquer sur "Add webhook"
 
-Généralement l'action par défaut est le "push" qui correspond à la publication des dernières mises à jour d'un dépôt par l'un des contributeurs au dépôt de code. Ainsi, après avoir ajouté l'adresse "Build" de votre dépôt Esc@pad comme webhook, à chaque mise à jour de votre code source de cours, le site vitrine sera régénéré et visible à l'adresse "Visit".
+Généralement l'action par défaut est le "push" qui correspond à la publication des dernières mises à jour d'un dépôt par l'un des contributeurs au dépôt de code. Ainsi, après avoir ajouté l'adresse "Build" de votre dépôt Esc@pad comme webhook, à chaque mise à jour de votre code source de cours (commit+push), le site vitrine sera régénéré et visible à l'adresse "Visit".

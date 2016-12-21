@@ -1,8 +1,16 @@
-Escapad parser library API
-==========================
+Code API
+========
 
-We document here the source code of the Escapad "modules" parser located in ``src/model.py`` file.
+We document here the source code of the Escapad parser located in ``src`` folder. It is divided into 2 main parts:
 
+1. the parser model located in ``src/model.py``
+2. the rest of the parser code, that is the scripts that manipulate the files and generate the exports in Web, IMS and EDX formats
+
+
+Detailed documentation of ``model.py``
+--------------------------------------
+
+This file ``model.py`` contains the logic of the Escapad parser that parse a whle course directory to build a Course Program object.
 The order of presentation follows the building of Course Program structure whereby :
 
 * a CourseProgram contains one or several modules and is stored in a repository (folder)
@@ -16,7 +24,7 @@ The order of presentation follows the building of Course Program structure where
           - ActiviteAvancee : for more advanced activity involving both research and personnal reflexion
 
 Course Program
----------------
+~~~~~~~~~~~~~~
 
 .. autoclass:: model.CourseProgram
     :members:
@@ -24,14 +32,14 @@ Course Program
 
 
 Module
--------
+~~~~~~
 
 .. autoclass:: model.Module
     :members:
     :undoc-members:
 
 Section
--------
+~~~~~~~
 
 .. autoclass:: model.Section
     :members:
@@ -40,7 +48,7 @@ Section
 
 
 Subsection
-----------
+~~~~~~~~~~
 
 .. autoclass:: model.Subsection
     :members:
@@ -48,7 +56,7 @@ Subsection
 
 
 Cours
-------
+~~~~~~
 
 Subclass of Subsection
 
@@ -58,7 +66,7 @@ Subclass of Subsection
 
 
 AnyActivity
------------
+~~~~~~~~~~~
 
 Subclass of Subsection
 
@@ -68,7 +76,7 @@ Subclass of Subsection
 
 
 Comprehension
---------------
+~~~~~~~~~~~~~~
 
 Subclass of AnyActivity
 
@@ -78,7 +86,7 @@ Subclass of AnyActivity
 
 
 Activite
-----------
+~~~~~~~~~~
 
 Subclass of AnyActivity
 
@@ -87,10 +95,41 @@ Subclass of AnyActivity
     :undoc-members:
 
 ActiviteAvancee
----------------
+~~~~~~~~~~~~~~-
 
 Subclass of AnyActivity
 
 .. autoclass:: model.ActiviteAvancee
     :members:
     :undoc-members:
+
+
+Scripts du parser Escapad
+-------------------------
+
+Here we detail the code documentation of the rest of the Escapad parser.
+
+cnExport
+~~~~~~~~
+.. automodule:: cnExport
+  :members:
+
+fromGift
+~~~~~~~~
+.. automodule:: fromGIFT
+  :members:
+
+toEDX
+~~~~~
+.. automodule:: toEDX
+  :members:
+
+toIMS
+~~~~~
+.. automodule:: toIMS
+  :members:
+
+utils
+~~~~~
+.. automodule:: utils
+  :members:

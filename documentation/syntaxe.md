@@ -69,17 +69,21 @@ qui produit le HTML suivant:
 ### Ajouter des images ou des fichiers resources
 
 L'ajout d'images en Markdown se fait de la manière suivante:
+```
+![une image](http://url.fr/de/mon.image.png)
+```
+L'ajout d'autres types de ressources se fait via des liens hypertextes simples, par exemple un lien vers un fichier texte ressource:
+```
+[exempleLaTeX](http://culturenumerique.univ-lille3.fr/module3/media/exempleLaTeX.pdf)
+```
 
-    ![une image](http://url.fr/de/mon.image.png)
-
-A noter que l'url peut être de 2 formes:
+A noter que dans les 2 cas, l'url peut être de 2 formes:
 
 - **absolue** e.g `https://culturenumerique.univ-lille3.fr/static/img/logo_plat_vert.svg`
 - **relative** au dossier `media` (situé dans le même dossier de module) e.g `media/logo_plat_vert.svg`
 
-A noter que l'ajout de lien hypertexte simple, par exemple un lien vers un fichier texte ressource `[exempleLaTeX](http://culturenumerique.univ-lille3.fr/module3/media/exempleLaTeX.pdf)` vers des ressources externes est géré de la même manière et il est possible donc d'ajouter simplement ces fichiers ressources dans le dossier `media` de chaque module.
 
-**_REMARQUE IMPORTANTE SUR L'HÉBERGEMENT DES MEDIA**:
+#### REMARQUE IMPORTANTE SUR L'HÉBERGEMENT DES MEDIA
 
 De manière générale **nous recommendons d'utiliser des liens absolus pour insérer des images** depuis une source stable (wikimedia, sites institutionnels, GED de l'université, etc.) ou une source que vous controllez (owncloud, serveur ftp, etc.). Cependant esc@pad supporte tout à fait l'usage de liens relatifs au dossier `media` et dans ce cas:
 
@@ -88,7 +92,9 @@ De manière générale **nous recommendons d'utiliser des liens absolus pour ins
 
 
 
-**Positionnement et stylage des images**. En utilisant la syntaxe "special attributes" vue ci-avant et permettant d'ajouter des attributs à des éléments,  il est possible d'ajouter du style à une image pour, par exemple, en diminuer la largeur, spécifier l'affichage, etc:
+#### Positionnement et stylage des images
+
+En utilisant la syntaxe "special attributes" vue ci-avant et permettant d'ajouter des attributs à des éléments,  il est possible d'ajouter du style à une image pour, par exemple, en diminuer la largeur, spécifier l'affichage, etc:
 
 ```
 ![logo](https://culturenumerique.univ-lille3.fr/static/img/logo_plat_vert.svg){: style="width:30%;float:right;"}
@@ -154,7 +160,7 @@ ou
 
 ### Syntaxe GIFT
 
-Ces activités sont rédigées en GIFT; chaque question est séparée par une ligne vide. La syntaxe Gift a été proposé par l'équipde Moodle pour permettre de gagner du temps dans la rédaction de quizz et de tests. Cette syntaxe est disponible sur [cette page](https://docs.moodle.org/28/en/GIFT_format). Il s'agit d'un format "texte" qui peut donc s'éditer dans n'importe quel éditeur de texte.
+Ces activités sont rédigées en GIFT; chaque question est séparée par une ligne vide. La syntaxe Gift a été proposé par l'équipde Moodle pour permettre de gagner du temps dans la rédaction de quizz et de tests. Cette syntaxe est disponible sur [cette page](https://docs.moodle.org/28/en/GIFT_format) (voir aussi plus bas une série d'exemples de questions en GIFT). Il s'agit d'un format "texte" qui peut donc s'éditer dans n'importe quel éditeur de texte.
 
 Exemple:
 
@@ -215,4 +221,76 @@ Ingrédients:
 <li>carottes</li>
 <li>pommes de terre</li>
 </ul>
+```
+
+### Exemples de questions rédigées en GIFT
+
+```
+
+// Vraie/Faux (la bonne réponse est FAUX) avec feedback, le tout rédigé en texte simple
+
+::Il n'existe qu'une façon seule façon de représenter numériquement un livre::
+{F# représenter une information est le résultat de nombreux choix}
+
+
+// Question ouverte (champ texte libre) avec feedback global, rédigé en texte simple
+
+::Donnez des exemples de critères qui peuvent gouverner le choix d'une représentation numérique::
+{#### la concision, la pertinence (permettre des traitements voulus), l'efficacité (les traitements sont réalisés rapidement, la confidentialité (l'accès aux données  peut être contrôlé),...}
+
+// choix multiple avec feedback pour chaque réponse choisie, notez le choix du format markdown
+
+::Les choix de représentations sont faits par::
+[markdown]
+{
+~Les informaticiens#non pas seuls car intervient aussi l'utilisation métier des objets représentés
+~Les experts métier#non pas seuls car il faut des spécialistes des données numériques et des algorithmes
+=Les deux#oui et souvent aussi des chercheurs, des entreprises, ...
+}
+
+// question à choix multiple (1 seul bonne réponse), avec texte+feedback global rédigé en HTML
+
+[html]<p>Que signifie <em>numérisation</em> ?</p>{
+=<p>L'opération qui consiste à représenter sous forme de nombres une
+information quelle qu'elle soit.</p>#<p>Oui !</p>
+~<p>L'opération qui consiste à citer tous les nombres (1, 2, 3, 4, ….).</p>#<p>Non, citer tous les nombres c'est compter...</p>
+####<p>La numérisation est l'opération qui consiste à représenter sous forme de nombres une information, quelle qu'elle soit.</p> }
+
+
+// question à choix multiple et plusieurs bonnes réponses, pondérées de manière équivalente, mais une mauvaise réponse qui ne ramène pas de points, avec texte+feedback global rédigé en HTML
+
+::Où sont les processeurs ?::
+[html]<p>Parmi ces objets, quels sont ceux équipés de
+processeur(s) \:</p>
+{
+~%16.66667%<p>tablettes</p>
+~%16.66667%<p>smartphones</p>
+~%16.66667%<p>box ADSL</p>
+~%16.66667%<p>lecteur mp3</p>
+~%16.66667%<p>ordinateur</p>
+~%16.66667%<p>calculatrice</p>
+~<p>aucun</p>#<p>Tous !</p>
+####<p>Tous ces objets sont équipés de micro-processeurs !</p> }
+
+
+// question de type 'Essay', ie. réponse texte libre, avec texte + feedback global (4#) rédigés en Markdown
+
+::Le numérique dans la société::
+[markdown]
+Le numérique, un enjeu pour les **citoyens du XXIème siècle** ...
+Le numérique nous concerne tous en tant que citoyen. Il permet de nouvelles choses en automatisant des procédures et en donnant accès à des données jusqu'ici inexploitables. Mais numérique n'est évidemment pas systématiquement synonyme de progrès. Il faut toujours réfléchir aux **finalités** des applications développées. Nous vous invitons à vous **documenter** et à réfléchir aux questions suivantes :
+ - Dans la **gestion de l‘énergie**: qu'est-ce que la **troisième révolution industrielle** et pourquoi le numérique y contribue-t-il ?
+- En **politique et média** : Qu'est-ce que la **vérification par les faits** (*fact-checking* en anglais) ? En quoi le numérique l'a rendue possible / facile ?
+- En **citoyenneté** : Que signifie **vote électronique** et en quoi cela pose-t-il des questions essentielles ? Trouver au moins un *avantage* et un *inconvénient*.
+Après avoir fait vos recherches, répondez aux questions posées en **quelques lignes** et en indiquant les **liens** où vous avez trouvé ces informations.
+{####[markdown]
+Voici quelques liens que nous vous proposons mais que vous avez sûrement trouvés par vous-même :
+- À propos de la troisième révolution industrielle :
+  - [Troisième révolution industrielle](http://fr.wikipedia.org/wiki/Troisième_révolution_industrielle)
+  - [pasdecalais](http://www.latroisiemerevolutionindustrielleennordpasdecalais.fr)
+- En **politique et média** : Qu'est-ce que la vérification par les faits (fact-checking en anglais) ? En quoi le numérique l'a rendue possible / facile ?
+  - [vérification par les faits](http://fr.wikipedia.org/wiki/Vérification_par_les_faits)
+- En **citoyenneté** : Que signifie vote électronique et en quoi cela pose-t-il des questions essentielles ? Trouver au moins un avantage et un inconvénient.
+  - [arguments] (http://fr.wikipedia.org/wiki/Vote_électronique#Arguments_en_faveur)
+}
 ```

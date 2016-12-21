@@ -10,10 +10,40 @@ Architecture
 
 Le code d'Escapad est décomposé comme suit:
 
-- le parser, qui consiste en un script ``cnExport.py`` qui se base sur un modèle (``model.py``) pour générer les différents exports.
-- l'application Web qui exécute le script du parser via les modules Django situé dans les dossiers:
+- le parser dont le point d'entrée est ``src/cnExport.py``
+- l'application Web qui exécute le script du parser via une application Django
+- le fichier "requirements.txt" contient les dépendances pour ces 2 parties du code.
+
+**Le parser**
+
+Cette partie du code réside dans les dossiers:
+
+- src:
+    - cnExport.py : c'est le script de départ; il amorce le parsing et contrôle les différents exports directemenr (Web) ou via  toEDX.py ou toIMS.py.
+    - model.py : contient le modèle; le parsing est amorcé par la création d'un objet Module défini dans ce modèle
+    - fromGIF.py : responsable du découpage et du parsing des questions rédigées en GIFT dans les sous-section de type Activité; gère également l'export web des questions
+    - utils.py : contient quelques méthodes utilitaires pour l'écriture de fichiers et certains filtres
+- templates: La génération du mini-site et de l'archive EDX utilise des templates écrit en Jinja2 et situé dans ce dossier. Pour le mini-site web
+- static : dossier regroupant les fichiers js, css, etc. utilisés par la version mini-site web de l'export. Ce dossier est donc copié tel quel dans chaque export web.
+- logs : contient les logs uniquement pour cnExport
+
+**l'application web**
+
+Cette application web est écrite au sein du framework Django (version 10). Tout le code écrit suit la documentation au plus près. Il est conseillé de faire au moins le premier tutoriel Django pour prendre en main ce framework.
+
+Son code est situé dans les dossiers:
     - cn_app : paramètres globaux
-    - escapad : la "sous-application" qui gère les dépôts
+    - escapad : la "sous-application" qui gère les dépôts:
+        - admin.py : paramétrage de l'interface d'admin utilisée et localisée à l'url `/admin`. C'est la seule interface web permettant d'interagir avec l'application Escapad.
+        - apps.py : paramétrage de l'application
+        - forms.py : utilisé par l'interface d'admin pour effectuer certaines opérations avant la soumission d'un nouvel objet Repository
+        - models.py : défini le modèle de Repository
+        - signals.py : exploite le mécanisme de signals de Django et relié donc au évènements de création, édition, ou suppression d'objets Repository
+        - urls.py : définition des patterns d'urls spécifique à l'application escapad
+        - views.py : définition du code permettant de faire exécuter le script pour un dépôt donné. L'emplacement des fichiers sources et les fichiers générés est défini dans le fichier site_settings.py et expliqué dans la documentation d'installation
+        - utils.py : qqs méthodes utilitaires, notamment celle à qui est délégué l'exécuption du script cnExport.py
+    - les logs de l'application Django sont situés dans le fichier debug.log dont l'emplacement est défini dans le fichier cn_app/site_settings.py
+    - le fichier manage.py n'est pas à modifier à priori (sauf cas avancé)
 
 
 Couverture de tests

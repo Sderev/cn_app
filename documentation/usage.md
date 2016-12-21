@@ -114,7 +114,7 @@ Usage :
 - ensuite chaque "build" intégrera les feedbacks; il n'y a pas de sous-dossier "staging" ou autre supplémentaire
 - pour revenir en arrière, il suffit d'éditer à nouveau la fiche détaillée d'un dépôt et de décocher la case puis enregistrer ET de régénérer le site, sinon les feedbacks et réponses seront encore visibles
 
-## Intégration continue avec le webhook
+## Automatisation de le génération des contenus
 
 Cette section s'adresse à ceux souhaitant automatiser la ré-génération des contenus à chaque publication de changement (commit+push) sur leur dépôt de cours.
 

@@ -77,13 +77,13 @@ L'ajout d'autres types de ressources se fait via des liens hypertextes simples, 
 [exempleLaTeX](http://culturenumerique.univ-lille3.fr/module3/media/exempleLaTeX.pdf)
 ```
 
-A noter que dans les 2 cas, l'url peut être de 2 formes:
+À noter que dans les 2 cas, l'url peut être de 2 formes:
 
 - **absolue** e.g `https://culturenumerique.univ-lille3.fr/static/img/logo_plat_vert.svg`
-- **relative** au dossier `media` (situé dans le même dossier de module) e.g `media/logo_plat_vert.svg`
+- **relative** au dossier `media` (situé dans le même dossier de module) e.g. `media/logo_plat_vert.svg`
 
 
-#### REMARQUE IMPORTANTE SUR L'HÉBERGEMENT DES MEDIA
+**REMARQUE IMPORTANTE SUR L'HÉBERGEMENT DES MEDIA**
 
 De manière générale **nous recommendons d'utiliser des liens absolus pour insérer des images** depuis une source stable (wikimedia, sites institutionnels, GED de l'université, etc.) ou une source que vous controllez (owncloud, serveur ftp, etc.). Cependant esc@pad supporte tout à fait l'usage de liens relatifs au dossier `media` et dans ce cas:
 
@@ -91,8 +91,7 @@ De manière générale **nous recommendons d'utiliser des liens absolus pour ins
 - **les images et medias seront hébergés sur le serveur `escapad.univ-lille3.fr`**. Il n'y pas "d'assemblage", c'est à dire que les images ou fichiers liés ne sont pas intégrés aux archives, et la disponibilité de ces ressources **n'est pas garantie**, le service Esc@pad étant un service expérimental.
 
 
-
-#### Positionnement et stylage des images
+**Positionnement et stylage des images**
 
 En utilisant la syntaxe "special attributes" vue ci-avant et permettant d'ajouter des attributs à des éléments,  il est possible d'ajouter du style à une image pour, par exemple, en diminuer la largeur, spécifier l'affichage, etc:
 

@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from escapade import views
 
 urlpatterns = [
     url(r'^escapad/', include('escapad.urls')),

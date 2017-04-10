@@ -22,10 +22,9 @@ logger = logging.getLogger(__name__) # see in cn_app.settings.py logger declarat
 
 
 def run_shell_command(command_line):
+    """ Utility to run shell commands """
     command_line_args = shlex.split(command_line)
-
     logger.warn('%s | Subprocess: %s ' % (timezone.now(), command_line))
-
     try:
         command_line_process = subprocess.Popen(
             command_line_args,

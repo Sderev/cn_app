@@ -327,6 +327,14 @@ span.sec-title{
     list-style: none;
 }
 
+.right_answer {
+    font-weight: bold;
+    color: green;
+}
+
+.wrong_answer {
+    text-decoration: line-through;
+}
 
 .question ul > li > input{
     margin-right: 0.5em;

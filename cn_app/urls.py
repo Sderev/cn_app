@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^escapad/', include('escapad.urls')),
+    url(r'^', include('escapad.urls')), #escapad is the sole app so far
     url(r'^admin/', admin.site.urls),
 ]
 

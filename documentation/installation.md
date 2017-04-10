@@ -84,7 +84,7 @@ Pour le déploiement sur un serveur, nous préconisons de suivre les conseils [d
 Par rapport à un déploiement standard, la difficulté ici réside dans le fait que plusieurs fichiers et dossiers sont manipulés à chaque exécution de l'application, ce qui peut poser problème si les droits d'accès ne sont pas gérés de manière cohérente. Nous recommandons d'utiliser l'arborescence suivants pour l'installation d'Esc@pad sur un serveur (considérons pour la suite que `cnuser` est le compte de l'usager, `www-data` le compte lié au serveur --dans notre cas Apache+mod_wsgi--):
 
 ```
-    cnapp_install (dossier d'installation)
+    - cnapp (dossier d'installation)
         - cnappenv/ (owner = cnuser)
               (dossier de l'environement virtuel contenant les binaires et librairies)
         - cn_app/ (owner = cnuser)
@@ -143,7 +143,7 @@ $ ./manage.py runserver
 
 ### Configuration Apache
 
-L'idée ici est d'ajouter un site à la config Apache. Pour ceci créer un fichier escapa.conf dans le dossier `/etc/apache2/sites-enabled`. Le fichier doit ressembler à ceci:
+L'idée ici est d'ajouter un site à la config Apache. Pour ceci créer un fichier escapad.conf dans le dossier `/etc/apache2/sites-enabled`. Le fichier doit ressembler à ceci:
 
 
 ```
@@ -171,23 +171,3 @@ L'idée ici est d'ajouter un site à la config Apache. Pour ceci créer un fichi
         </Directory>
 
 ```
-
-
-## Mettre à jour la documentation
-
-
-**Installation**
-
-La documentation est générée avec [Sphinx](http://www.sphinx-doc.org) et l'utilisation d'un parser additionnel, Recommonmark, pour le support des fichiers markdown (voir les explications [ici](http://searchvoidstar.tumblr.com/post/125486358368/making-pdfs-from-markdown-on-readthedocsorg-using)). Ensuite les étapes sont:
-
-- installation des dépendances : les librairies nécessaires sont intégrées dans la fichier `requirements.txt` situé à la racine du code source, et sont donc installées par la commande `pip install - r requirements.txt` si vous ne l'avez pas déjà exécutée.
-- par ailleurs les fichiers de configuration de Sphinx sont intégré dans le code source: `Makefile` à utilser tel quel, et le `conf.py.template` à modifier de la façon suivante:
-    - placez-vous dans le dossier `documentation` de votre installation
-    - copier le fichier `conf.py.template` en nommant la copie `conf.py` et modifier y le chemin absolu (vers ligne 21) vers le dossier `src` du code source d'Esc@pad (utilisé pour l'autodocumentation du module `src/model.py`)
-    - les autres éléments pour le parsing du markdown sont déjà ajoutés.
-
-
-**Régénérer la documentation**
-
-- La structure de la documentation est définie dans le fichier `documentation/index.rst` qui permet d'inclure les autres fichiers en tant que section simplement en ajoutant leur nom à la suite de la commande  sans préciser leur suffixe.
-- la commande `make html` permet alors de régénérer la documentation dans le dossier `_build`

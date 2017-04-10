@@ -86,6 +86,7 @@ def get_video_src(video_link):
         src_link = ''
     return src_link
 
+
 def add_target_blank(html_src):
     """ add target="_blank" attribute to anchors in html_src """
     soup = BeautifulSoup(html_src, 'html.parser')
@@ -122,11 +123,12 @@ def totimestamp(dt, epoch=datetime(1970,1,1)):
     # return td.total_seconds()
     return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
 
+
 #FIXME: make it simpler with no current_dir param, but only target_folder
 def write_file(src, current_dir, target_folder, name):
     """
-        given a "src" source string, write a file with "name" located in
-        "current_dir"/"target_folder"
+    given a "src" source string, write a file with "name" located in
+    "current_dir"/"target_folder"
     """
     target_folder = os.path.join(current_dir, target_folder)
     if not(os.path.isdir(target_folder)):
@@ -138,16 +140,18 @@ def write_file(src, current_dir, target_folder, name):
     except:
         logging.exception(" Error writing file %s" % filename)
         return False
-
     # if successful
     return filename
 
+
 def stitch_files(files, filename):
+    """ concatenate "files" and save it as "filename" """
     with open(filename, "w", encoding='utf-8') as outfile:
         for f in files:
             with open(f, "r", encoding='utf-8') as infile:
                 outfile.write(infile.read())
     return outfile
+
 
 def createDirs(outDir, folders):
     """ create anew all dirs in folders within target outdir"""
@@ -173,6 +177,7 @@ def copyMediaDir(repoDir, moduleOutDir, module):
             shutil.rmtree(os.path.join(moduleOutDir,'media'))
             shutil.copytree(mediaDir, os.path.join(moduleOutDir,'media'))
 
+
 def create_empty_file(filedir, filename):
     """ Given a file dir path and name, create it anew """
     filepath = os.path.join(filedir, filename)
@@ -182,6 +187,7 @@ def create_empty_file(filedir, filename):
         os.remove(filepath)
     open(filepath, 'a').close()
     return filepath
+
 
 def prepareDestination(BASE_PATH, outDir):
     """ Create outDir and copy mandatory files"""
@@ -221,9 +227,11 @@ def fetchMarkdownFile(moduleDir):
 
     return filein
 
+
 def cnslugify(value):
     """ Meant to be used as a tag in Jinja2 template, return the input string "value" turned into slugified version """
     return slugify(value)
+
 
 def cntohtml(value):
     """ filter taking input in md or html and rendering it anyway """

@@ -6,8 +6,12 @@ import mimetypes
 import logging
 import os
 import shlex
+import StringIO
 import subprocess
 import sys
+import zipfile
+
+import shutil
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -22,15 +26,13 @@ from .utils import run_shell_command
 logger = logging.getLogger(__name__)
 
 
-
-
 class BuildView(View):
     """
     A view for generating site from Repository
     """
     http_method_names = ['get', 'post']
 
-    @csrf_exempt
+    @csrf_exempt #this is needed to allow unauthenticated access to this view
     def dispatch(self, *args, **kwargs):
         return super(BuildView, self).dispatch(*args, **kwargs)
 
@@ -57,7 +59,8 @@ class BuildView(View):
 
         # 3. build with BASE_PATH/src/toHTML.py
         os.chdir(settings.BASE_DIR)
-        build_cmd = ("python src/cnExport.py -r %s -d %s -u %s -i -e" % (repo_path, build_path, base_url))
+        feedback_option = '-f' if repo_object.show_feedback else ''
+        build_cmd = ("python src/cnExport.py -r %s -d %s -u %s -i -e %s" % (repo_path, build_path, base_url, feedback_option))
         success, output = run_shell_command(build_cmd)
         # go back to BASE_DIR and check output
         os.chdir(settings.BASE_DIR)
@@ -77,10 +80,28 @@ class BuildView(View):
         self.build_repo(slug, request)
         return redirect(reverse('visit_site', args=(slug,)))
 
+
+class BuildZipView(BuildView):
+    """ View for building and zipping the whole archive before returning it"""
+
+    def get(self, request, slug, *args, **kwargs):
+        built = self.build_repo(slug, request)
+        if built["success"] == "true":
+            build_path = os.path.join(settings.GENERATED_SITES_DIR, slug)
+            archive_name = shutil.make_archive(build_path, 'zip', build_path)
+            zip_file = open(archive_name, 'r')
+            response = HttpResponse(zip_file, content_type='application/force-download')
+            response['Content-Disposition'] = 'attachment; filename="%s.zip"' % slug
+            return response
+        else:
+            return redirect(reverse('visit_site', args=(slug,)))
+
+
 def visit_site(request, slug):
     """ Just a redirection to generated site """
     return redirect(os.path.join(settings.GENERATED_SITES_URL, slug, 'index.html'))
 
-def index(request):
-    # FIXME : useless now
-    return HttpResponse(u"Liste des dépôt")
+def home(request):
+    """Simple home page view"""
+    # Template is in app-local folder escapad/templates/homepage.html
+    return render(request, 'homepage.html', {})

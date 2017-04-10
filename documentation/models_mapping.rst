@@ -1,29 +1,11 @@
-Export
-======
+Liens entre modèles Escapad et modèles des LMS
+==============================================
 
-Cette section est destinée à ceux qui souhaitent utiliser une
-archive EDX ou IMSCC générée par Esc@pad et téléchargeable depuis le site vitrine généré, dans la page de chaque module, section "Réutilisez ce module". Nous abordons les
-questions suivantes pour chaque type :
+Cette section est destinée à ceux qui souhaitent comprendre comment sont établies les correspondances entre les modèles de cours parsé depuis le markdown par Escapad et les cours exportés vers les LMS EDX et Moodle. Ces archives EDX ou IMSCC-Moodle sont téléchargeables depuis le site vitrine généré, dans la page de chaque module, section "Réutilisez ce module".
 
--  Comment récupérer et utiliser ces archives dans EDX-Studio ou
-   Moodle
--  comment sont structurées les modules produits, ou quelles sont
-   les correspondances établies entre le modèle de cours Esc@pad et
-   le modèle inhérent de chacun des LMS supportés.
+Correspondance entre EDX - Escapad
+----------------------------------
 
-Export EDX
-----------
-
-Usage
-~~~~~
-
-Dans le studio EDX, une fois dans la page de votre cours (la fonction "créer un cours
-depuis une archive EDX" n'est à notre connaissance pas encore disponible), cliquez sur "importer".
-Suivez ensuite les étapes. Plus d'explications `ici <http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/releasing_course/export_import_course.html>`__
-
-
-Correspondance entre les modèles de cours
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 La mapping se fait assez naturellement entre le modèle Esc@Pad et le
 modèle EDX, même si le typage des activités et contenu ne se fait exactement
@@ -88,19 +70,10 @@ Avec EDX il est possible de défninir :
 Tout ceci est défini dans le fichier de template
 `templates/toEDX/policies/course/grading_policy.json <../templates/toEDX/policies/course/grading_policy.json>`__
 
-Export vers Moodle via IMSCC
-----------------------------
+Correspondance des modèles Escapad et Moodle/IMS
+------------------------------------------------
 
-Usage
-~~~~~
 
-Esc@pad peut générer un fichier ``module_folder.imscc.zip`` qui peut
-être importé dans Moodle en tant que cours (cf `restauration d'un cours
-depuis une archive IMSCC sous
-Moodle <https://docs.moodle.org/28/en/IMS_Common_Cartridge_import_and_export>`__).
-
-Cette archive contient également toutes les activités avec les questions
-associées déjà intégrées.
 
 Limitations à l'import d'archives IMS dans Moodle
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -153,4 +126,4 @@ Commentaire:
 
 - Le découpage en section est identique
 - Les sous-section de Cours sont traduites en Resource Moodel de type "page"
-- les 3 types d'activités sont traduits en Activité Moodle de type Quiz.  
+- les 3 types d'activités sont traduits en Activité Moodle de type Quiz.

@@ -8,6 +8,8 @@ from django.utils.translation import ugettext as _
 
 logger = logging.getLogger(__name__)
 
+
+
 class RepositoryForm(forms.ModelForm):
     
     def clean(self):
@@ -30,4 +32,16 @@ class RepositoryForm(forms.ModelForm):
                 )
             else:
                 return
+
+class ContactForm(forms.Form):
+
+    sujet = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea)
+    envoyeur = forms.EmailField(label="Votre adresse mail")
+    renvoi = forms.BooleanField(help_text="Cochez si vous souhaitez obtenir une copie du mail envoyé.", required=False)
+
+
+
+
+
          

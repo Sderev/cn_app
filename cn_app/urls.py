@@ -19,6 +19,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^escapad/', include('escapad.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^contact/$', views.contact, name='contact'),
 ]
 
 admin.site.site_header = 'Esc@pad Admin'

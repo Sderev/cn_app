@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Culture numérique</title>
+    <link rel="icon" type="static/image/png" href="img/favicon.ico" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/jasny-bootstrap.min.css" rel="stylesheet" media="screen">
+    <!-- onepage css -->
+    
+    <link href="static/css/modules.css" rel="stylesheet">
+    
+    <!-- Icones -->
+    <link href="static/css/icons.css" rel="stylesheet">
+    <link href="static/css/common.css" rel="stylesheet">
+    <title>Culture Numérique</title>
+</head>
+
+<body class=modules data-spy="scroll" data-target="#menugauche" data-offset="120">
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top" id="menutop">
+        <div class="">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Activer navigation principale</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">
+                  
+                      <img class="hidden-xs logo" class="logo" src="static/img/logo_plat_vert.svg" alt="">
+                  
+                  <img class="visible-xs logo" src="static/img/logo_cercle_vert.svg" alt="">
+                </a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="">
+                        <a href="index.html">
+                            <img src="static/img/home.svg" style="width:1.8em; height:1.8em; padding-right:0.5em; margin-top:-0.25em;">Présentation</a>
+                    </li>
+                    <li>
+                        <a href="index.html#page7">
+                            <img src="static/img/contact.svg" style="width:2.5em; height:2.5em; padding-right:0.5em; margin-top:-0.60em; margin-bottom:-0.5em;">Contact</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <img src="static/img/modules.svg" style="width:3.5em; height:3.5em; padding-right:0.5em; margin-top:-0.90em; margin-bottom:-10px;">Modules
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            
+                            <li class="btnmodules ">
+                                <a href="module1.html">Titre</a>
+                                <!-- <p class="subbtnmodules">Titre long</p> -->
+                            </li>
+                            
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+    <!-- end of fixed top navbar -->
+    
+    
+      <!-- Menu gauche -->
+<div class="menugauche navmenu navmenu-default navmenu-fixed-left offcanvas-sm" role="navigation" id="menugauche">
+    <h1 class="icon-web">Titre</h1>
+
+    <ul class="nav panel-group" id="accordion">
+        
+        <!-- Copier ici un item déployable -->
+        <li class="panel panel-default">
+            <h4 class="panel-title">
+                <a href="#sec_1">
+                    <span class="sec-num">1</span>
+                    <span class="sec-title">Comment utiliser Esc@Pad pour produire un support de cours multi-plateformes</span>
+                </a>
+            </h4>
+            <ul class="nav list-group">
+                
+                    <li class="list-group-item">
+                        <a class="icon-webcontent" href="#subsec_1_1">1.1 Structure globale d'un cours Culture Numérique</a>
+                    </li>
+                
+                    <li class="list-group-item">
+                        <a class="icon-webcontent" href="#subsec_1_2">1.2 Cours avec image</a>
+                    </li>
+                
+                    <li class="list-group-item">
+                        <a class="icon-webcontent" href="#subsec_1_3">1.3 Vidéo de cours</a>
+                    </li>
+                
+            </ul>
+        </li>
+        
+        <!-- Copier ici un item déployable -->
+        <li class="panel panel-default">
+            <h4 class="panel-title">
+                <a href="#sec_2">
+                    <span class="sec-num">2</span>
+                    <span class="sec-title">Exemples d'activité</span>
+                </a>
+            </h4>
+            <ul class="nav list-group">
+                
+                    <li class="list-group-item">
+                        <a class="icon-webcontent" href="#subsec_2_1">2.1 Cours</a>
+                    </li>
+                
+                    <li class="list-group-item">
+                        <a class="icon-comprehension" href="#subsec_2_2">2.2 Compréhension</a>
+                    </li>
+                
+                    <li class="list-group-item">
+                        <a class="icon-webcontent" href="#subsec_2_3">2.3 Une sous-section de cours entre 2 activités</a>
+                    </li>
+                
+            </ul>
+        </li>
+        
+        <!-- Stop ici un item déployable -->
+        <!-- Link to Annexe  -->
+        <div class="annex-sep"></div>
+        <li class="panel panel-default">
+            <h4 class="panel-title">
+                <a href="#sec_A">
+                    <span class="sec-num icon-cc"></span>
+                    <span class="sec-title">Réutiliser ce module</span>
+                </a>
+            </h4>
+            <ul class="nav list-group">
+                <li class="list-group-item" style="display:none">
+                    <a class="icon" href="#subsec_A1"></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <!--  bouton chevron "gauche" pour replier menu gauche-->
+    <button type="button" class="navmenu-fixed-left navmenu-fixed-left navbar-offcanvas-toggle menugauchebtn collapsed hidden-md hidden-lg" data-toggle="offcanvas"  data-canvas="div.content" data-target="#menugauche"  id="menugauche-sm-left">
+    	<span class="icon-chevron-left"> </span>
+    </button>
+</div>
+<!-- Fin menu gauche classique -->
+
+<div id="content">
+    <!--  bouton chevron "droit" pour déplier menu gauche-->
+    <button type="button" class="navmenu-fixed-left navmenu-fixed-left navbar-offcanvas-toggle menugauchebtn collapsed hidden-md hidden-lg" data-toggle="offcanvas"  data-canvas="div.content" data-target="#menugauche"  id="menugauche-sm">
+	       <span class="icon-chevron-right"> </span>
+    </button>
+    <!-- Margin top 4 em -->
+    <!-- Début contenu droite -->
+    <ol class="breadcrumb">
+        <li>
+            <a href="#">
+                <span class="icon-home"></span>
+            </a>
+        </li>
+        <li><a href="#">Titre</a></li>
+        <li class="active">Cours</li>
+    </ol>
+
+    <div class="contenudroite">
+        
+            
+            <section  id="sec_1">
+            <h1 class="icon-section title blue">1. Comment utiliser Esc@Pad pour produire un support de cours multi-plateformes</h1>
+                
+                    <section id="subsec_1_1">
+                        <h2 class="icon-webcontent title">1.1. Structure globale d'un cours Culture Numérique</h2>
+                        
+                        
+                        
+                        <!-- teaser: first 5 lines -->
+    					<div class="collapse hidden-text">
+                            <span data-toggle="collapse" data-target="#subsec_1_1 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+                            <p>
+ Un cours se décompose en sections et sous-sections. Le niveau sous-sections constitue le niveau "pivot" de la structure d'un
+ <a href="http://culturenumerique.univ-lille3.fr/" target="_blank">
+  cours Culture NUmérique
+ </a>
+ . Chaque sous-section peut être du type et de la forme suivante:
+</p>
+<ol>
+ <li>
+  cours simple (texte + images)
+ </li>
+ <li>
+  vidéo de cours accompagnée de la version texte
+ </li>
+ <li>
+  activité de 3 types possibles:
+  <ul>
+   <li>
+    auto-évaluation sous forme de quiz
+   </li>
+   <li>
+    exercice autonome
+   </li>
+   <li>
+    exercice d'approfondissement
+   </li>
+  </ul>
+ </li>
+</ol>
+<p>
+ RMQ: les 2 derniers types d'exercice incluent un énoncé (texte riche) et un espace pour fournir une réponse sous forme de texte libre
+</p>
+                            <span data-toggle="collapse" data-target="#subsec_1_1 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+    					</div>
+                                <!-- <p>
+ Un cours se décompose en sections et sous-sections. Le niveau sous-sections constitue le niveau "pivot" de la structure d'un
+ <a href="http://culturenumerique.univ-lille3.fr/" target="_blank">
+  cours Culture NUmérique
+ </a>
+ . Chaque sous-section peut être du type et de la forme suivante:
+</p>
+<ol>
+ <li>
+  cours simple (texte + images)
+ </li>
+ <li>
+  vidéo de cours accompagnée de la version texte
+ </li>
+ <li>
+  activité de 3 types possibles:
+  <ul>
+   <li>
+    auto-évaluation sous forme de quiz
+   </li>
+   <li>
+    exercice autonome
+   </li>
+   <li>
+    exercice d'approfondissement
+   </li>
+  </ul>
+ </li>
+</ol>
+<p>
+ RMQ: les 2 derniers types d'exercice incluent un énoncé (texte... -->
+                        <div class="teaser" data-toggle="collapse" data-target="#subsec_1_1 .hidden-text">
+                            <span  class="icon-plus-circled teaser-button"><i>(Montrer la suite)</i></span>
+                            <div class="tease"></div>
+                            <p>
+ Un cours se décompose en sections et sous-sections. Le niveau sous-sections constitue le niveau "pivot" de la structure d'un
+ <a href="http://culturenumerique.univ-lille3.fr/" target="_blank">
+  cours Culture NUmérique
+ </a>
+ . Chaque sous-section peut être du type et de la forme suivante:
+</p>
+<ol>
+ <li>
+  cours simple (texte + images)
+ </li>
+ <li>
+  vidéo de cours accompagnée de la version texte
+ </li>
+ <li>
+  activité de 3 types possibles:
+  <ul>
+   <li>
+    auto-évaluation sous forme de quiz
+   </li>
+   <li>
+    exercice autonome
+   </li>
+   <li>
+    exercice d'approfondissement
+   </li>
+  </ul>
+ </li>
+</ol>
+<p>
+ RMQ: les 2 derniers types d'exercice incluent un énoncé (texte riche) et un espace pour fournir une réponse sous forme de texte libre
+</p>
+                        </div>
+                        <!-- rest with a collapse -->
+                        
+                </section>
+            
+                    <section id="subsec_1_2">
+                        <h2 class="icon-webcontent title">1.2. Cours avec image</h2>
+                        
+                        
+                        
+                        <!-- teaser: first 5 lines -->
+    					<div class="collapse hidden-text">
+                            <span data-toggle="collapse" data-target="#subsec_1_2 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+                            <p>
+ Rédigée en MarkDown, c'est un type de sous-section simple consistant en du texte mis en forme et enrichi d'images.
+</p>
+<p>
+ <img alt="vue_web_cours" src="/home/culnumerique/cnapp/cn_app/module1/media/vue_web_cours.png"/>
+</p>
+                            <span data-toggle="collapse" data-target="#subsec_1_2 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+    					</div>
+                                <!-- <p>
+ Rédigée en MarkDown, c'est un type de sous-section simple consistant en du texte mis en forme et enrichi d'images.
+</p>
+<p>
+ <img alt="vue_web_cours" src="/home/culnumerique/cnapp/cn_app/module1/media/vue_web_cours.png"/>
+</p> -->
+                        <div class="teaser" data-toggle="collapse" data-target="#subsec_1_2 .hidden-text">
+                            <span  class="icon-plus-circled teaser-button"><i>(Montrer la suite)</i></span>
+                            <div class="tease"></div>
+                            <p>
+ Rédigée en MarkDown, c'est un type de sous-section simple consistant en du texte mis en forme et enrichi d'images.
+</p>
+<p>
+ <img alt="vue_web_cours" src="/home/culnumerique/cnapp/cn_app/module1/media/vue_web_cours.png"/>
+</p>
+                        </div>
+                        <!-- rest with a collapse -->
+                        
+                </section>
+            
+                    <section id="subsec_1_3">
+                        <h2 class="icon-webcontent title">1.3. Vidéo de cours</h2>
+                        
+                            
+                            <!--  TODO : check video here and add fancy text -->
+
+                                <div class="iframe_cont">
+                                    <div class="play_thumb">
+    <img src="static/img/thumbnail_video.jpg">
+    <div class="play-button"></div>
+</div>    
+                                    <iframe allowfullscreen="" mozallowfullscreen="" webkitallowfullscreen="" data-src="https://player.vimeo.com/video/93350435"
+                                        style="display:none"></iframe></div>
+                            
+                            <!--  TODO : check video here and add fancy text -->
+
+                                <div class="iframe_cont">
+                                    <div class="play_thumb">
+    <img src="static/img/thumbnail_video.jpg">
+    <div class="play-button"></div>
+</div>    
+                                    <iframe allowfullscreen="" mozallowfullscreen="" webkitallowfullscreen="" data-src="https://player.vimeo.com/video/138623497"
+                                        style="display:none"></iframe></div>
+                            
+                        
+                        
+                        
+                        <!-- teaser: first 5 lines -->
+    					<div class="collapse hidden-text">
+                            <span data-toggle="collapse" data-target="#subsec_1_3 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+                            <p>
+ <a class="cours_video" href="https://vimeo.com/93350435" target="_blank">
+  video
+ </a>
+</p>
+<p>
+ Ces éléments de cours consistent en des sous-sections pouvant inclure 1 ou plusieurs vidéos d'animations. Pour qu'un lien vers une vidéo (Vimeo uniquement pour l'instant) soit reconnu comme video de cours,  on utilise le principe des
+ <em>
+  attribute lists
+ </em>
+ (cf ci-dessus) en ajoutant la classe
+ <code>
+  cours_video
+ </code>
+ :
+</p>
+<pre><code>[Introduction au web](https://vimeo.com/138623497){: .cours_video }
+</code></pre>
+<p>
+ <strong>
+  NB:
+ </strong>
+ les liens de videos doivent être de la forme
+</p>
+<p>
+ <code>
+  https://vimeo.com/1234568
+ </code>
+</p>
+<p>
+ et non
+</p>
+<p>
+ <code>
+  https://player.vimeo.com/video/1234568
+ </code>
+</p>
+<p>
+ La 2e forme est celle du champ "src" des iframes vimeo, mais l'API Vimeo requiert la 1ère forme, et qui est le lien permettant de plus d'accéder à la page vimeo de la video, et donc d'accéder à la chaine, aux autres videos, de liker, partager, etc.
+</p>
+                            <span data-toggle="collapse" data-target="#subsec_1_3 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+    					</div>
+                                <!-- <p>
+ <a class="cours_video" href="https://vimeo.com/93350435" target="_blank">
+  video
+ </a>
+</p>
+<p>
+ Ces éléments de cours consistent en des sous-sections pouvant inclure 1 ou plusieurs vidéos d'animations. Pour qu'un lien vers une vidéo (Vimeo uniquement pour l'instant) soit reconnu comme video de cours,  on utilise le principe des
+ <em>
+  attribute lists
+ </em>
+ (cf ci-dessus) en ajoutant la classe
+ <code>
+  cours_video
+ </code>
+ :
+</p>
+<pre><code>[Introduction au web](https://vimeo.com/138623497){: .cours_video }
+</code></pre>
+<p>
+ <strong>
+  NB:
+ </strong>
+ les liens de videos doivent être de la forme
+</p>
+<p>
+ <code>
+  https://vimeo.com/1234568
+ </code>
+</p>
+<p>
+ et non
+</p>
+<p>
+... -->
+                        <div class="teaser" data-toggle="collapse" data-target="#subsec_1_3 .hidden-text">
+                            <span  class="icon-plus-circled teaser-button"><i>(Montrer la suite)</i></span>
+                            <div class="tease"></div>
+                            <p>
+ <a class="cours_video" href="https://vimeo.com/93350435" target="_blank">
+  video
+ </a>
+</p>
+<p>
+ Ces éléments de cours consistent en des sous-sections pouvant inclure 1 ou plusieurs vidéos d'animations. Pour qu'un lien vers une vidéo (Vimeo uniquement pour l'instant) soit reconnu comme video de cours,  on utilise le principe des
+ <em>
+  attribute lists
+ </em>
+ (cf ci-dessus) en ajoutant la classe
+ <code>
+  cours_video
+ </code>
+ :
+</p>
+<pre><code>[Introduction au web](https://vimeo.com/138623497){: .cours_video }
+</code></pre>
+<p>
+ <strong>
+  NB:
+ </strong>
+ les liens de videos doivent être de la forme
+</p>
+<p>
+ <code>
+  https://vimeo.com/1234568
+ </code>
+</p>
+<p>
+ et non
+</p>
+<p>
+ <code>
+  https://player.vimeo.com/video/1234568
+ </code>
+</p>
+<p>
+ La 2e forme est celle du champ "src" des iframes vimeo, mais l'API Vimeo requiert la 1ère forme, et qui est le lien permettant de plus d'accéder à la page vimeo de la video, et donc d'accéder à la chaine, aux autres videos, de liker, partager, etc.
+</p>
+                        </div>
+                        <!-- rest with a collapse -->
+                        
+                </section>
+            
+        </section>
+        
+            
+            <section  id="sec_2">
+            <h1 class="icon-section title blue">2. Exemples d'activité</h1>
+                
+                    <section id="subsec_2_1">
+                        <h2 class="icon-webcontent title">2.1. Cours</h2>
+                        
+                        
+                        
+                        <!-- teaser: first 5 lines -->
+    					<div class="collapse hidden-text">
+                            <span data-toggle="collapse" data-target="#subsec_2_1 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+                            <p>
+ Dans les sous-sections suivantes, retrouvez une série d'exemple d'activités des 2 types (simple et avancées.). N'hésitez-pas à vous inspirer de ces exemples et à les prendre comme point de départ pour créer vos propres quiz et activités.
+</p>
+                            <span data-toggle="collapse" data-target="#subsec_2_1 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+    					</div>
+                                <!-- <p>
+ Dans les sous-sections suivantes, retrouvez une série d'exemple d'activités des 2 types (simple et avancées.). N'hésitez-pas à vous inspirer de ces exemples et à les prendre comme point de départ pour créer vos propres quiz et activités.
+</p> -->
+                        <div class="teaser" data-toggle="collapse" data-target="#subsec_2_1 .hidden-text">
+                            <span  class="icon-plus-circled teaser-button"><i>(Montrer la suite)</i></span>
+                            <div class="tease"></div>
+                            <p>
+ Dans les sous-sections suivantes, retrouvez une série d'exemple d'activités des 2 types (simple et avancées.). N'hésitez-pas à vous inspirer de ces exemples et à les prendre comme point de départ pour créer vos propres quiz et activités.
+</p>
+                        </div>
+                        <!-- rest with a collapse -->
+                        
+                </section>
+            
+                    <section id="subsec_2_2">
+                        <h2 class="icon-comprehension title">2.2. Compréhension</h2>
+                        
+                        
+                        
+                            
+<!-- New question --><div class="question"><h3 class="questiontitle">Représenter et manipuler</h3><div class="questiontext">
+<p>
+ <strong>
+  Représenter et manipuler
+ </strong>
+ Les traitements possibles dépendent fortement des choix de représentation
+</p></div><ul class="truefalse"><li class="right_answer"><input type="radio" name="name" />Vrai</li><li class=""><input type="radio" name="name" />Faux</li></ul></div>
+
+
+<!-- New question --><div class="question"><h3 class="questiontitle">Quelles données ?</h3><div class="questiontext">
+<p>
+ <strong>
+  Quelles données ?
+ </strong>
+ La représentation numérique d'un livre peut inclure des données qui ne se limitent pas au contenu textuel. Donnez quelques exemples.
+</p></div><div class="global_feedback"><b><em>Feedback:</em></b><br/> <p>
+ Le genre, la date de création, l'éditeur, ...
+</p></div></div>
+
+
+<!-- New question --><div class="question"><h3 class="questiontitle">Qui choisit ? </h3><div class="questiontext">
+<p>
+ <strong>
+  Qui choisit ?
+ </strong>
+ Les choix de représentations sont faits par
+</p></div><ul class="multichoice"><li class=""><input type="radio" name="name" />Les informaticiens </li><li class=""><input type="radio" name="name" />Les experts métier </li><li class="right_answer"><input type="radio" name="name" />Les deux </li></ul></div>
+
+
+                        
+                </section>
+            
+                    <section id="subsec_2_3">
+                        <h2 class="icon-webcontent title">2.3. Une sous-section de cours entre 2 activités</h2>
+                        
+                        
+                        
+                        <!-- teaser: first 5 lines -->
+    					<div class="collapse hidden-text">
+                            <span data-toggle="collapse" data-target="#subsec_2_3 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+                            <p>
+ Ces activités sont rédigées en GIFT; chaque question est séparée par une ligne vide. La syntaxe Gift a été proposé par l'équipde Moodle pour permettre de gagner du temps dans la rédaction de quizz et de tests. Cette syntaxe est disponible sur
+ <a href="https://docs.moodle.org/28/en/GIFT_format" target="_blank">
+  cette page
+ </a>
+ . Il s'agit d'un format "texte" qui peut s'éditer dans n'importe quel "éditeur de texte" (et non dans un "traitement de texte").
+</p>
+<p>
+ <code>
+  activité
+::Une tâche complexe::
+[markdown]
+**Une tâche complexe**
+Représenter et normaliser est une tâche complexe : l'exemple de HTML. En vous rendant sur les pages wikipedia de [HTML](https://fr.wikipedia.org/wiki/Hypertext_Markup_Language) et du [W3C](https://fr.wikipedia.org/wiki/World_Wide_Web_Consortium). Répondez aux questions suivantes :
+- Quelle est l'origine de `HTML` ?
+- Qui développe et publie les spécifications `HTML` depuis 1995 ?
+- Quelle est la version la plus récente de `HTML` et son année de parution ?
+- Qui participe au développement du standard `HTML` au `W3C` ?
+- Quelles sont les étapes pour arriver à être une recommandation ?
+- Qui est responsable du standard `css` pour les feuilles de style ?
+{#### origine au CERN ; Le W3C développe le HTML depuis 1995 ; HTML5 en 2014 ; industriels, éditeurs logiciels, chercheurs, entreprises du Web, ... ; brouillon, appel, candidat, proposition et recommandation ; le W3C.}
+ </code>
+</p>
+                            <span data-toggle="collapse" data-target="#subsec_2_3 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+    					</div>
+                                <!-- <p>
+ Ces activités sont rédigées en GIFT; chaque question est séparée par une ligne vide. La syntaxe Gift a été proposé par l'équipde Moodle pour permettre de gagner du temps dans la rédaction de quizz et de tests. Cette syntaxe est disponible sur
+ <a href="https://docs.moodle.org/28/en/GIFT_format" target="_blank">
+  cette page
+ </a>
+ . Il s'agit d'un format "texte" qui peut s'éditer dans n'importe quel "éditeur de texte" (et non dans un "traitement de texte").
+</p>
+<p>
+ <code>
+  activité
+::Une tâche complexe::
+[markdown]
+**Une tâche complexe**
+Représenter et normaliser est une tâche complexe : l'exemple de HTML. En vous rendant sur les pages wikipedia de... -->
+                        <div class="teaser" data-toggle="collapse" data-target="#subsec_2_3 .hidden-text">
+                            <span  class="icon-plus-circled teaser-button"><i>(Montrer la suite)</i></span>
+                            <div class="tease"></div>
+                            <p>
+ Ces activités sont rédigées en GIFT; chaque question est séparée par une ligne vide. La syntaxe Gift a été proposé par l'équipde Moodle pour permettre de gagner du temps dans la rédaction de quizz et de tests. Cette syntaxe est disponible sur
+ <a href="https://docs.moodle.org/28/en/GIFT_format" target="_blank">
+  cette page
+ </a>
+ . Il s'agit d'un format "texte" qui peut s'éditer dans n'importe quel "éditeur de texte" (et non dans un "traitement de texte").
+</p>
+<p>
+ <code>
+  activité
+::Une tâche complexe::
+[markdown]
+**Une tâche complexe**
+Représenter et normaliser est une tâche complexe : l'exemple de HTML. En vous rendant sur les pages wikipedia de [HTML](https://fr.wikipedia.org/wiki/Hypertext_Markup_Language) et du [W3C](https://fr.wikipedia.org/wiki/World_Wide_Web_Consortium). Répondez aux questions suivantes :
+- Quelle est l'origine de `HTML` ?
+- Qui développe et publie les spécifications `HTML` depuis 1995 ?
+- Quelle est la version la plus récente de `HTML` et son année de parution ?
+- Qui participe au développement du standard `HTML` au `W3C` ?
+- Quelles sont les étapes pour arriver à être une recommandation ?
+- Qui est responsable du standard `css` pour les feuilles de style ?
+{#### origine au CERN ; Le W3C développe le HTML depuis 1995 ; HTML5 en 2014 ; industriels, éditeurs logiciels, chercheurs, entreprises du Web, ... ; brouillon, appel, candidat, proposition et recommandation ; le W3C.}
+ </code>
+</p>
+                        </div>
+                        <!-- rest with a collapse -->
+                        
+                </section>
+            
+        </section>
+        
+        <!-- download section here -->
+        <section  id="sec_A">
+            <h1 class="icon-section title blue">Annexe : réutiliser ce module</h1>
+            
+            
+        </section>
+
+    </div>
+    <!-- Fin contenu droite -->
+
+</div>
+<!--Content -->
+    
+
+    
+    <!-- Début footer -->
+    <!-- <footer>
+        <a href="https://www.univ-lille3.fr/">
+            <img src="static/svg/logo_lille3.svg" title="" alt="Lille 3" />
+        </a>
+        <p><a href="http://culturenumerique.univ-lille3.fr/" title="Culture Numérique">Culture Numérique</a> - 2015</p>
+    </footer> -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="static/js/vendors/bootstrap.min.js"></script>
+    <script src="static/js/vendors/jasny-bootstrap.min.js"></script>
+    
+    <script src="static/js/modules.js"></script>
+    
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $('.email').click(function() {
+                login = $(this).html().replace('<span class="iamnotadot"></span>', '.')
+        		window.location.href = 'mailto:' + login + '@univ-lille3.fr';
+        	});
+        });
+    </script>
+
+</body>
+</html>

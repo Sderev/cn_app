@@ -48,7 +48,7 @@ def processModule(args, repoDir, outDir, module):
     with open(filein, encoding='utf-8') as md_file:
         m = model.Module(md_file, module, args.baseUrl)
 
-    m.toHTML(args.feedback) # only generate html for all subsections
+    m.toHTML(args.feedback) # only generate html for all subsections 
 
     # write html, XML, and JSon files
     utils.write_file(m.toGift(), moduleOutDir, '', module+'.questions_bank.gift.txt')

@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from escapade import views
+from escapad import views
 
 urlpatterns = [
     url(r'^escapad/', include('escapad.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^contact/$', views.contact, name='contact'),
+    url(r'^form_upload/$', views.form_upload, name='form_upload'),
 ]
 
 admin.site.site_header = 'Esc@pad Admin'

@@ -61,3 +61,31 @@ class Repository(models.Model):
     repo_synced = models.BooleanField(default=False)
     provider = models.URLField(max_length=200, blank=True, null=True)
 
+class Media(models.Model):
+    url = models.FileField()
+    def __str__(self):
+        return self.url
+
+class Module(models.Model):
+    url = models.FileField()#fichier .md
+    medias = models.ManyToManyField(Media)
+    def __str__(self):
+        return self.url
+
+class Home(models.Model):
+    url = models.FileField()#fichier .md
+    logo = models.ImageField()
+    #hasLogo = models.BooleanField(initial=True)
+    def __str__(self):
+        return self.url
+
+class Projet(models.Model):
+    nom = models.CharField(max_length=50)
+    url = models.CharField(max_length=50)
+    home = models.OneToOneField(Home)        
+    def __str__(self):
+        return self.nom
+
+
+
+

@@ -550,6 +550,7 @@ class CourseProgram:
 
 
 ############### main ################
+#FIXME : it is useless ?
 if __name__ == "__main__":
     import io
 

@@ -44,7 +44,12 @@ class ModuleParsingTestCase(unittest.TestCase):
 
     def check_headers_parsing(self):
         """Check if info placed in the header of test md file gets correctly parsed"""
-        pass
+        self.assertEqual(self.control_module.author, self.sample_module.author, "Not the same author")
+        self.assertEqual(self.control_module.menutitle, self.sample_module.menutitle, "Not the same menutitle")
+        self.assertEqual(self.control_module.language, self.sample_module.language, "Not the same language")
+        self.assertEqual(self.control_module.css, self.sample_module.css, "Not the same CSS")
+        self.assertEqual(self.control_module.title, self.sample_module.title, "Not the same title")
+        print("[ModuleParsingTestCase]-- Parsing Header OK --")
 
 
     def check_subsections(self):
@@ -89,6 +94,8 @@ class ModuleParsingTestCase(unittest.TestCase):
     def runTest(self):
         #check number of sections
         self.check_number_of_sections()
+        #check header parsing
+        self.check_headers_parsing()
         #check subsections are splited right and with right types
         self.check_subsections()
         #Module object exact match
@@ -108,6 +115,8 @@ class HtmlGenerationTestCase(ModuleParsingTestCase):
 
     def runTest(self):
         print("[HtmlGenerationTestCase] (nothing) OK")
+
+class CoursParserTestCase(unittest.TestCase):
 
 
 

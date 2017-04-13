@@ -5,32 +5,12 @@ from io import open
 import json
 import unittest
 from collections import namedtuple
-from StringIO import StringIO
 from jinja2 import Template, Environment, FileSystemLoader
 # Path hack for getting access to src python modules
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 
-from src import model,utils
-
-"""
-    Test File for Project Esc@pad
-    ==============================
-
-    Here is a test file to test the project Esc@pad.
-    This file test :
-        - Parsing of source files to construct a course model (cf model.Module) with module_test.md ( the file to file) and test.config.json() (the serialized control object)
-        - ( #TODO à remplir)
-        -
-        -
-
-    How to use this file ?
-    ---------------------
-    In your terminal, use the command :
-        >> $ python tests.py
-
-
-"""
+from src import model
 
 
 class ModuleParsingTestCase(unittest.TestCase):
@@ -136,51 +116,9 @@ class HtmlGenerationTestCase(ModuleParsingTestCase):
     def runTest(self):
         print("[HtmlGenerationTestCase] (nothing) OK")
 
-class FctParserTestCase(unittest.TestCase):
-    """
-
-    """
-    # def JSON_string_header(author, base_url, css, language, menutitle, module, title):
-    #     return ("{'author': '"+author+"', 'base_url': '"+base_url+"', 'css':'"+css+"', 'language': '"+language+"','menutitle': '"+menutitle+"','module': '"+module+"','title': '"+title+"' }")
-
-    def check_default_parser_head(self):
-        # JSON control
-        object_header = StringIO("""
-        {
-        "author": "culture numerique",
-        "base_url": "http://culnu.fr",
-        "css": "http://culturenumerique.univ-lille3.fr/css/base.css",
-        "language": "fr",
-        "menutitle": "Titre",
-        "module": "culnu",
-        "title": "Titre long"
-        }
-        """)
-        control_header = json.load(object_header, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-        del object_header
-
-        # Parsed MD without header
-        pars_head = StringIO("""
-        # Titre 1
-        """)
-        sample_object = model.Module(pars_head, "culnu", "http://culnu.fr")
-        sample_object.toHTML(False)
-        sample_header = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-        del sample_object
-
-        #Test the default value of metadata
-        self.assertEqual(control_header.title, sample_header.title, "Not the same title in default_parser_head")
-        self.assertEqual(control_header.author, sample_header.author, "Not the same author in default_parser_head")
-        self.assertEqual(control_header.base_url, sample_header.base_url, "Not the same base_url in default_parser_head")
-        self.assertEqual(control_header.css, sample_header.css, "Not the same css in default_parser_head")
-        self.assertEqual(control_header.language, sample_header.language, "Not the same language in default_parser_head")
-        self.assertEqual(control_header.menutitle, sample_header.menutitle, "Not the same menutitle in default_parser_head")
-        self.assertEqual(control_header.module, sample_header.module, "Not the same module in default_parser_head")
-        print("[FctParserTestCase]-- default_parser_head OK --")
+# class CoursParserTestCase(unittest.TestCase):
 
 
-    def runTest(self):
-        self.check_default_parser_head()
 
 
 # Main

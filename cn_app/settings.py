@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'escapad_formulaire'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -55,7 +56,7 @@ ROOT_URLCONF = 'cn_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates/','escapade/templates/'],
+        'DIRS': ['templates/','escapad/templates/','escapad_formulaire/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

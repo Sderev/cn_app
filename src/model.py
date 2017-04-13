@@ -239,7 +239,7 @@ class AnyActivity(Subsection):
         for question in self.questions:
             # append each question to html output
             self.html_src+=question.to_html(feedback_option)
-            if self.html_src == '': # fallback when question is not yet properly formated
+            if self.html_src == '': # f</p>allback when question is not yet properly formated
                 self.html_src = '<p>'+self.src+'</p>'
             # post-process Gift source replacing markdown formated questions text by html equivalent
             if question.text_format in (("markdown")):
@@ -283,7 +283,7 @@ class Comprehension(AnyActivity):
 
 class Activite(AnyActivity):
     """Subclass of AnyActivity defining a simple 'activité' type of activity"""
-    actnum = 0  # specific counter for this subclass of AnyActivity
+    actnum = 0  # specific counter for this subclassCours of AnyActivity
     def __init__(self, section, src):
         AnyActivity.__init__(self,section,src)
         self.title = 'Activité'

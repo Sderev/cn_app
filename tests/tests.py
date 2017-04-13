@@ -116,7 +116,7 @@ class HtmlGenerationTestCase(ModuleParsingTestCase):
     def runTest(self):
         print("[HtmlGenerationTestCase] (nothing) OK")
 
-class CoursParserTestCase(unittest.TestCase):
+# class CoursParserTestCase(unittest.TestCase):
 
 
 

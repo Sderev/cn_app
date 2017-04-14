@@ -459,12 +459,15 @@ class Module:
 
         :rtype: string, last line parsed
         """
+
         l = f.readline()
+
         while l and not reEndHead.match(l) :
             m = reMetaData.match(l)
             if m:
                 setattr(self, m.group('meta').lower(), m.group('value'))
             l = f.readline()
+
         return l
 
     def toJson(self):
@@ -478,9 +481,12 @@ class Module:
          last line parsed. Parsing goes on until that last line returned is not the start of a new Section.
         """
         l = self.parseHead(f) ## up to first section
+
         match = reStartSection.match(l)
+
         while l and match:
             s = Section(match.group('title'),f, self.module, self.base_url)
+
             self.sections.append( s )
             l = s.lastLine
             match = reStartSection.match(l)

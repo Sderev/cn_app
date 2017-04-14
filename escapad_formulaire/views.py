@@ -36,22 +36,30 @@ def form_upload(request):
     form = UploadForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
-    	#print type(form.cleaned_data["home"])
-
     	repoDir=settings.BASE_DIR
     	outDir=settings.BASE_DIR
     	baseUrl=settings.BASE_DIR
 
-        moduleData=form.cleaned_data["module"]
+        moduleData=form.cleaned_data["module1"]
+        moduleData2=form.cleaned_data["module2"]
         homeData=form.cleaned_data["home"]
+        titleData=form.cleaned_data["nom_projet"]
+        logoData=form.cleaned_data["logo"]
 
         modulesData=[]
         modulesData.append(moduleData)
+        modulesData.append(moduleData2)
 
-        html=cn.generateArchive(modulesData,homeData,repoDir,outDir,baseUrl)
+        zip=cn.generateArchive(modulesData,homeData,titleData,logoData,repoDir,outDir,baseUrl)
 
         sauvegarde = True
-        return HttpResponse(html)
+
+        response= HttpResponse(zip)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = "attachment; filename=\"site.zip\""
+        return response
+
+        #return HttpResponse(zip)
 
     return render(request, 'escapad_formulaire/form.html', {
         'form': form,

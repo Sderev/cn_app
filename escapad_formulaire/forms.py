@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 class UploadForm(forms.Form):
 
     nom_projet = forms.CharField(max_length=100)
+    logo = forms.ImageField()
     home = forms.FileField()
-    #logo = forms.ImageField()
-    module = forms.FileField()
+    module1 = forms.FileField()
+    module2 = forms.FileField()

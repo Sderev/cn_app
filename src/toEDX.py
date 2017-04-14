@@ -85,6 +85,7 @@ def generateEDXArchive(module, moduleOutDir):
         pjson = json.dumps(json.loads(pjson),ensure_ascii=True,indent=4,separators=(',', ': '))
         utils.write_file(pjson, os.getcwd(), os.path.join(edx_outdir, 'policies', 'course'), pfile)
 
+
     # Write main course.xml file
     course_template = jenv.get_template("course.tmpl.xml")
     course_xml = course_template.render(module=module, grademap=EDX_GRADER_MAP)
@@ -98,3 +99,56 @@ def generateEDXArchive(module, moduleOutDir):
     tar.close()
 
     return ('%s_edx.tar.gz' % module.module)
+
+
+def generateEDXArchiveLight(module, moduleOutDir, zipFile):
+    """ Given a module object and destination dir, generate EDX archive """
+
+    # Module data
+    module.advanced_EDX_module_list = EDX_ADVANCED_MODULE_LIST.__str__()
+
+    # generate content files: html/webcontent | problem/(Activite|ActiviteAvancee|Comprehension)
+    for sec in module.sections:
+        for sub in sec.subsections:
+            if sub.folder == 'webcontent': # these go to EDX/html/
+                zipFile.writestr(module.module+'/EDX/html/'+sub.getFilename(), sub.html_src.encode("UTF-8"))
+            elif sub.folder in ('Activite', 'ActiviteAvancee', 'Comprehension'):
+                for question in sub.questions:
+                    fname =  ('%s.xml' % question.id)
+                    zipFile.writestr(module.module+'/EDX/problem/'+fname, toEdxProblemXml(question).encode("UTF-8"))
+
+
+    # Add other files
+    for folder, dfile in EDX_DEFAULT_FILES.items():
+        with open(EDX_TEMPLATES_PATH+'/'+folder+'/'+dfile, 'r') as myfile:
+            data=myfile.read()
+            zipFile.writestr(module.module+'/EDX/'+folder+'/'+dfile, data.encode("UTF-8"))
+
+    # Render and add policies/course files
+    course_policies_files =  ['grading_policy.json', 'policy.json']
+
+    jenv = loadJinjaEnv()
+    for pfile in course_policies_files:
+        pfile_template = jenv.get_template(os.path.join('policies','course', pfile))
+        pjson = pfile_template.render(module=module)
+        pjson = json.dumps(json.loads(pjson),ensure_ascii=True,indent=4,separators=(',', ': '))
+        zipFile.writestr(module.module+'/EDX/policies/course/'+pfile, pjson.encode("UTF-8"))
+
+    # Write main course.xml file
+    course_template = jenv.get_template("course.tmpl.xml")
+    course_xml = course_template.render(module=module, grademap=EDX_GRADER_MAP)
+    zipFile.writestr(module.module+'/EDX/course.xml', course_xml.encode("UTF-8"))
+
+    # pack it up into a tar archive
+    #zipFile.read()
+
+    #dirs = list(set([os.path.dirname(x) for x in zipFile.namelist()]))
+    #print dirs
+    #archive_file = os.path.join(moduleOutDir, ('%s_edx.tar.gz' % module.module))
+    #with tarfile.open(archive_file, "w:gz") as tar:
+    #    for afile in os.listdir(edx_outdir):
+    #        tar.add(os.path.join(edx_outdir, afile))
+    #tar.close()
+
+    #return ('%s_edx.tar.gz' % module.module)
+    return zipFile

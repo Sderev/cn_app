@@ -137,13 +137,15 @@ class HtmlGenerationTestCase(ModuleParsingTestCase):
         print("[HtmlGenerationTestCase] (nothing) OK")
 
 class FctParserTestCase(unittest.TestCase):
-    """
 
-    """
     # def JSON_string_header(author, base_url, css, language, menutitle, module, title):
     #     return ("{'author': '"+author+"', 'base_url': '"+base_url+"', 'css':'"+css+"', 'language': '"+language+"','menutitle': '"+menutitle+"','module': '"+module+"','title': '"+title+"' }")
 
+
     def check_default_parser_head(self):
+        """
+        This method check default values of header.
+        """
         # JSON control
         object_header = StringIO("""
         {
@@ -164,7 +166,6 @@ class FctParserTestCase(unittest.TestCase):
         # Titre 1
         """)
         sample_object = model.Module(pars_head, "culnu", "http://culnu.fr")
-        sample_object.toHTML(False)
         sample_header = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         del sample_object
 
@@ -178,9 +179,61 @@ class FctParserTestCase(unittest.TestCase):
         self.assertEqual(control_header.module, sample_header.module, "Not the same module in default_parser_head")
         print("[FctParserTestCase]-- default_parser_head OK --")
 
+    def check_wrong_case_header(self):
+        """
+        Check if an incorrect data can be write
+        """
+        # Parsed MD without header
+        pars_head = StringIO("""
+TITLE: Bonjour
+MENUTITLE: Salut
+CHICKEN: Cot Cot
+# Titre 1
+        """)
+        sample_object = model.Module(pars_head, "culnu", "http://culnu.fr")
+        sample_header = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+        del sample_object
+
+#        self.assertIsNone(sample_header.chicken)
+
+    def check_sections(self): #FIXME : Need to begin with a # and not (## or ###)
+        """
+        """
+        #Title parsed
+        io_title = StringIO("""
+Bla bla bla
+# Title 0
+### SubSub0
+## Sub 0
+# Title 1
+Blablabla
+# Title 2
+# Title 3
+## Sub3
+### SubSub3
+## Sub3.2
+# Title 4
+Fin
+        """)
+        sample_object = model.Module(io_title, "culnu", "http://culnu.fr")
+        sample_object.toHTML(False)
+        sample_sections = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+        del sample_object
+
+        self.assertEqual(len(sample_sections.sections),5, "Not the same number of sections in check_sections")
+
+        for i,sec in enumerate(sample_sections.sections):
+            self.assertEqual(sec.title,"Title "+str(i))
+
+        print("[FctParserTestCase]-- check_sections OK --")
+
+    # def check_subsections(self):
+
 
     def runTest(self):
         self.check_default_parser_head()
+        self.check_wrong_case_header()
+        self.check_sections()
 
 
 # Main

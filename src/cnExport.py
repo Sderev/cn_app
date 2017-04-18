@@ -161,6 +161,7 @@ if __name__ == "__main__":
     # ** Logging **
     logfile = utils.create_empty_file(os.path.join(BASE_PATH, 'logs'), 'cnExport.log')
     logging.basicConfig(filename=logfile,filemode='w',level=getattr(logging, args.logLevel))
+    # FIXME : PACKAGE LOGGING POUR LA GESTION D'ERREUR !
 
     # ** Paths and directories **
     if os.path.isabs(args.repository):

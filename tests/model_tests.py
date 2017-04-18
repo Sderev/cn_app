@@ -194,6 +194,7 @@ CHICKEN: Cot Cot
         del sample_object
 
 #        self.assertIsNone(sample_header.chicken)
+#FIXME : On peut mettre n'importe quoi !
 
     def check_sections(self): #FIXME : Need to begin with a # and not (## or ###)
         """
@@ -247,17 +248,73 @@ Blablabla
         sample_subsections = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         del sample_object
 
+#        print(sample_subsections)
+
         # ASSERT NUMBERS
         self.assertEqual(len(sample_subsections.sections[0].subsections), 4, "Not the same number of subsections in check_subsections")
         self.assertEqual(len(sample_subsections.sections[1].subsections), 0, "Not the same number of subsections in check_subsections")
         self.assertEqual(len(sample_subsections.sections[2].subsections), 1, "Not the same number of subsections in check_subsections")
+# FIXME : Si pas de titre de nv 1, pas de titre nv2 !
 
-        #ASSERTGOOD
+
+        #ASSERTSame
         for i,sec in enumerate(sample_subsections.sections):
             for j,sub in enumerate(sec.subsections):
                 self.assertEqual(sub.title, "Sub "+str(i)+str(j))
 
         print("[FctParserTestCase]-- check_subsections OK --")
+
+    def check_subsubsections(self):
+        """
+        """
+        # PARSE
+        io_subsub = StringIO("""
+# Title 0
+## Sub 00
+### SubSub 000
+Blablabla
+### SubSub 001
+## Sub 01
+### SubSub 010
+# Title 1
+Blabla
+### SubSub 100
+        """)
+
+        sample_object = model.Module(io_subsub, "culnu", "http://culnu.fr")
+        sample_object.toHTML(False)
+        sample_subsubsections = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+        del sample_object
+
+#        print(sample_subsubsections.sections[1])
+
+        self.assertNotEquals( sample_subsubsections.sections[0].subsections[0].src.find("### SubSub 000"), -1)
+        self.assertNotEquals( sample_subsubsections.sections[0].subsections[0].src.find("### SubSub 001"), -1)
+        self.assertNotEquals( sample_subsubsections.sections[0].subsections[1].src.find("### SubSub 010"), -1)
+#        self.assertNotEquals( sample_subsubsections.sections[1].src.find("### SubSub 100"), -1)
+# FIXME : Si pas de titre de nv 2, pas de titre nv 3 !
+        print("[FctParserTestCase]-- check_subsubsections OK --")
+
+    def check_video(self):
+
+        io_video = StringIO("""
+# Title 0
+## Sub 00
+[Video 0](https://vimeo.com/123456789){: .cours_video }
+### SubSub 000
+[Video 1](https://vimeo.com/123456789){: .cours_video }
+        """)
+
+        sample_object = model.Module(io_video, "culnu", "http://culnu.fr")
+        sample_object.toHTML(False)
+        sample_video = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+
+#        print(sample_video.sections[0].subsections[0])
+
+        self.assertNotEquals( sample_video.sections[0].subsections[0].src.find("Video 0"), -1)
+        self.assertNotEquals( sample_video.sections[0].subsections[0].src.find("Video 1"), -1)
+
+        print("[FctParserTestCase]-- check_videos OK --")
 
 
 # ________________RUNTEST FOR FctParserTestCase____________________________
@@ -266,6 +323,8 @@ Blablabla
         self.check_wrong_case_header()
         self.check_sections()
         self.check_subsections()
+        self.check_subsubsections()
+        self.check_video()
 
 
 # Main

@@ -46,6 +46,9 @@ reStartActivity = re.compile('^```(?P<type>.*)$')
 reEndActivity = re.compile('^```\s*$')
 reMetaData = re.compile('^(?P<meta>.*?):\s*(?P<value>.*)\s*$')
 
+#Warning messages
+DEFAULT_PLACEMENT_BODY = "Ce fragment de texte n'a été placé dans aucune sous-section, placement automatique dans une sous-section \"Cours\":"
+
 def goodActivity(match):
     """ utility function used with 'reStartActivity' regex pattern to determine wether the 'type' variable of the given matched pattern fits the name of class defined in this module
 
@@ -338,6 +341,7 @@ class Section:
                 # for sections with only text:
                 if body and not body.isspace():
                     self.subsections.append(Cours(self,src=body))
+                    logging.warning (DEFAULT_PLACEMENT_BODY + "%s", body) # écrit un message dans le logging
                 break
             else:
                 # is it a new subsection ?
@@ -367,13 +371,16 @@ class Section:
                             # read a new line after the end of blocks
                             self.lastLine = f.readline()
                         else:
-                            logging.warning ("Unknown activity type %s",self.lastLine)
+                            logging.warning ("Unknown activity type %s",self.lastLine) # écrit un message dans le logging
                             body += self.lastLine
                             self.lastLine = f.readline()
+                            # FIXME : Si fin de fichier et pas de nouvelle section, ce qu'il y a dans body n'est pas affiché
                     else:
                         # no match, add the line to the body and read a new line
                         body += self.lastLine
                         self.lastLine = f.readline()
+                        # FIXME : Si fin de fichier et pas de nouvelle section, ce qu'il y a dans body n'est pas affiché
+
 
     # FIXME: is this usefull ??
     def toHTML(self, feedback_option=False):
@@ -466,10 +473,11 @@ class Module:
         :rtype: string, last line parsed
         """
         l = f.readline()
-        while l and not reEndHead.match(l) :
+        while l and not reEndHead.match(l) : # FIXME : Plutôt tester si c'est un début de metadonnée plutôt qu'un début de section ? -> Exemple : l and reMetaData.match(l)
             m = reMetaData.match(l)
             if m:
                 setattr(self, m.group('meta').lower(), m.group('value'))
+            # FIXME : Ajout d'un warning ? Si on est entré dans cette boucle mais qu'on ne lit ni une metadata, ni un début de section -> problème
             l = f.readline()
         return l
 
@@ -490,6 +498,7 @@ class Module:
             self.sections.append( s )
             l = s.lastLine
             match = reStartSection.match(l)
+        # Si qqlch dans l and pas de match -> pas trouvé de section pour démarrer -> WARNING
 
     # FIXME : is it usefull ?
     def toHTML(self, feedback_option=False):

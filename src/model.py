@@ -38,6 +38,7 @@ VIDEO_THUMB_API_URL = 'https://vimeo.com/api/v2/video/'
 DEFAULT_VIDEO_THUMB_URL = 'https://i.vimeocdn.com/video/536038298_640.jpg'
 DEFAULT_BASE_URL = 'http://culturenumerique.univ-lille3.fr'
 
+
 # Regexps
 reEndHead = re.compile('^#')
 reStartSection = re.compile('^#\s+(?P<title>.*)$')
@@ -115,6 +116,7 @@ class Subsection:
             links are turned absolute with the base_url and the module name
         """
         self.src = re.sub('\]\(\s*(\.\/)*\s*media/', ']('+self.section.base_url+'/'+self.section.module+'/media/', self.src)
+        #print(self.src)
 
 class Cours(Subsection):
     """
@@ -329,7 +331,18 @@ class Section:
         Section.num +=1
         Subsection.num=1
 
-    def parse(self, f):
+    def build_default_cours(self, text):
+        """
+        Build a default Cours with text without subsections
+
+        :param body: Text which contains a part of class
+        :type body: String
+        """
+        self.subsections.append(Cours(self,src=text))
+        logging.warning (DEFAULT_PLACEMENT_BODY + "%s", text) # placement automatique du contenu de body dans une sous-section cours
+
+
+    def parse(self, f): #FIXME : Beaucoup de if/else, peut-être faire ça plus Design-Pattern friendly
         """Read lines in file pointer 'f' until the start of a new section. If the start of a new subsection or new activity is detected, parsing is continued in corresponding subsection parse method that returns the newly created object
         """
         body = ''
@@ -340,8 +353,8 @@ class Section:
             if match:
                 # for sections with only text:
                 if body and not body.isspace():
-                    self.subsections.append(Cours(self,src=body))
-                    logging.warning (DEFAULT_PLACEMENT_BODY + "%s", body) # écrit un message dans le logging
+                    self.build_default_cours(body)
+                    body = ''
                 break
             else:
                 # is it a new subsection ?
@@ -350,7 +363,8 @@ class Section:
                     # should I create a subsection (text just below a section
                     # or between activities
                     if body and not body.isspace():
-                        self.subsections.append(Cours(self,src=body))
+                        self.build_default_cours(body)
+                        body = ''
                     sub = Cours(self,file=f,title=match.group('title')) #parsing is then continued in Cours parse method,
                     self.subsections.append(sub)
                     # The next line is the last line read in the parse of the subsection
@@ -365,21 +379,21 @@ class Section:
                             # should I create a subsection (text just below a section
                             # or between activities
                             if body and not body.isspace():
-                                self.subsections.append(Cours(self,src=body))
+                                self.build_default_cours(body)
                                 body = ''
                             self.subsections.append(act(self,f))
                             # read a new line after the end of blocks
-                            self.lastLine = f.readline()
                         else:
-                            logging.warning ("Unknown activity type %s",self.lastLine) # écrit un message dans le logging
+                            logging.warning ("Type d'activité inconnu %s",self.lastLine) # écrit un message dans le logging
                             body += self.lastLine
-                            self.lastLine = f.readline()
-                            # FIXME : Si fin de fichier et pas de nouvelle section, ce qu'il y a dans body n'est pas affiché
                     else:
                         # no match, add the line to the body and read a new line
                         body += self.lastLine
-                        self.lastLine = f.readline()
-                        # FIXME : Si fin de fichier et pas de nouvelle section, ce qu'il y a dans body n'est pas affiché
+                    self.lastLine = f.readline()
+        # If lastLine is empty (file is ending), we write the body in Cours Subsection
+        if body and not body.isspace():
+            self.build_default_cours(body)
+
 
 
     # FIXME: is this usefull ??

@@ -20,6 +20,9 @@ from yattag import Doc
 import model
 import utils
 
+import StringIO
+import re
+
 # utf8 hack, python 2 only !!
 if sys.version_info[0] == 2:
     reload(sys)
@@ -379,6 +382,83 @@ def generateImsArchive(module_object, module_name, module_directory):
     zipf.close()
     os.chdir(cur_dir)
     return fileout
+
+
+def generateImsArchiveLight(module, moduleOutDir, zipFile):
+    # Prepare paths and directories
+    #cur_dir = os.getcwd()
+    #os.chdir(module_directory)
+    ims_outdir = os.path.join(moduleOutDir, 'IMS')
+    #os.makedirs(ims_outdir)
+    #utils.createDirs(ims_outdir, FOLDERS)
+
+    # Generate Html and XML files
+    for section in module.sections:
+        for sub in section.subsections:
+            if sub.folder == 'webcontent':
+                html_filename = os.path.join(ims_outdir,sub.folder,sub.getFilename())
+                zipFile.writestr(html_filename, sub.html_src.encode("UTF-8"))
+            else:
+                xml_filename = os.path.join(ims_outdir,sub.folder,sub.getFilename('xml'))
+                zipFile.writestr(xml_filename, sub.toXMLMoodle().encode("UTF-8"))
+                #utils.write_file(sub.toXMLMoodle(), ims_outdir, sub.folder, sub.getFilename('xml'))
+
+    # parse data and generate imsmanifest.xml
+    ims_filename = os.path.join(ims_outdir, 'imsmanifest.xml')
+    zipFile.writestr(ims_filename, generateIMSManifest(module).encode("UTF-8"))
+
+
+    #imsfile = open(imsfilename, 'w', encoding='utf-8')
+    #imsfile.write(generateIMSManifest(module_object))
+    #imsfile.close()
+    logging.warning("[toIMS] imsmanifest.xml saved for module %s", moduleOutDir)
+
+
+    # Compress relevant files
+    file_out = os.path.join(module.module,module.module+'.imscc.zip')
+
+
+    tab=zipFile.namelist()
+    reEdxPath = re.compile('^'+module.module+'/IMS')
+
+    zipArchiveIO = StringIO.StringIO()
+
+    zipf = zipfile.ZipFile(zipArchiveIO, 'w')
+
+    #for each IMS element belonging to the module
+    for elt in tab:
+        res=reEdxPath.match(elt)
+        if res:
+            # adding the file to the zip archive
+            zipf.writestr(elt,zipFile.read(elt))
+            data=zipFile.read(elt)
+    zipf.close()
+
+    zipArchiveIO.seek(0)
+    zipFile.writestr(file_out, zipArchiveIO.read())
+
+
+
+    """
+    zipf.write(imsfilename)
+    for dir_name in FOLDERS:
+        try:
+            if os.listdir(os.path.join(ims_outdir, dir_name)):
+                for afile in os.listdir(os.path.join(ims_outdir, dir_name)):
+                    filepath = os.path.join(ims_outdir, dir_name, afile)
+                    logging.info("[toIMS] Adding %s to archive " % (filepath))
+                    zipf.write(filepath)
+        except:
+            continue
+
+    zipf.close()
+
+
+    os.chdir(cur_dir)
+    return fileout
+    """
+    return zipFile
+
 
 def main(argv):
     """

@@ -40,7 +40,7 @@ LOGFILE = 'logs/cnExport.log'
 #################
 
 #module="moduleX"
-def processModuleLight(moduleName, moduleData, repoDir, outDir, baseUrl,):
+def processModuleLight(moduleName, moduleData, repoDir, outDir, baseUrl):
 
     moduleDir=repoDir+'/'+moduleName
 
@@ -64,6 +64,7 @@ def processRepositoryLight(modules, repoDir, outDir):
         course_obj.modules.append(module)
     return course_obj
 
+# Adding an entire folder to a zip file (used for the static folder)
 def addFolderToZip(myZipFile,folder_src,folder_dst):
     folder_src = folder_src.encode('ascii') #convert path to ascii for ZipFile Method
     for file in glob.glob(folder_src+"/*"):
@@ -123,6 +124,14 @@ def buildSiteLight(course_obj, repoDir, outDir,homeData, titleData, logoData):
     # Loop through modules
     for module in course_obj.modules:
         zipFile = toEDX.generateEDXArchiveLight(module, module.module, zipFile)
+        zipFile = toIMS.generateImsArchiveLight(module, module.module, zipFile)
+
+        # write html, XML, and JSon files
+        file_path=module.module
+
+        zipFile.writestr(file_path+'/'+module.module+'.questions_bank.gift.txt', module.toGift().encode("UTF-8"))
+        zipFile.writestr(file_path+'/'+module.module+'.video_iframe_list.txt', module.toVideoList().encode("UTF-8"))
+        mod_config=zipFile.writestr(file_path+'/'+module.module+'.config.json', module.toJson().encode("UTF-8")) # FIXME : this file should be optionnaly written
 
         module_template = jenv.get_template("module.html")
         module_html_content = module_template.render(module=module)

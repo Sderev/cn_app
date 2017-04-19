@@ -32,7 +32,7 @@ from src import model,utils
     How to use this file ?
     ---------------------
     In your terminal, use the command :
-        >> $ python tests.py
+        >> $ python model_tests.py
 
 
 """
@@ -198,8 +198,10 @@ CHICKEN: Cot Cot
         sample_header = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         del sample_object
 
-#        self.assertIsNone(sample_header.chicken)
-#FIXME : On peut mettre n'importe quoi !
+
+        self.assertIsNotNone(sample_header.chicken)
+        #FIXME : Réussir à capturer le warning avec logging
+        print("[FctParserTestCase]-- wrong_case_header OK --")
 
     def check_sections(self): #FIXME : Need to begin with a # and not (## or ###)
         """
@@ -221,7 +223,6 @@ Blablabla
 Fin
         """)
         sample_object = model.Module(io_title, "culnu", "http://culnu.fr")
-        sample_object.toHTML(False)
         sample_sections = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         del sample_object
 
@@ -229,6 +230,7 @@ Fin
 
         for i,sec in enumerate(sample_sections.sections):
             self.assertEqual(sec.title,"Title "+str(i))
+
 
         print("[FctParserTestCase]-- check_sections OK --")
 
@@ -249,7 +251,6 @@ Blablabla
 ## Sub 20
         """)
         sample_object = model.Module(io_sub, "culnu", "http://culnu.fr")
-        sample_object.toHTML(False)
         sample_subsections = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         del sample_object
 
@@ -287,41 +288,63 @@ Blabla
         """)
 
         sample_object = model.Module(io_subsub, "culnu", "http://culnu.fr")
-        sample_object.toHTML(False)
         sample_subsubsections = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         del sample_object
-
-#        print(sample_subsubsections.sections[1])
 
         self.assertNotEquals( sample_subsubsections.sections[0].subsections[0].src.find("### SubSub 000"), -1)
         self.assertNotEquals( sample_subsubsections.sections[0].subsections[0].src.find("### SubSub 001"), -1)
         self.assertNotEquals( sample_subsubsections.sections[0].subsections[1].src.find("### SubSub 010"), -1)
-#        self.assertNotEquals( sample_subsubsections.sections[1].src.find("### SubSub 100"), -1)
-# FIXME : Si pas de titre de nv 2, pas de titre nv 3 !
+        self.assertNotEquals( sample_subsubsections.sections[1].subsections[0].src.find("### SubSub 100"), -1)
+
         print("[FctParserTestCase]-- check_subsubsections OK --")
 
-    def check_video(self):
-
-        io_video = StringIO("""
+    def check_cours(self):
+        """
+        """
+        io_cours = StringIO("""
 # Title 0
-[Video 0](https://vimeo.com/123456789){: .cours_video }
-[Video 1](https://vimeo.com/123456789){: .cours_video }
-## Sub 00
-[Video 2](https://vimeo.com/123456789){: .cours_video }
+Ce texte va être placé tout seul dans un cours
+## Cours 0
+Ce texte va être placé dans cours 0
 ### SubSub 000
-[Video 3](https://vimeo.com/123456789){: .cours_video }
+Ce texte va être placé dans cours 0
+## Cours 1
+Ce texte va être placé dans cours 1
+'''comprehension
+::Comp1::
+[markdown] Je ne suis pas un cours !
+{
+salut
+}
+'''
+# Title 1
+'''activité
+::Act1::
+[markdown] Je ne suis toujours pas un cours !
+'''
+## Cours 3
+Par contre moi oui !
         """)
 
-        sample_object = model.Module(io_video, "culnu", "http://culnu.fr")
-        sample_object.toHTML(False)
-        sample_video = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+        sample_object = model.Module(io_cours, "culnu", "http://culnu.fr")
+        sample_cours = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+        del sample_object
 
-#        print(sample_video.sections[0].subsections[0].videos)
+        print(sample_cours.sections[0].subsections)
 
-        # self.assertNotEquals( sample_video.sections[0].subsections[0].src.find("Video 0"), -1)
-        # self.assertNotEquals( sample_video.sections[0].subsections[1].src.find("Video 1"), -1)
 
-        print("[FctParserTestCase]-- check_videos OK --")
+        self.assertEqual(sample_cours.sections[0].subsections[0].title, "Cours")
+        self.assertEqual(sample_cours.sections[0].subsections[0].folder, u"webcontent")
+        self.assertEqual(sample_cours.sections[0].subsections[0].src, u'Ce texte va être placé tout seul dans un cours\n')
+        self.assertEqual(sample_cours.sections[0].subsections[1].title, "Cours 0")
+        self.assertEqual(sample_cours.sections[0].subsections[1].folder, u"webcontent")
+        self.assertEqual(sample_cours.sections[0].subsections[1].src, u'Ce texte va être placé dans cours 0\n### SubSub 000\nCe texte va être placé dans cours 0\n')
+        self.assertEqual(sample_cours.sections[0].subsections[2].title, "Cours 1")
+        self.assertEqual(sample_cours.sections[0].subsections[2].folder, u"webcontent")
+
+
+        print("[FctParserTestCase]-- check_cours OK --")
+
 
 
 # ________________RUNTEST FOR FctParserTestCase____________________________
@@ -331,7 +354,7 @@ Blabla
         self.check_sections()
         self.check_subsections()
         self.check_subsubsections()
-        self.check_video()
+        self.check_cours()
 
 
 # Main

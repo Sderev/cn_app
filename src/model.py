@@ -40,15 +40,17 @@ DEFAULT_BASE_URL = 'http://culturenumerique.univ-lille3.fr'
 
 
 # Regexps
-reEndHead = re.compile('^#')
+reEndHead = re.compile('^#\s.+$')
 reStartSection = re.compile('^#\s+(?P<title>.*)$')
 reStartSubsection = re.compile('^##\s+(?P<title>.*)$')
 reStartActivity = re.compile('^```(?P<type>.*)$')
 reEndActivity = re.compile('^```\s*$')
-reMetaData = re.compile('^(?P<meta>.*?):\s*(?P<value>.*)\s*$')
+reMetaData = re.compile('^(?P<meta>([A-Z])+?):\s*(?P<value>.*)\s*$')
 
 #Warning messages
-DEFAULT_PLACEMENT_BODY = "Ce fragment de texte n'a été placé dans aucune sous-section, placement automatique dans une sous-section \"Cours\":"
+DEFAULT_PLACEMENT_BODY = "Ce fragment de texte n'a été placé dans aucune sous-section, placement automatique dans une sous-section \"Cours\": "
+METADATA_NOT_FOUND = "Cette balise de Header ne correspond à aucun attribut modifiable, vérifier l'orthographe/l'existence de cette balise: "
+NOT_START_SECTION = "Cette partie de texte qui suit le header n'est pas placé dans une section, mettez un \"# <titre>\" après l'en-tête: "
 
 def goodActivity(match):
     """ utility function used with 'reStartActivity' regex pattern to determine wether the 'type' variable of the given matched pattern fits the name of class defined in this module
@@ -487,11 +489,16 @@ class Module:
         :rtype: string, last line parsed
         """
         l = f.readline()
-        while l and not reEndHead.match(l) : # FIXME : Plutôt tester si c'est un début de metadonnée plutôt qu'un début de section ? -> Exemple : l and reMetaData.match(l)
+        while l and not reEndHead.match(l) :
             m = reMetaData.match(l)
             if m:
-                setattr(self, m.group('meta').lower(), m.group('value'))
-            # FIXME : Ajout d'un warning ? Si on est entré dans cette boucle mais qu'on ne lit ni une metadata, ni un début de section -> problème
+                meta = m.group('meta').lower()
+                value = m.group('value')
+                if not (meta in self.__dict__):
+                    logging.warning(METADATA_NOT_FOUND + "%s", meta.upper())
+                setattr(self, meta, value)
+            elif (l != '\n') :
+                logging.warning(NOT_START_SECTION + l)
             l = f.readline()
         return l
 

@@ -22,6 +22,7 @@ from django.views.generic import View
 logger = logging.getLogger(__name__)
 
 from .forms import UploadForm
+from .forms import ModuleForm
 
 from src import model
 from src import utils
@@ -34,23 +35,44 @@ def form_upload(request):
     sauvegarde = False
 
     form = UploadForm(request.POST or None, request.FILES or None)
+    formMod = ModuleForm(request.POST or None, request.FILES or None)
+    #formMod2 = ModuleForm(request.POST or None, request.FILES or None)
 
-    if form.is_valid():
-    	repoDir=settings.BASE_DIR
+    #if form.is_valid() and formMod1.is_valid() and formMod2.is_valid():
+
+
+    if form.is_valid() and formMod.is_valid():
+
+        #print form.cleaned_data["moduletest"]
+
+        repoDir=settings.BASE_DIR
     	outDir=settings.BASE_DIR
     	baseUrl=settings.BASE_DIR
 
-        moduleData=form.cleaned_data["module1"]
-        moduleData2=form.cleaned_data["module2"]
         homeData=form.cleaned_data["home"]
         titleData=form.cleaned_data["nom_projet"]
         logoData=form.cleaned_data["logo"]
 
         modulesData=[]
-        modulesData.append(moduleData)
-        modulesData.append(moduleData2)
+        mediasData=[]
+        nbModule=request.POST.get("nb_module")
+        #print request.POST
+        #print request.FILES
 
-        zip=cn.generateArchive(modulesData,homeData,titleData,logoData,repoDir,outDir,baseUrl)
+        for i in range(1, int(nbModule)+1):
+            nomModule="module_"+str(i)
+            nomMedia="media_"+str(i)
+            moduleData=request.FILES.get(nomModule)
+            mediaData=request.FILES.get(nomMedia)
+
+            modulesData.append(moduleData)
+            mediasData.append(mediaData)
+
+        print mediasData
+
+        #modulesData.append(moduleData2)
+
+        zip=cn.generateArchive(modulesData,mediasData,homeData,titleData,logoData,repoDir,outDir,baseUrl)
 
         sauvegarde = True
 
@@ -59,9 +81,10 @@ def form_upload(request):
         response['Content-Disposition'] = "attachment; filename=\"site.zip\""
         return response
 
-        #return HttpResponse(zip)
+        #return HttpResponse(zip)"""
 
     return render(request, 'escapad_formulaire/form.html', {
         'form': form,
+        'formMod': formMod,
         'sauvegarde': sauvegarde
     })

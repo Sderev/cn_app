@@ -26,7 +26,7 @@ import model
 
 import zipfile
 from zipfile import ZipFile
-from StringIO import StringIO
+import StringIO
 from io import TextIOWrapper
 
 
@@ -74,13 +74,28 @@ def addFolderToZip(myZipFile,folder_src,folder_dst):
         elif os.path.isdir(file):
             addFolderToZip(myZipFile,file,folder_dst+os.path.basename(file)+'/')
 
+def writeMediaFromArchive(zipFile, mediaData, path):
+
+    #print mediaData.read()
+
+    tarArchiveIO = StringIO.StringIO()
+    tarArchiveIO.write(mediaData.read())
+    tarArchiveIO.seek(0)
+
+    # We open the tar archive inside of the StringIO instance
+    with tarfile.open(mode='r:gz', fileobj=tarArchiveIO) as tar:
+        for member in tar.getnames():
+            zipFile.writestr(path+'/'+member, tar.extractfile(member).read())
+        tar.close()
+
+    return zipFile
 
 #Construction du site
 #retourne l'archive
-def buildSiteLight(course_obj, repoDir, outDir,homeData, titleData, logoData):
+def buildSiteLight(course_obj, repoDir, outDir, mediasData ,homeData, titleData, logoData):
 
     #print BASE_PATH
-    inMemoryOutputFile = StringIO()
+    inMemoryOutputFile = StringIO.StringIO()
     zipFile = ZipFile(inMemoryOutputFile, 'w')
     addFolderToZip(zipFile,BASE_PATH+'/static/','static/')
 
@@ -122,12 +137,15 @@ def buildSiteLight(course_obj, repoDir, outDir,homeData, titleData, logoData):
 
     ####MODULE
     # Loop through modules
-    for module in course_obj.modules:
+    for module,mediaData in zip(course_obj.modules,mediasData):
         zipFile = toEDX.generateEDXArchiveLight(module, module.module, zipFile)
         zipFile = toIMS.generateImsArchiveLight(module, module.module, zipFile)
 
         # write html, XML, and JSon files
         file_path=module.module
+
+        if mediaData:
+            zipFile=writeMediaFromArchive(zipFile,mediaData,file_path+'/media')
 
         zipFile.writestr(file_path+'/'+module.module+'.questions_bank.gift.txt', module.toGift().encode("UTF-8"))
         zipFile.writestr(file_path+'/'+module.module+'.video_iframe_list.txt', module.toVideoList().encode("UTF-8"))
@@ -143,8 +161,7 @@ def buildSiteLight(course_obj, repoDir, outDir,homeData, titleData, logoData):
 
     return inMemoryOutputFile
 
-
-def generateArchive(modulesData, homeData, titleData, logoData, repoDir, outDir, baseUrl):
+def generateArchive(modulesData, mediasData, homeData, titleData, logoData, repoDir, outDir, baseUrl):
     modules=[]
     i=1
     for moduleData in modulesData:
@@ -152,6 +169,28 @@ def generateArchive(modulesData, homeData, titleData, logoData, repoDir, outDir,
         modules.append(m)
         i=i+1
     c=processRepositoryLight(modules,repoDir,outDir)
-    outputFile=buildSiteLight(c,repoDir,outDir,homeData,titleData, logoData)
+
+    #mediasDataObj=extractArchive(mediasData)
+    outputFile=buildSiteLight(c,repoDir,outDir,mediasData,homeData,titleData, logoData)
 
     return outputFile
+
+"""
+def extractArchive(mediasData):
+    mediasDataObj=[]
+
+    for mediaData in mediasData:
+        #print mediaData.read()
+        tarArchiveIO = StringIO.StringIO()
+        tarArchiveIO.write(mediasData.read())
+        tarArchiveIO.seek(0)
+
+        # We open the tar archive inside of the StringIO instance
+        with tarfile.open(mode='r:gz', fileobj=tarArchiveIO) as tar:
+            for member in tar.getnames():
+                media=StringIO.StringIO()
+                media.write(tar.extractfile(member).read())
+                mediasDataObj.append(media)
+            tar.close()
+        return mediasDataObj
+"""

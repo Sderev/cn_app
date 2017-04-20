@@ -310,18 +310,17 @@ Ce texte va être placé dans cours 0
 Ce texte va être placé dans cours 0
 ## Cours 1
 Ce texte va être placé dans cours 1
-'''comprehension
+```comprehension
 ::Comp1::
-[markdown] Je ne suis pas un cours !
+[markdown] Hello
 {
-salut
-}
-'''
+salut}
+```
 # Title 1
-'''activité
+```activite
 ::Act1::
 [markdown] Je ne suis toujours pas un cours !
-'''
+```
 ## Cours 3
 Par contre moi oui !
         """)
@@ -330,17 +329,23 @@ Par contre moi oui !
         sample_cours = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         del sample_object
 
-        print(sample_cours.sections[0].subsections)
+        # print(sample_cours.sections[0].subsections[3])
 
 
         self.assertEqual(sample_cours.sections[0].subsections[0].title, "Cours")
-        self.assertEqual(sample_cours.sections[0].subsections[0].folder, u"webcontent")
-        self.assertEqual(sample_cours.sections[0].subsections[0].src, u'Ce texte va être placé tout seul dans un cours\n')
+        self.assertEqual(sample_cours.sections[0].subsections[0].folder, "webcontent")
+        self.assertEqual(sample_cours.sections[0].subsections[0].src, 'Ce texte va être placé tout seul dans un cours\n')
         self.assertEqual(sample_cours.sections[0].subsections[1].title, "Cours 0")
-        self.assertEqual(sample_cours.sections[0].subsections[1].folder, u"webcontent")
-        self.assertEqual(sample_cours.sections[0].subsections[1].src, u'Ce texte va être placé dans cours 0\n### SubSub 000\nCe texte va être placé dans cours 0\n')
+        self.assertEqual(sample_cours.sections[0].subsections[1].folder, "webcontent")
+        self.assertEqual(sample_cours.sections[0].subsections[1].src, 'Ce texte va être placé dans cours 0\n### SubSub 000\nCe texte va être placé dans cours 0\n')
         self.assertEqual(sample_cours.sections[0].subsections[2].title, "Cours 1")
-        self.assertEqual(sample_cours.sections[0].subsections[2].folder, u"webcontent")
+        self.assertEqual(sample_cours.sections[0].subsections[2].folder, "webcontent")
+        self.assertNotEqual(sample_cours.sections[0].subsections[3].title, "Cours")
+        self.assertNotEqual(sample_cours.sections[0].subsections[3].folder, "webcontent")
+        self.assertNotEqual(sample_cours.sections[1].subsections[0].title, "Cours")
+        self.assertNotEqual(sample_cours.sections[1].subsections[0].folder, "webcontent")
+
+
 
 
         print("[FctParserTestCase]-- check_cours OK --")

@@ -344,6 +344,8 @@ Par contre moi oui !
         self.assertNotEqual(sample_cours.sections[0].subsections[3].folder, "webcontent")
         self.assertNotEqual(sample_cours.sections[1].subsections[0].title, "Cours")
         self.assertNotEqual(sample_cours.sections[1].subsections[0].folder, "webcontent")
+        self.assertEqual(sample_cours.sections[1].subsections[1].title, "Cours 3")
+
 
 
 

@@ -62,6 +62,7 @@ def get_embed_code_for_url(url):
             # return hostname, res['html']
         vid_id = url.strip('/').rsplit('/', 1)[1]
         embed_code = """<iframe src="https://player.vimeo.com/video/{0}" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>""".format(vid_id)
+        # FIXME : problème avec W3validator avec webkitallowfullscreen mozallowfullscreen allowfullscreen
         return hostname, embed_code
 
     # CanalU.tv
@@ -72,6 +73,7 @@ def get_embed_code_for_url(url):
 
     # not supported
     else:
+        # FIXME : Ajouter un warning ici
         return hostname, '<p>Unsupported video provider ({0})</p>'.format(hostname)
 
 

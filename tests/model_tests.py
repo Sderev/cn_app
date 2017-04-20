@@ -1,4 +1,4 @@
- #!/usr/bin/env python -W ignore::Warning
+ #!/usr/bin/ python
 # -*- coding: utf-8 -*-
 
 from io import open
@@ -347,10 +347,9 @@ Par contre moi oui !
         self.assertEqual(sample_cours.sections[1].subsections[1].title, "Cours 3")
 
 
-
-
-
         print("[FctParserTestCase]-- check_cours OK --")
+
+# FIXME : Ajouter le parserGift pour tester le parsing des activités
 
 
 

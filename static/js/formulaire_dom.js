@@ -17,32 +17,42 @@ function removeModule(){
 function createModule(){
 
   nb_module+=1;
-  var nbMod=document.getElementById('nb_module').setAttribute("value",nb_module)
-
+  var nbMod=document.getElementById('nb_module').setAttribute("value",nb_module);
   var modules= document.getElementById('modules');
-  var module= document.getElementById('module1');
-  var new_module= module.cloneNode(true);
+  var new_module= document.createElement('div');
   new_module.setAttribute('id','module'+nb_module);
 
-  var legend=new_module.getElementsByTagName("legend")[0];
+  var legend=document.createElement("legend");
   legend.innerHTML="Module "+nb_module+" :";
+  new_module.appendChild(legend);
 
-  var labelModule=new_module.getElementsByTagName("label")[0];
+  var labelModule= document.createElement("label");
   labelModule.setAttribute('for','id_module_'+nb_module);
   labelModule.innerHTML="Module "+nb_module+" :";
 
-  var labelMedia=new_module.getElementsByTagName("label")[1];
+  var labelMedia=document.createElement('label');
   labelMedia.setAttribute('for','id_module_'+nb_module);
   labelMedia.innerHTML="Media "+nb_module+" :";
 
-  var inputModule=new_module.getElementsByTagName("input")[0];
+  var inputModule=document.createElement('input');
   inputModule.setAttribute('id','id_module_'+nb_module);
   inputModule.setAttribute('name','module_'+nb_module);
+  inputModule.setAttribute('type','file');
 
-  var inputMedia=new_module.getElementsByTagName("input")[1];
+  var inputMedia=document.createElement('input');
   inputMedia.setAttribute('id','id_media_'+nb_module);
   inputMedia.setAttribute('name','media_'+nb_module);
+  inputMedia.setAttribute('type','file');
 
+  var p1=document.createElement('p');
+  var p2=document.createElement('p');
+
+  p1.appendChild(labelModule);
+  p1.appendChild(inputModule);
+  new_module.appendChild(p1);
+  p2.appendChild(labelMedia);
+  p2.appendChild(inputMedia);
+  new_module.appendChild(p2);
 
   modules.appendChild(new_module);
 

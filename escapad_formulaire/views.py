@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 from .forms import UploadForm
 from .forms import ModuleForm
+from .forms import UploadFormLight
 
 from src import model
 from src import utils
@@ -86,5 +87,36 @@ def form_upload(request):
     return render(request, 'escapad_formulaire/form.html', {
         'form': form,
         'formMod': formMod,
+        'sauvegarde': sauvegarde
+    })
+
+
+def form_upload_light(request):
+    sauvegarde = False
+
+    form = UploadFormLight(request.POST or None, request.FILES or None)
+
+    if form.is_valid() :
+        #print form.cleaned_data["moduletest"]
+        repoDir=settings.BASE_DIR
+        outDir=settings.BASE_DIR
+        baseUrl=settings.BASE_DIR
+
+        archiveData=form.cleaned_data["archive"]
+
+        #modulesData.append(moduleData2)
+        zip=cn.generateArchiveLight(archiveData, repoDir, outDir, baseUrl)
+
+        sauvegarde = True
+
+        response= HttpResponse(zip)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = "attachment; filename=\"site.zip\""
+        return response
+
+        #return HttpResponse(zip)"""
+
+    return render(request, 'escapad_formulaire/formlight.html', {
+        'form': form,
         'sauvegarde': sauvegarde
     })

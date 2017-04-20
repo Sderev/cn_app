@@ -19,10 +19,13 @@ from django.contrib import admin
 import escapad,escapad_formulaire
 import escapad_formulaire.views as escapad_form_view
 
+
 urlpatterns = [
     url(r'^escapad/', include('escapad.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^form_upload/$', escapad_formulaire.views.form_upload, name='form_upload'),
+    url(r'^form_upload_light/$', escapad_formulaire.views.form_upload_light, name='form_upload_light'),
+
 ]
 
 admin.site.site_header = 'Esc@pad Admin'

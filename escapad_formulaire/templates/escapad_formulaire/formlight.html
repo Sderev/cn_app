@@ -1,0 +1,24 @@
+{% extends "application.html" %}
+
+{% block title %}Upload de cours{% endblock %}
+{% block content %}
+
+
+    <h2>Veuillez insérer l'archive pour créer le cours</h2>
+    <h3>Veillez à bien respecter l'architecture!</h3>
+
+    {% if sauvegarde  %} Votre message a bien été envoyé !{% endif %}
+
+    <form action="{% url "form_upload_light" %}" method="post"  enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset>
+          <legend>Archive du cours</legend>
+          {{ form.as_p}}
+        </fieldset>
+
+        <input type="submit" value="Submit" />
+    </form>
+
+
+
+{% endblock %}

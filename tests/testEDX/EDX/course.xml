@@ -1,0 +1,198 @@
+<course name="course"
+org="culture-numerique-squad" course="internet" language="fr"
+advanced_modules="[&quot;cnvideo&quot;, &quot;library_content&quot;]"
+cert_html_view_enabled="true"  display_name="Internet: technologies, usages, société" graceperiod="" minimum_grade_credit="0.8" start="&quot;2030-01-01T00:00:00+00:00&quot;" >
+
+    
+    <chapter url_name="informatique-et-numerique" display_name="Informatique et numérique">
+        
+            
+            <sequential url_name="cours" display_name="Cours">
+                <vertical url_name="vertical_cours" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                    
+                    <cnvideo url_name="1-1-1-https-vimeo-com-122104210" xblock-family="xblock.v1" href="https://vimeo.com/122104210"/>
+                    
+                    <html url_name="1-1cours_webcontent" filename="html/1-1cours_webcontent.html" display_name="Raw HTML" editor="raw"/>
+                </vertical>
+            </sequential>
+            
+        
+            
+            <sequential url_name="comprehension" display_name="Compréhension"  format="Comprehension" graded="true">
+                <vertical url_name="vertical_comprehension" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                
+                  <problem url_name="97b95b6a-7eb3-448f-b3dc-eeb46fb981a8"/>
+                
+                  <problem url_name="89d22c51-4ed3-4ae9-885c-ad9ced32a378"/>
+                
+                  <problem url_name="4f6d6407-a550-4b53-a2bc-d370e29c9ead"/>
+                
+                </vertical>
+            </sequential>
+            
+        
+            
+            <sequential url_name="activite" display_name="Activité"  format="Activite" graded="true">
+                <vertical url_name="vertical_activite" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                
+                  <problem url_name="d38523b6-2d0d-4585-a0c8-a5049de1d882"/>
+                
+                </vertical>
+            </sequential>
+            
+        
+            
+            <sequential url_name="activite-avancee" display_name="Activité avancée"  format="Activite Avancee" graded="true">
+                <vertical url_name="vertical_activite-avancee" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                
+                  <problem url_name="71af0232-322a-4eba-b201-91fdb218a7b2"/>
+                
+                  <problem url_name="69a95a93-b8af-4225-9ae3-801c752100bc"/>
+                
+                </vertical>
+            </sequential>
+            
+        
+    </chapter>
+    
+    <chapter url_name="que-se-passe-t-il-quand-on-se-connecte-a-internet" display_name="Que se passe-t-il quand on se connecte à internet?">
+        
+            
+            <sequential url_name="cours" display_name="Cours">
+                <vertical url_name="vertical_cours" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                    
+                    <html url_name="2-1cours_webcontent" filename="html/2-1cours_webcontent.html" display_name="Raw HTML" editor="raw"/>
+                </vertical>
+            </sequential>
+            
+        
+            
+            <sequential url_name="comprehension" display_name="Compréhension"  format="Comprehension" graded="true">
+                <vertical url_name="vertical_comprehension" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                
+                  <problem url_name="7ecb5d5d-ee55-4154-961b-70ce0b6af400"/>
+                
+                  <problem url_name="1f5ba492-8c1e-4bbb-80ef-9f93cc12a03e"/>
+                
+                  <problem url_name="2f81eddf-47f6-4b51-b997-38b27a96a286"/>
+                
+                </vertical>
+            </sequential>
+            
+        
+            
+            <sequential url_name="activite" display_name="Activité"  format="Activite" graded="true">
+                <vertical url_name="vertical_activite" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                
+                  <problem url_name="401cce33-0a9b-40de-84b6-7db40505b77a"/>
+                
+                </vertical>
+            </sequential>
+            
+        
+    </chapter>
+    
+    <chapter url_name="les-supports-physiques-de-transmission-de-l-information" display_name="Les supports physiques de transmission de l'information">
+        
+            
+            <sequential url_name="cours" display_name="Cours">
+                <vertical url_name="vertical_cours" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                    
+                    <cnvideo url_name="1-3-1-https-vimeo-com-122104443" xblock-family="xblock.v1" href="https://vimeo.com/122104443"/>
+                    
+                    <cnvideo url_name="2-3-1-https-vimeo-com-122104499" xblock-family="xblock.v1" href="https://vimeo.com/122104499"/>
+                    
+                    <html url_name="3-1cours_webcontent" filename="html/3-1cours_webcontent.html" display_name="Raw HTML" editor="raw"/>
+                </vertical>
+            </sequential>
+            
+        
+            
+            <sequential url_name="comprehension" display_name="Compréhension"  format="Comprehension" graded="true">
+                <vertical url_name="vertical_comprehension" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                
+                  <problem url_name="8ee1d589-2906-4c44-95a5-c87e1b43aa69"/>
+                
+                  <problem url_name="3b86a932-b815-45d1-9549-bb5641e6c1b6"/>
+                
+                  <problem url_name="9efc497c-064a-419d-bbea-84986fca4fa6"/>
+                
+                </vertical>
+            </sequential>
+            
+        
+            
+            <sequential url_name="activite" display_name="Activité"  format="Activite" graded="true">
+                <vertical url_name="vertical_activite" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                
+                  <problem url_name="4bf576da-1e86-4bbf-b2f7-6e3e210949db"/>
+                
+                  <problem url_name="36e097dd-2686-4b6a-a59f-e6f6356059d0"/>
+                
+                  <problem url_name="01a0b5a7-45c3-4919-9297-ba2733223a75"/>
+                
+                </vertical>
+            </sequential>
+            
+        
+            
+            <sequential url_name="le-saviez-vous" display_name="Le saviez-vous ?">
+                <vertical url_name="vertical_le-saviez-vous" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                    
+                    <html url_name="3-4le-saviez-vous_webcontent" filename="html/3-4le-saviez-vous_webcontent.html" display_name="Raw HTML" editor="raw"/>
+                </vertical>
+            </sequential>
+            
+        
+    </chapter>
+    
+    <chapter url_name="societe-qui-decide-sur-internet" display_name="Société : qui décide sur internet?">
+        
+            
+            <sequential url_name="cours" display_name="Cours">
+                <vertical url_name="vertical_cours" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                    
+                    <cnvideo url_name="1-4-1-https-vimeo-com-122104174" xblock-family="xblock.v1" href="https://vimeo.com/122104174"/>
+                    
+                    <html url_name="4-1cours_webcontent" filename="html/4-1cours_webcontent.html" display_name="Raw HTML" editor="raw"/>
+                </vertical>
+            </sequential>
+            
+        
+            
+            <sequential url_name="comprehension" display_name="Compréhension"  format="Comprehension" graded="true">
+                <vertical url_name="vertical_comprehension" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                
+                  <problem url_name="73690e4a-c69e-48d5-8540-0d12b8b95b28"/>
+                
+                  <problem url_name="ce594b74-3d80-4b77-af1d-12e9fff26092"/>
+                
+                  <problem url_name="95f863ec-1b9b-4b8f-aaee-d07ae52882f2"/>
+                
+                </vertical>
+            </sequential>
+            
+        
+            
+            <sequential url_name="le-saviez-vous" display_name="Le saviez-vous ?">
+                <vertical url_name="vertical_le-saviez-vous" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                    
+                    <html url_name="4-3le-saviez-vous_webcontent" filename="html/4-3le-saviez-vous_webcontent.html" display_name="Raw HTML" editor="raw"/>
+                </vertical>
+            </sequential>
+            
+        
+            
+            <sequential url_name="activite-avancee" display_name="Activité avancée"  format="Activite Avancee" graded="true">
+                <vertical url_name="vertical_activite-avancee" display_name="Unité"> <!-- Here only 1 vertical/subsection containing content and activities-->
+                
+                  <problem url_name="2f6006e0-3dcb-4125-b239-9988e56152cd"/>
+                
+                </vertical>
+            </sequential>
+            
+        
+    </chapter>
+    
+
+</course>

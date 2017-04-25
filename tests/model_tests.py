@@ -48,7 +48,7 @@ class ModuleParsingTestCase(unittest.TestCase):
         with open('tests.config.json', encoding='utf-8') as jsf:
             self.control_module = json.load(jsf, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
 
-        with open("module_test.md", encoding='utf-8') as sample_file:
+        with open("coursTest/module1/module_test.md", encoding='utf-8') as sample_file:
             self.sample_object = model.Module(sample_file, "tests", "http://culturenumerique.univ-lille3.fr")
             self.sample_object.toHTML(False)
             # outfile = open('sample.config.json', 'wb')

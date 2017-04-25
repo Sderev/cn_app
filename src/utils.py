@@ -1,6 +1,6 @@
-from __future__ import division
 # -*- coding: utf-8 -*-
 #!cnappenv/bin/python
+from __future__ import division
 
 
 import os

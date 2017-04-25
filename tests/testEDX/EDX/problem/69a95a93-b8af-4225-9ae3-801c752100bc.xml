@@ -1,0 +1,126 @@
+<!-- DEBUT problem Le numérique dans la société -->
+<problem display_name="Le numérique dans la société" >
+    <legend>
+        <p>
+ <strong>
+  Le numérique, un enjeu pour les citoyens du XXIème siècle
+ </strong>
+ ...
+</p>
+
+<p>
+ Le numérique nous concerne tous en tant que citoyen. Il permet de nouvelles choses en automatisant des procédures et en donnant accès à des données jusqu'ici inexploitables. Mais numérique n'est évidemment pas systématiquement synonyme de progrès. Il faut toujours réfléchir aux
+ <strong>
+  finalités des applications
+ </strong>
+ développées. Nous vous invitons à vous documenter et à réfléchir aux questions suivantes :
+</p>
+
+<ul>
+ <li>
+  Dans la
+  <strong>
+   gestion de l‘énergie
+  </strong>
+  : qu'est-ce que la troisième révolution industrielle et pourquoi le numérique y contribue-t-il ?
+ </li>
+ <li>
+  En
+  <strong>
+   politique et média
+  </strong>
+  : Qu'est-ce que la vérification par les faits (fact-checking en anglais) ? En quoi le numérique l'a rendue possible / facile ?
+ </li>
+ <li>
+  En
+  <strong>
+   citoyenneté
+  </strong>
+  : Que signifie vote électronique et en quoi cela pose-t-il des questions essentielles ? Trouver au moins un avantage et un inconvénient.
+ </li>
+</ul>
+
+<p>
+ Après avoir fait vos recherches, répondez aux questions posées en quelques lignes et en indiquant les liens où vous avez trouvé ces informations.
+</p>
+    </legend>
+    
+    <script type="loncapa/python">
+import re
+def checkAnswerEssay(expect, ans):
+    response = re.search('', ans)
+    if response:
+        return 1
+    else:
+        return 0
+</script>
+<span id="69a95a93-b8af-4225-9ae3-801c752100bc"></span>
+<script type="text/javascript">
+    /* The object here is to replace the single line input with a textarea */
+   (function() {
+    var elem = $("#69a95a93-b8af-4225-9ae3-801c752100bc")
+        .closest("div.problem")
+        .find(":text");
+    /* There's CSS in the LMS that controls the height, so we have to override here */
+    var textarea = $('<textarea style="height:150px" rows="20" cols="70" />');
+    console.log(elem);
+    console.log(textarea);
+    //This is just a way to do an iterator in JS
+    for (attrib in {'id':null, 'name':null}) {
+        textarea.attr(attrib, elem.attr(attrib));
+    }
+    /* copy over the submitted value */
+    textarea.val(elem.val())
+    elem.replaceWith(textarea);
+    
+   })();
+</script>
+    <customresponse cfn="checkAnswerEssay">
+    	<textline size="40" correct_answer="" label="Problem Text"/>
+    </customresponse>
+    
+    
+    <solution>
+        <div class="detailed-solution"><p>
+ Voici quelques liens que nous vous proposons mais que vous avez sûrement trouvés par vous-même :
+</p>
+
+<ul>
+ <li>
+  À propos de la troisième révolution industrielle :
+  <ul>
+   <li>
+    <a href="http://fr.wikipedia.org/wiki/Troisième_révolution_industrielle" target="_blank">
+     Troisième révolution industrielle
+    </a>
+   </li>
+   <li>
+    <a href="http://www.latroisiemerevolutionindustrielleennordpasdecalais.fr" target="_blank">
+     pasdecalais
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li>
+  En politique et média : Qu'est-ce que la vérification par les faits (fact-checking en anglais) ? En quoi le numérique l'a rendue possible / facile ?
+  <ul>
+   <li>
+    <a href="http://fr.wikipedia.org/wiki/Vérification_par_les_faits" target="_blank">
+     vérification par les faits
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li>
+  En citoyenneté : Que signifie vote électronique et en quoi cela pose-t-il des questions essentielles ? Trouver au moins un avantage et un inconvénient.
+  <ul>
+   <li>
+    [arguments] (http://fr.wikipedia.org/wiki/Vote_électronique#Arguments_en_faveur)
+   </li>
+  </ul>
+ </li>
+</ul></div>
+    </solution>
+    
+</problem>
+<!-- FIN problem Le numérique dans la société -->

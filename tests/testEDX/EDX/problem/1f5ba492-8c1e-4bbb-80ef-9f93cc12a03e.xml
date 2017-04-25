@@ -1,0 +1,43 @@
+<!-- DEBUT problem le routeur -->
+<problem display_name="le routeur" max_attempts="1">
+    <legend>
+        <p>
+ Pourquoi la machine qui assure l'interconnexion avec
+les autres réseaux d'internet (le routeur) est-elle une place de choix
+pour y installer des fonctions de filtrage ?
+</p>
+    </legend>
+    
+    <multiplechoiceresponse>
+        <choicegroup type="MultipleChoice">
+            
+            <choice correct="true">Parce que toutes les informations passent par là.
+                
+                <choicehint>C'est exact !</choicehint>
+                
+            </choice>
+            
+            <choice correct="false">Parce que c'est la machine la plus puissante.
+                
+                <choicehint>Et bien, non.</choicehint>
+                
+            </choice>
+            
+            <choice correct="false">Parce qu'elle est en général bien cachée.
+                
+                <choicehint>Pas du</choicehint>
+                
+            </choice>
+            
+        </choicegroup>
+    </multiplechoiceresponse>
+    
+    
+    <solution>
+        <div class="detailed-solution"><p>
+ Parce que toutes les informations transitent par elle.
+</p></div>
+    </solution>
+    
+</problem>
+<!-- FIN problem le routeur -->

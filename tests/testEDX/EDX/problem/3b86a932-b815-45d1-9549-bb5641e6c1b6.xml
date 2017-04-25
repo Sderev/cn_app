@@ -1,0 +1,75 @@
+<!-- DEBUT problem vitesse de connexion -->
+<problem display_name="vitesse de connexion" max_attempts="1">
+    <legend>
+        <p>
+ <strong>
+  Qu'est-ce qui joue sur la vitesse d'une connexion ?
+ </strong>
+</p>
+    </legend>
+    
+    <choiceresponse partial_credit="EDC">
+        <checkboxgroup>
+            
+            
+            <choice correct="true">
+                Le débit maximal admissible du lien qui me raccorde au réseau local.
+                
+                <choicehint selected="true">
+                    Oui, c'est l'un des paramètres.
+                </choicehint>
+                
+            </choice>
+            
+            
+            <choice correct="true">
+                Le nombre d'utilisateurs de ce lien.
+                
+                <choicehint selected="true">
+                    Exact, c'est l'un des paramètres.
+                </choicehint>
+                
+            </choice>
+            
+            
+            <choice correct="true">
+                Le nombre de messages qui passent par les mêmes routeurs que les miens.
+                
+                <choicehint selected="true">
+                    Oui, c'est un paramètre.
+                </choicehint>
+                
+            </choice>
+            
+            
+            <choice correct="true">
+                Le nombre de requêtes arrivant sur la machine avec qui je désire échanger des messages.
+                
+                <choicehint selected="true">
+                    Oui.
+                </choicehint>
+                
+            </choice>
+            
+            
+            <choice correct="false">
+                L'âge de l'utilisateur.
+                
+                <choicehint selected="true">
+                    Sans commentaire !
+                </choicehint>
+                
+            </choice>
+            
+        </checkboxgroup>
+    </choiceresponse>
+    
+    
+    <solution>
+        <div class="detailed-solution"><p>
+ Le débit maximal admissible du lien, le nombre d'utilisateurs de ce lien, le nombre de requêtes mais aussi le nombre de messages qui passent par les mêmes routeurs que les miens.
+</p></div>
+    </solution>
+    
+</problem>
+<!-- FIN problem vitesse de connexion -->

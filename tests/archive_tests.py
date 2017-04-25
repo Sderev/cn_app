@@ -27,7 +27,7 @@ class EDXArchiveTestCase(unittest.TestCase):
         with open("coursTest/module1/module_test.md", encoding='utf-8') as sample_file:
             self.m = model.Module(sample_file, "tests", "http://culturenumerique.univ-lille3.fr")
             self.m.toHTML()
-            self.m_jsonn = json.loads(self.m.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+            self.m_json = json.loads(self.m.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
             if os.path.isdir(TEST_EDX_DIR):
                 shutil.rmtree(TEST_EDX_DIR)
             (self.m).edx_archive_path = toEDX.generateEDXArchive(self.m, TEST_EDX_DIR)
@@ -35,6 +35,7 @@ class EDXArchiveTestCase(unittest.TestCase):
 
     def runEDX(self):
         pass
+
 
     def runTest(self):
         self.runEDX()

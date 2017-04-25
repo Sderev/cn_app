@@ -48,9 +48,12 @@ reEndActivity = re.compile('^```\s*$')
 reMetaData = re.compile('^(?P<meta>([A-Z])+?):\s*(?P<value>.*)\s*$')
 
 #Warning messages
-DEFAULT_PLACEMENT_BODY = "Ce fragment de texte n'a été placé dans aucune sous-section, placement automatique dans une sous-section \"Cours\": "
-METADATA_NOT_FOUND = "Cette balise de Header ne correspond à aucun attribut modifiable, vérifier l'orthographe/l'existence de cette balise: "
-NOT_START_SECTION = "Cette partie de texte qui suit le header n'est pas placée dans une section, mettez un \"# <titre>\" après l'en-tête: "
+DEFAULT_PLACEMENT_BODY = "[UTIL]Ce fragment de texte n'a été placé dans aucune sous-section, placement automatique dans une sous-section \"Cours\": "
+METADATA_NOT_FOUND = "[UTIL]Cette balise de Header ne correspond à aucun attribut modifiable, vérifier l'orthographe/l'existence de cette balise: "
+NOT_START_SECTION = "[UTIL]Cette partie de texte qui suit le header n'est pas placée dans une section, mettez un \"# <titre>\" après l'en-tête: "
+
+#Hiérarchie
+hierarchie = ''
 
 def goodActivity(match):
     """ utility function used with 'reStartActivity' regex pattern to determine wether the 'type' variable of the given matched pattern fits the name of class defined in this module
@@ -252,7 +255,6 @@ class AnyActivity(Subsection):
             if question.text_format in (("markdown")):
                 question.md_src_to_html()
                 return self.html_src
-        print (self.html_src)
 
 
     def toEdxProblemsList(self):

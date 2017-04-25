@@ -82,7 +82,6 @@ tout doit être représenté sous forme de nombres être manipulé par un ordina
         out.write(activity.html_src)
         out.close()
 
-
     def runTest(self):
         self.TestDunExemple()
 

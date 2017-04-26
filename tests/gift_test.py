@@ -1,6 +1,7 @@
  #!/usr/bin/ python
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import html
 sys.path.append('..')
@@ -21,32 +22,99 @@ logger.setLevel(40)
 import yattag
 import glob
 
+TEST_GIFT_DIR = "./testGIFT/"
+
+
 class GiftParsingTestCase(unittest.TestCase):
 
-    def TestDunExemple(self):
+    def TestUnChoix(self):
         io_gift = StringIO("""
 ::Pourquoi représenter avec des nombres ?::
-[html]<p>Pourquoi faut-il représenter les textes, images, sons,
-etc, par des nombres dans un ordinateur ?</p>
+Pourquoi faut-il représenter les textes, images, sons,
+etc, par des nombres dans un ordinateur ?
 {
-~<p>C'est un choix industriel.</p>#<p>Non, les industriels n'avaient pas le choix.</p>
-~<p>Les ordinateurs ont été inventés par des mathématiciens.</p>#<p>Non, les mathématiciens savent manipuler autre chose que des nombres, et les ordinateurs sont le fruit de l'interaction entre de nombreuses sciences.</p>
-=<p>Tout ordinateur est fondamentalement une machine qui calcule avec des
-nombres.</p>#<p>Oui, comme un ordinateur ne manipule que des nombres,
-tout doit être représenté sous forme de nombres être manipulé par un ordinateur.</p>
-####<p>Un ordinateur ne manipule que des nombres, tout doit donc être représenté sous forme de nombres pour qu'il puisse le manipuler.</p> }
+~C'est un choix industriel.#Non, les industriels n'avaient pas le choix.
+~Les ordinateurs ont été inventés par des mathématiciens.#Non, les mathématiciens savent manipuler autre chose que des nombres, et les ordinateurs sont le fruit de l'interaction entre de nombreuses sciences.
+=Tout ordinateur est fondamentalement une machine qui calcule avec des
+nombres.#Oui, comme un ordinateur ne manipule que des nombres,
+tout doit être représenté sous forme de nombres être manipulé par un ordinateur.
+####Un ordinateur ne manipule que des nombres, tout doit donc être représenté sous forme de nombres pour qu'il puisse le manipuler. }
 """)
         io_modele = StringIO("""
 ::Pourquoi représenter avec des nombres ?::
-[html]<p>Pourquoi faut-il représenter les textes, images, sons,
-etc, par des nombres dans un ordinateur ?</p>
+Pourquoi faut-il représenter les textes, images, sons,
+etc, par des nombres dans un ordinateur ?
 {
-~<p>C'est un choix industriel.</p>#<p>Non, les industriels n'avaient pas le choix.</p>
-~<p>Les ordinateurs ont été inventés par des mathématiciens.</p>#<p>Non, les mathématiciens savent manipuler autre chose que des nombres, et les ordinateurs sont le fruit de l'interaction entre de nombreuses sciences.</p>
-=<p>Tout ordinateur est fondamentalement une machine qui calcule avec des
-nombres.</p>#<p>Oui, comme un ordinateur ne manipule que des nombres,
-tout doit être représenté sous forme de nombres être manipulé par un ordinateur.</p>
-####<p>Un ordinateur ne manipule que des nombres, tout doit donc être représenté sous forme de nombres pour qu'il puisse le manipuler.</p> }
+~C'est un choix industriel.#Non, les industriels n'avaient pas le choix.
+~Les ordinateurs ont été inventés par des mathématiciens.#Non, les mathématiciens savent manipuler autre chose que des nombres, et les ordinateurs sont le fruit de l'interaction entre de nombreuses sciences.
+=Tout ordinateur est fondamentalement une machine qui calcule avec des
+nombres.#Oui, comme un ordinateur ne manipule que des nombres,
+tout doit être représenté sous forme de nombres être manipulé par un ordinateur.
+####Un ordinateur ne manipule que des nombres, tout doit donc être représenté sous forme de nombres pour qu'il puisse le manipuler.}
+```
+""")
+        questions = pygift.parseFile(io_gift)
+        io_gift.close()
+        io_none = StringIO("""
+# Titre 1
+## Titre 2
+        """)
+
+        html_src = ''
+        d = yattag.Doc()
+        d.asis('<!DOCTYPE html>')
+        with d.tag('html'):
+            with d.tag('head'):
+                d.stag('meta', charset="utf-8")
+                d.stag('link', rel="stylesheet", href="../static/css/bootstrap.min.css")
+                d.stag('link', rel="stylesheet", href="../static/css/modules.css")
+                d.stag('link', rel="stylesheet", href="../static/css/jasny-bootstrap.min.css", media="screen")
+
+        with d.tag('h2'):
+            d.text("Nouveau parser")
+
+        for q in questions:
+            q.toHTML(d,True)
+
+        for q in questions:
+            q.toHTML(d,False)
+
+        module = model.Module(io_none,"test")
+        activity = model.Comprehension(module.sections[0],io_modele)
+        activity.toHTML(True)
+        # print(sample_activty.sections[0])
+        io_none.close()
+        io_modele.close()
+
+        out =  open(TEST_GIFT_DIR+"simplechoice.html", "w")
+        out.write (d.getvalue())
+
+        out.write("<h2> Ancien parser </h2>")
+
+        out.write(activity.html_src)
+
+        activity.toHTML(False)
+
+        out.write(activity.html_src)
+        out.close()
+
+    def TestMultiple(self):
+        io_gift = StringIO("""
+::Parmi ces personnes, nommez-en deux qui sont enterrées dans la Grant's tomb. ::{
+   ~%-100%Personne # NOMMEZ EN DEUX
+   ~%50%Grant # Et de un
+   ~%50%L'épouse de Grant # Et de deux
+   ~%-100%Le père de Grant # Perdu !
+####C'était Grant ainsi que sa femme
+}""")
+        io_modele = StringIO("""
+::Parmi ces personnes, nommez-en deux qui sont enterrées dans la Grant's tomb. ::{
+   ~%-100%Personne # NOMMEZ EN DEUX
+   ~%50%Grant # Et de un
+   ~%50%L'épouse de Grant # Et de deux
+   ~%-100%Le père de Grant # Perdu !
+####C'était Grant ainsi que sa femme
+}
 ```
 """)
         questions = pygift.parseFile(io_gift)
@@ -67,23 +135,335 @@ tout doit être représenté sous forme de nombres être manipulé par un ordina
                 d.stag('link', rel="stylesheet", href="../static/css/modules.css")
                 d.stag('link', rel="stylesheet", href="../static/css/jasny-bootstrap.min.css", media="screen")
 
+        with d.tag('h2'):
+            d.text("Nouveau parser")
+
         for q in questions:
-            with d.tag('div', klass='qandcode'):
-                q.toHTML(d,True)
+            q.toHTML(d,True)
+
+        for q in questions:
+            q.toHTML(d,False)
+
+        module = model.Module(io_none,"test")
+        activity = model.Comprehension(module.sections[0],io_modele)
+        activity.toHTML(True)
+        # print(sample_activty.sections[0])
+        io_none.close()
+        io_modele.close()
+
+        out =  open(TEST_GIFT_DIR+"multiplechoice.html", "w")
+        out.write (d.getvalue())
+
+        out.write("<h2> Ancien parser </h2>")
+
+        out.write(activity.html_src)
+
+        activity.toHTML(False)
+
+        out.write(activity.html_src)
+        out.close()
+
+
+    def TestSimpleText(self):
+        io_gift = StringIO("""
+::Le numérique concerne tout le monde::
+**Quels étudiants sont concernés par le numérique ?**
+Le numérique concerne évidemment les étudiants en informatique et plus généralement les étudiants des filières scientifiques.  Mais vous qui êtes inscrits dans une université de sciences humaines et sociales, êtes-vous concernés ?
+Choisissez au moins 3 des domaines suivants et faites des recherches pour voir en quoi ils sont impactés par le numérique : les médias, la santé, l'histoire, la sociologie, la linguistique, les arts, la culture, l'enseignement, l'archéologie.
+Faites une synthèse en quelques lignes de vos recherches en précisant les domaines auxquels vous vous êtes intéressés. Indiquez les liens des sites sur lesquels vous avez trouvé ces informations. La liste est non exhaustive et vous pouvez vous intéresser à d'autres domaines.
+{####
+# Le numérique concerne tout le monde
+Ces recherches ont dû vous convaincre, si c'était nécessaire, que le numérique **n'est pas réservé** aux informaticiens, il concerne tout le monde, toutes les disciplines.
+S'agissant plus particulièrement des **sciences humaines**, la prise en compte du numérique a fait évoluer les champs disciplinaires pour faire apparaître ce qu'on appelle les **humanités numériques** ( *digital humanities* en anglais).
+Voici quelques exemples que nous vous proposons, n'hésitez pas à proposer d'autres exemples dans le forum de discussion :
+* Dans les **médias** : nouveau sous-métier de journalisme : les **data-journalistes**
+	* [data-visualisation](http://www.lemonde.fr/data-visualisation/)
+	* [journalisme de données](http://fr.wikipedia.org/wiki/Journalisme_de_données)
+* Dans la **santé** : (imagerie, dossier numérique du patient, ...)
+	* [simulation](https://interstices.info/jcms/c_21525/simulation-de-loperation-de-la-cataracte)
+* En **histoire, sociologie, linguistique** : *fouille de données*
+	* [fouille de données](http://www.youtube.com/watch?feature=player_embedded&v=tp4y-_VoXdA)
+* En **art et culture** :
+	* [Le Fresnoy](http://www.lefresnoy.net/fr/Le-Fresnoy/presentation)
+* Dans l'**enseignement** : (outils numérique d'accompagnement scolaire, MOOC,...):
+	* [FUN](https://www.france-universite-numerique-mooc.fr/cours/)
+* En fouille archéologique :  une réalisation prestigieuse réalisée à Lille3 :
+	* [vase qui parle](http://bsa.biblio.univ-lille3.fr/blog/2013/09/exposition-le-vase-qui-parle-au-palais-des-beaux-arts-de-lille/)
+}
+""")
+        io_modele = StringIO("""
+::Le numérique concerne tout le monde::
+**Quels étudiants sont concernés par le numérique ?**
+Le numérique concerne évidemment les étudiants en informatique et plus généralement les étudiants des filières scientifiques.  Mais vous qui êtes inscrits dans une université de sciences humaines et sociales, êtes-vous concernés ?
+Choisissez au moins 3 des domaines suivants et faites des recherches pour voir en quoi ils sont impactés par le numérique : les médias, la santé, l'histoire, la sociologie, la linguistique, les arts, la culture, l'enseignement, l'archéologie.
+Faites une synthèse en quelques lignes de vos recherches en précisant les domaines auxquels vous vous êtes intéressés. Indiquez les liens des sites sur lesquels vous avez trouvé ces informations. La liste est non exhaustive et vous pouvez vous intéresser à d'autres domaines.
+{####
+# Le numérique concerne tout le monde
+Ces recherches ont dû vous convaincre, si c'était nécessaire, que le numérique **n'est pas réservé** aux informaticiens, il concerne tout le monde, toutes les disciplines.
+S'agissant plus particulièrement des **sciences humaines**, la prise en compte du numérique a fait évoluer les champs disciplinaires pour faire apparaître ce qu'on appelle les **humanités numériques** ( *digital humanities* en anglais).
+Voici quelques exemples que nous vous proposons, n'hésitez pas à proposer d'autres exemples dans le forum de discussion :
+* Dans les **médias** : nouveau sous-métier de journalisme : les **data-journalistes**
+	* [data-visualisation](http://www.lemonde.fr/data-visualisation/)
+	* [journalisme de données](http://fr.wikipedia.org/wiki/Journalisme_de_données)
+* Dans la **santé** : (imagerie, dossier numérique du patient, ...)
+	* [simulation](https://interstices.info/jcms/c_21525/simulation-de-loperation-de-la-cataracte)
+* En **histoire, sociologie, linguistique** : *fouille de données*
+	* [fouille de données](http://www.youtube.com/watch?feature=player_embedded&v=tp4y-_VoXdA)
+* En **art et culture** :
+	* [Le Fresnoy](http://www.lefresnoy.net/fr/Le-Fresnoy/presentation)
+* Dans l'**enseignement** : (outils numérique d'accompagnement scolaire, MOOC,...):
+	* [FUN](https://www.france-universite-numerique-mooc.fr/cours/)
+* En fouille archéologique :  une réalisation prestigieuse réalisée à Lille3 :
+	* [vase qui parle](http://bsa.biblio.univ-lille3.fr/blog/2013/09/exposition-le-vase-qui-parle-au-palais-des-beaux-arts-de-lille/)
+}
+```
+""")
+        questions = pygift.parseFile(io_gift)
+        io_gift.close()
+
+        io_none = StringIO("""
+# Titre 1
+## Titre 2
+        """)
+
+        html_src = ''
+        d = yattag.Doc()
+        d.asis('<!DOCTYPE html>')
+        with d.tag('html'):
+            with d.tag('head'):
+                d.stag('meta', charset="utf-8")
+                d.stag('link', rel="stylesheet", href="../static/css/bootstrap.min.css")
+                d.stag('link', rel="stylesheet", href="../static/css/modules.css")
+                d.stag('link', rel="stylesheet", href="../static/css/jasny-bootstrap.min.css", media="screen")
+
+        with d.tag('h2'):
+            d.text("Nouveau parser")
+
+        for q in questions:
+            q.toHTML(d,True)
+
+        for q in questions:
+            q.toHTML(d,False)
 
         module = model.Module(io_none,"test")
         activity = model.Comprehension(module.sections[0],io_modele)
         activity.toHTML(True)
         # print(sample_activty.sections[0])
 
+        io_none.close()
+        io_modele.close()
 
-        out =  open("test2.html", "w")
+        out =  open(TEST_GIFT_DIR+"texte.html", "w")
         out.write (d.getvalue())
+
+        out.write("<h2> Ancien parser </h2>")
+
+        out.write(activity.html_src)
+
+        activity.toHTML(False)
+
         out.write(activity.html_src)
         out.close()
 
+    def TestSimpleText2(self):
+        io_gift = StringIO("""
+::Le numérique au quotidien::Les microprocesseurs, les ordinateurs ont envahi notre quotidien. Pour chacun des domaines suivants, cherchez des exemples où le numérique a permis des évolutions notables :
+- Domotique
+- Transports
+- Vêtements
+- Médical / paramédical
+Après avoir effectué vos recherches, copier dans la fenêtre de rendu 1 lien pour au moins 3 des 4 thèmes proposés (un lien par thème).
+{####
+# le numérique au quotidien
+Quelques exemples que nous vous proposons au cas où vous n'auriez rien trouvé, ...
+La **domotique** est un domaine en pleine expansion qui vise à équiper numériquement notre maison :
+- [nest](https://nest.com/fr/)
+- [domotique](http://fr.wikipedia.org/wiki/Domotique)
+Pour les **transports**, les ordinateurs de bord sont depuis longtemps présents dans les voitures, de plus en plus ils sont responsables de notre sécurité :
+- [electrostabilisateur]( http://fr.wikipedia.org/wiki/electrostabilisateur_programmé)
+- [ordinateur de bord](http://fr.wikipedia.org/wiki/Ordinateur_de_bord)
+Les **chaussures** : gadget ou réelle innovation ? Ce genre d'objet est de plus en plus présents dans nos vies :
+ - [chaussures](http://www.linternaute.com/science/technologie/deja-demain/07/chaussure-intelligente/chaussure-intelligente.shtml)
+Les **lentilles pour la vue** ?
+ - [lentilles](http://www.zdnet.fr/actualites/google-apres-les-lunettes-connectees-les-lentilles-pour-le-diabete-39797148.htm)
+}
+""")
+        io_modele = StringIO("""
+::Le numérique au quotidien::Les microprocesseurs, les ordinateurs ont envahi notre quotidien. Pour chacun des domaines suivants, cherchez des exemples où le numérique a permis des évolutions notables :
+- Domotique
+- Transports
+- Vêtements
+- Médical / paramédical
+Après avoir effectué vos recherches, copier dans la fenêtre de rendu 1 lien pour au moins 3 des 4 thèmes proposés (un lien par thème).
+{####
+# le numérique au quotidien
+Quelques exemples que nous vous proposons au cas où vous n'auriez rien trouvé, ...
+La **domotique** est un domaine en pleine expansion qui vise à équiper numériquement notre maison :
+- [nest](https://nest.com/fr/)
+- [domotique](http://fr.wikipedia.org/wiki/Domotique)
+Pour les **transports**, les ordinateurs de bord sont depuis longtemps présents dans les voitures, de plus en plus ils sont responsables de notre sécurité :
+- [electrostabilisateur]( http://fr.wikipedia.org/wiki/electrostabilisateur_programmé)
+- [ordinateur de bord](http://fr.wikipedia.org/wiki/Ordinateur_de_bord)
+Les **chaussures** : gadget ou réelle innovation ? Ce genre d'objet est de plus en plus présents dans nos vies :
+ - [chaussures](http://www.linternaute.com/science/technologie/deja-demain/07/chaussure-intelligente/chaussure-intelligente.shtml)
+Les **lentilles pour la vue** ?
+ - [lentilles](http://www.zdnet.fr/actualites/google-apres-les-lunettes-connectees-les-lentilles-pour-le-diabete-39797148.htm)
+}
+```
+""")
+        questions = pygift.parseFile(io_gift)
+        io_gift.close()
+
+        io_none = StringIO("""
+# Titre 1
+## Titre 2
+        """)
+
+        html_src = ''
+
+        d = yattag.Doc()
+        d.asis('<!DOCTYPE html>')
+        with d.tag('html'):
+            with d.tag('head'):
+                d.stag('meta', charset="utf-8")
+                d.stag('link', rel="stylesheet", href="../static/css/bootstrap.min.css")
+                d.stag('link', rel="stylesheet", href="../static/css/modules.css")
+                d.stag('link', rel="stylesheet", href="../static/css/jasny-bootstrap.min.css", media="screen")
+
+        with d.tag('h2'):
+            d.text("Nouveau parser")
+
+        for q in questions:
+            q.toHTML(d,True)
+
+        for q in questions:
+            q.toHTML(d,False)
+
+        module = model.Module(io_none,"test")
+        activity = model.Comprehension(module.sections[0],io_modele)
+        activity.toHTML(True)
+        io_none.close()
+        io_modele.close()
+        # print(sample_activty.sections[0])
+
+
+        out =  open(TEST_GIFT_DIR+"texte2.html", "w")
+        out.write (d.getvalue())
+
+        out.write("<h2> Ancien parser </h2>")
+
+        out.write(activity.html_src)
+
+        activity.toHTML(False)
+
+        out.write(activity.html_src)
+        out.close()
+
+    def TestLesAutres(self):
+        #INITIALISATION
+        out =  open(TEST_GIFT_DIR+"nouveauparser.html", "w")
+        d = yattag.Doc()
+        d.asis('<!DOCTYPE html>')
+        with d.tag('html'):
+            with d.tag('head'):
+                d.stag('meta', charset="utf-8")
+                d.stag('link', rel="stylesheet", href="../static/css/bootstrap.min.css")
+                d.stag('link', rel="stylesheet", href="../static/css/modules.css")
+                d.stag('link', rel="stylesheet", href="../static/css/jasny-bootstrap.min.css", media="screen")
+
+# AVEC UNE RÉPONSE SIMPLE
+        io_simple = StringIO("""
+::first paret of text of Q2::
+//comment in Q2
+second part of text of Q2
+{=answer Q2}
+        """)
+
+        questions = pygift.parseFile(io_simple)
+        io_simple.close()
+
+        with d.tag('h2'):
+            d.text("Nouveau parser")
+
+        for q in questions:
+            q.toHTML(d,True)
+
+        for q in questions:
+            q.toHTML(d,False)
+
+        # AVEC UNE RÉPONSE AU MILIEU DU TEXTE
+
+        io_in = StringIO("""
+blabla {} with tail
+""")
+
+        questions = pygift.parseFile(io_in)
+        io_in.close()
+
+        for q in questions:
+            q.toHTML(d,True)
+
+        for q in questions:
+            q.toHTML(d,False)
+
+        #NUMERICAL ANSWER
+
+        io_num = StringIO("""
+::Num1::
+When was Ulysses S. Grant born?{#1822:5}
+
+::Num2::
+What is the value of pi (to 3 decimal places)? {#3.141..3.142}.
+
+::Num3::
+When was Ulysses S. Grant born? {#
+=1822:0
+=%50%1822:2
+}
+        """)
+
+        questions = pygift.parseFile(io_num)
+        io_num.close()
+
+        for q in questions:
+            q.toHTML(d,True)
+
+        for q in questions:
+            q.toHTML(d,False)
+
+        io_match = StringIO("""
+::Match::
+Match the following countries with their corresponding capitals. {
+=Canada -> Ottawa
+=Italy -> Rome
+=Japan -> Tokyo
+=India -> New Delhi
+}
+        """)
+        questions = pygift.parseFile(io_match)
+        io_match.close()
+
+        for q in questions:
+            q.toHTML(d,True)
+
+        for q in questions:
+            q.toHTML(d,False)
+
+        #FERMETURE ET ECRITURE DU FICHIER
+        out.write (d.getvalue())
+        out.close()
+
+
     def runTest(self):
-        self.TestDunExemple()
+        try :
+            os.makedirs(TEST_GIFT_DIR)
+        except :
+            pass
+        self.TestUnChoix()
+        self.TestMultiple()
+        self.TestSimpleText()
+        self.TestSimpleText2()
+        self.TestLesAutres()
 
 
 # Main

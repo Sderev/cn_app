@@ -4,6 +4,7 @@ lxml
 yattag
 python-slugify
 markdown
+html
 MarkdownSuperscript
 flask
 requests
@@ -12,3 +13,5 @@ beautifulsoup4
 Sphinx
 sphinx-rtd-theme
 recommonmark
+-e git://github.com/CelestineSauvage/pygiftparser#egg=pygiftparser
+

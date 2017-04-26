@@ -6,5 +6,6 @@ all :
 
 clean : all
 	rm -r testEDX
-	rm test2.html
+	rm -r testGIFT
+
 

@@ -174,7 +174,7 @@ def generateArchive(modulesData, mediasData, homeData, titleData, logoData, repo
     i=1
     for moduleData in modulesData:
         #The only way I could find to encode InMemoryUploadedFile into utf-8 (avoid warning)
-        moduleData = TextIOWrapper(moduleData.file, encoding='utf-8')
+        #moduleData = TextIOWrapper(moduleData.file, encoding='utf-8')
         m=processModuleLight("module"+str(i),moduleData,repoDir,outDir,baseUrl)
         modules.append(m)
         i=i+1

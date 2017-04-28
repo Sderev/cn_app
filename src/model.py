@@ -423,6 +423,19 @@ class Section:
                 edx_xml_problem_list += sub.toEdxProblemsList()
         return edx_xml_problem_list
 
+    def toCourseHTMLVisualisation(self):
+        """Loops through Cours subsections only.
+
+        :rtype: a string concatenating subsections HTML output
+        """
+        courseHTML = ""
+        for sub in self.subsections:
+            if isinstance(sub, Cours):
+                courseHTML += "\n\n<!-- Subsection "+sub.num+" -->\n"
+                courseHTML += "\n\n<h2>"+sub.num+". "+sub.title+" </h2>\n"
+                courseHTML += markdown.markdown(sub.src, MARKDOWN_EXT)
+        return courseHTML
+
 class Module:
     """ Module structure.
 
@@ -530,6 +543,17 @@ class Module:
             edx_xml_problem_list += s.toEdxProblemsList()
         edx_xml_problem_list += "\n</library>"
         return edx_xml_problem_list
+
+    def toCourseHTMLVisualisation(self):
+        """To CourseHTML with title (used for getting preview of the website)
+
+        :rtype: Returns a string of the concatenation of their HTML output"""
+        courseHTML = ""
+        for sec in self.sections:
+            courseHTML += "\n\n<!-- Section "+sec.num+" -->\n"
+            courseHTML += "\n\n<h1> "+sec.num+". "+sec.title+" </h1>\n";
+            courseHTML += sec.toCourseHTMLVisualisation()
+        return courseHTML
 
 # param syntax
 # :param mode: Specifies the mode of transport to use when calculating

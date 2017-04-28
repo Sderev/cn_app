@@ -24,7 +24,21 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     # os.path.join(BASE_DIR, "repo_data"),
 ]
+#DEFAULT_FROM_EMAIL="culnum@gmail.com"
+#EMAIL_HOST = 'localhost'
+#EMAIL_PORT = 1025
 
+
+#EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_BACKEND='smtp.gmail.com'
+#EMAIL_HOST='smtp.gmail.com'
+#EMAIL_PORT=587
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER='culnum@gmail.com'
+EMAIL_HOST_PASSWORD='vivelenumerique'
+EMAIL_PORT = 587
 
 # Application definition
 

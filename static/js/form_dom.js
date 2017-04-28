@@ -8,10 +8,8 @@ function removeModule(){
     var module= document.getElementById('module'+nb_module);
     var modules= document.getElementById('modules').removeChild(module);
     nb_module+=-1;
-    document.getElementById('nb_module').setAttribute("value",nb_module)
-
+    document.getElementById('nb_module').setAttribute("value",nb_module);
   }
-
 }
 
 function createModule(){

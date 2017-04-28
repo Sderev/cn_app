@@ -66,9 +66,9 @@ tout doit être représenté sous forme de nombres être manipulé par un ordina
         with d.tag('html'):
             with d.tag('head'):
                 d.stag('meta', charset="utf-8")
-                d.stag('link', rel="stylesheet", href="../static/css/bootstrap.min.css")
-                d.stag('link', rel="stylesheet", href="../static/css/modules.css")
-                d.stag('link', rel="stylesheet", href="../static/css/jasny-bootstrap.min.css", media="screen")
+                d.stag('link', rel="stylesheet", href="../../static/css/bootstrap.min.css")
+                d.stag('link', rel="stylesheet", href="../../static/css/modules.css")
+                d.stag('link', rel="stylesheet", href="../../static/css/jasny-bootstrap.min.css", media="screen")
 
         with d.tag('h2'):
             d.text("Nouveau parser")
@@ -131,9 +131,9 @@ tout doit être représenté sous forme de nombres être manipulé par un ordina
         with d.tag('html'):
             with d.tag('head'):
                 d.stag('meta', charset="utf-8")
-                d.stag('link', rel="stylesheet", href="../static/css/bootstrap.min.css")
-                d.stag('link', rel="stylesheet", href="../static/css/modules.css")
-                d.stag('link', rel="stylesheet", href="../static/css/jasny-bootstrap.min.css", media="screen")
+                d.stag('link', rel="stylesheet", href="../../static/css/bootstrap.min.css")
+                d.stag('link', rel="stylesheet", href="../../static/css/modules.css")
+                d.stag('link', rel="stylesheet", href="../../static/css/jasny-bootstrap.min.css", media="screen")
 
         with d.tag('h2'):
             d.text("Nouveau parser")
@@ -232,9 +232,9 @@ Voici quelques exemples que nous vous proposons, n'hésitez pas à proposer d'au
         with d.tag('html'):
             with d.tag('head'):
                 d.stag('meta', charset="utf-8")
-                d.stag('link', rel="stylesheet", href="../static/css/bootstrap.min.css")
-                d.stag('link', rel="stylesheet", href="../static/css/modules.css")
-                d.stag('link', rel="stylesheet", href="../static/css/jasny-bootstrap.min.css", media="screen")
+                d.stag('link', rel="stylesheet", href="../../static/css/bootstrap.min.css")
+                d.stag('link', rel="stylesheet", href="../../static/css/modules.css")
+                d.stag('link', rel="stylesheet", href="../../static/css/jasny-bootstrap.min.css", media="screen")
 
         with d.tag('h2'):
             d.text("Nouveau parser")
@@ -326,9 +326,9 @@ Les **lentilles pour la vue** ?
         with d.tag('html'):
             with d.tag('head'):
                 d.stag('meta', charset="utf-8")
-                d.stag('link', rel="stylesheet", href="../static/css/bootstrap.min.css")
-                d.stag('link', rel="stylesheet", href="../static/css/modules.css")
-                d.stag('link', rel="stylesheet", href="../static/css/jasny-bootstrap.min.css", media="screen")
+                d.stag('link', rel="stylesheet", href="../../static/css/bootstrap.min.css")
+                d.stag('link', rel="stylesheet", href="../../static/css/modules.css")
+                d.stag('link', rel="stylesheet", href="../../static/css/jasny-bootstrap.min.css", media="screen")
 
         with d.tag('h2'):
             d.text("Nouveau parser")
@@ -367,9 +367,9 @@ Les **lentilles pour la vue** ?
         with d.tag('html'):
             with d.tag('head'):
                 d.stag('meta', charset="utf-8")
-                d.stag('link', rel="stylesheet", href="../static/css/bootstrap.min.css")
-                d.stag('link', rel="stylesheet", href="../static/css/modules.css")
-                d.stag('link', rel="stylesheet", href="../static/css/jasny-bootstrap.min.css", media="screen")
+                d.stag('link', rel="stylesheet", href="../../static/css/bootstrap.min.css")
+                d.stag('link', rel="stylesheet", href="../../static/css/modules.css")
+                d.stag('link', rel="stylesheet", href="../../static/css/jasny-bootstrap.min.css", media="screen")
 
 # AVEC UNE RÉPONSE SIMPLE
         io_simple = StringIO("""
@@ -442,6 +442,38 @@ Match the following countries with their corresponding capitals. {
         """)
         questions = pygift.parseFile(io_match)
         io_match.close()
+
+        for q in questions:
+            q.toHTML(d,True)
+
+        for q in questions:
+            q.toHTML(d,False)
+
+
+        io_minmax = StringIO("""
+::Les normes et leurs sigles::
+**Classez ces modes de connexion du plus lent au plus rapide.**
+3G,4G,H+,Edge
+{
+3G -> 2
+4G -> 4
+H+ -> 3
+E (Edge) -> 1
+####
+# Les normes et leurs sigles
+- Les modes de connexion du plus lent au plus rapide.
+    - E (Edge) aussi appelé 2G, lent. Ce mode de connexion permet à peine de lire ses mails. Il ne permet pas une navigation fluide sur le Web.
+    - 3G (3ème génération) permet de faire des recherches et de surfer sans trop attendre.
+    - H+, est une amélioration de la 3G. il est plus rapide que le wifi si les connexions sont optimales. Et l'accès à la musique en ligne où aux vidéos peut être envisagé.
+    - 4G, plus rapide que le wifi si les connexions sont optimales. À condition bien sûr que cette connexion soit de bonne qualité ("plusieurs petites briques"), l'accès à internet est alors très fluide, et les jeux en ligne, les vidéos en streaming ou le téléchargement de gros fichiers devient possible.
+Notez bien que pour pouvoir bénéficier d'une connexion 4G, il faut :
+ - que cette connexion soit disponible là où vous vous trouvez,
+ - que votre smartphone soit équipé d'une antenne 4G, c'est loin d'être le cas sur tous les modèles y compris sur des appareils récents.
+ }
+        """)
+
+        questions = pygift.parseFile(io_minmax)
+        io_minmax.close()
 
         for q in questions:
             q.toHTML(d,True)

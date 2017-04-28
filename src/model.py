@@ -18,16 +18,16 @@ import sys
 import re
 import json
 import markdown
-import requests
+import yattag
+
 import logging
 from unidecode import unidecode
 from inspect import isclass
 
-from lxml import etree
-from lxml import html
 from slugify import slugify
 
-from fromGIFT import extract_questions, process_questions
+from pygiftparser import parser as pygift
+# from fromGIFT import extract_questions, process_questions
 import toIMS
 import toEDX
 import utils
@@ -218,7 +218,8 @@ class AnyActivity(Subsection):
         self.src = ''
         self.parse(f)
         self.absolutizeMediaLinks()
-        self.questions = process_questions(extract_questions(self.src))
+        self.questions = pygift.parseFile(iter(self.src.splitlines(True)))
+        # self.questions = process_questions(extract_questions(self.src))
 
 
     def parse(self,f):
@@ -246,16 +247,12 @@ class AnyActivity(Subsection):
         :rtype: text string with html code
         """
         self.html_src = ''
-        for question in self.questions:
+        d = yattag.Doc()
+        for q in self.questions:
             # append each question to html output
-            self.html_src+=question.to_html(feedback_option)
-            if self.html_src == '': # fallback when question is not yet properly formated
-                self.html_src = '<p>'+self.src+'</p>'
-            # post-process Gift source replacing markdown formated questions text by html equivalent
-            if question.text_format in (("markdown")):
-                question.md_src_to_html()
-                return self.html_src
-
+            q.toHTML(d,feedbacks=feedback_option)
+        self.html_src = d.getvalue()
+        return self.html_src
 
     def toEdxProblemsList(self):
         """Returns xml source code of all the questions in EDX XML format. *depends on toEdx.py module*
@@ -274,10 +271,11 @@ class AnyActivity(Subsection):
         :rtype: texte string of xml code
         """
         # a) depending on the type, get max number of attempts for the test
-        if isinstance(self, Comprehension):
-            max_attempts = '1'
-        else:
-            max_attempts = 'unlimited'
+        #FIXME : It is usefull?
+        # if isinstance(self, Comprehension):
+        #     max_attempts = '1'
+        # else:
+        #     max_attempts = 'unlimited'
         # b) write empty xml test file for moodle export
         return toIMS.create_ims_test(self.questions, self.num+'_'+slugify(self.title), self.title)
 

@@ -4,20 +4,17 @@ from __future__ import division
 
 
 import os
+import sys
 import shutil
-import tarfile
 import requests
 import markdown
 
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
+from datetime import datetime
 from io import open
-from lxml import etree
-from lxml import html
 from urlparse import urlparse
 from slugify import slugify
 
-import model
 import logging
 
 MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
@@ -84,7 +81,7 @@ def get_video_src(video_link):
     soup = BeautifulSoup(embed, 'html.parser')
     try:
         src_link = soup.iframe['src']
-    except Exception as e:
+    except Exception:
         src_link = ''
     return src_link
 
@@ -174,7 +171,7 @@ def copyMediaDir(repoDir, moduleOutDir, module):
     if os.path.isdir(mediaDir):
         try :
             shutil.copytree(mediaDir, os.path.join(moduleOutDir,'media'))
-        except OSError as exception:
+        except OSError:
             logging.warn("%s already exists. Going to delete it",mediaDir)
             shutil.rmtree(os.path.join(moduleOutDir,'media'))
             shutil.copytree(mediaDir, os.path.join(moduleOutDir,'media'))
@@ -208,7 +205,7 @@ def prepareDestination(BASE_PATH, outDir):
         dest = os.path.join(outDir, d)
         try :
             shutil.copytree(source, dest)
-        except OSError as e:
+        except OSError:
             logging.warn("%s already exists, going to overwrite it",d)
             shutil.rmtree(dest)
             shutil.copytree(source, dest)

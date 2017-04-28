@@ -30,10 +30,10 @@ class GiftParsingTestCase(unittest.TestCase):
     def TestUnChoix(self):
         io_gift = StringIO("""
 ::Pourquoi représenter avec des nombres ?::
-Pourquoi faut-il représenter les textes, images, sons,
-etc, par des nombres dans un ordinateur ?
+Pourquoi faut-il <strong>représenter</strong> les textes, images, sons,
+etc, *par* des nombres dans un ordinateur ?
 {
-~C'est un choix industriel.#Non, les industriels n'avaient pas le choix.
+~C'est un choix <strong>industriel</strong>.#Non, les industriels n'avaient pas le choix.
 ~Les ordinateurs ont été inventés par des mathématiciens.#Non, les mathématiciens savent manipuler autre chose que des nombres, et les ordinateurs sont le fruit de l'interaction entre de nombreuses sciences.
 =Tout ordinateur est fondamentalement une machine qui calcule avec des
 nombres.#Oui, comme un ordinateur ne manipule que des nombres,
@@ -42,10 +42,10 @@ tout doit être représenté sous forme de nombres être manipulé par un ordina
 """)
         io_modele = StringIO("""
 ::Pourquoi représenter avec des nombres ?::
-Pourquoi faut-il représenter les textes, images, sons,
-etc, par des nombres dans un ordinateur ?
+Pourquoi faut-il <strong>représenter</strong> les textes, images, sons,
+etc, *par* des nombres dans un ordinateur ?
 {
-~C'est un choix industriel.#Non, les industriels n'avaient pas le choix.
+~C'est un choix <strong>industriel</strong>.#Non, les industriels n'avaient pas le choix.
 ~Les ordinateurs ont été inventés par des mathématiciens.#Non, les mathématiciens savent manipuler autre chose que des nombres, et les ordinateurs sont le fruit de l'interaction entre de nombreuses sciences.
 =Tout ordinateur est fondamentalement une machine qui calcule avec des
 nombres.#Oui, comme un ordinateur ne manipule que des nombres,

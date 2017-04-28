@@ -234,7 +234,7 @@ class AnyActivity(Subsection):
         """Returns a text string containing the gift code of all the questions of this AnyActivity instance"""
         gift_src=''
         for question in self.questions:
-            gift_src+='\n'+question.gift_src+'\n'
+            gift_src+='\n'+question.source+'\n'
         return gift_src
 
 

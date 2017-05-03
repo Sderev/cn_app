@@ -26,6 +26,13 @@ function convertir()
 	frame.setAttribute("src",url_b+list_url[0]);
 }
 
+function convertir(url_home)
+{
+	var url='http://193.51.236.202:8000/apercu_home/'+url_home;
+	var frame=document.getElementById("frametest");
+
+	frame.setAttribute("src",url);
+}
 
 function random_string(nb_char)
 {

@@ -35,6 +35,12 @@ import markdown
 import StringIO
 import urllib2
 
+#RANDOM
+import string
+import random
+def id_generator(size=6, chars=string.ascii_lowercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
 
 def connexion(request):
     error = False
@@ -66,6 +72,7 @@ def inscription(request):
             #user = authenticate(username=username, password=password)  # Nous vérifions si les données sont correctes
             print('okay');
             form.save();
+            return redirect(connexion)
             #login(request, user)  # nous connectons l'utilisateur
         else: # sinon une erreur sera affichée
             error = True
@@ -152,6 +159,8 @@ def form_upload_light(request):
         'form': form,
         'sauvegarde': sauvegarde
     })
+
+
 
 
 
@@ -244,4 +253,61 @@ def apercu_home(request,id_export):
 
     return render(request, 'escapad_formulaire/apercu.html', {
         'res': home_html
+    })
+
+
+def mes_cours(request):
+    myUser=request.user
+    profil= Profil.objects.get(user=myUser)
+    form = CreateCourse(request.POST or None)
+    print myUser.first_name
+    if form.is_valid() :
+        url_home='home-'+id_generator()
+        projet=Projet(nom_projet=form.cleaned_data['nom_projet'], nb_module=1, url_home=url_home)
+        projet.save()
+        profil.projets.add(projet)
+        #url_home='http://193.51.236.202:9001/p/'+url_home
+
+    return render(request, 'escapad_formulaire/cours.html', {
+        'profil' : profil,
+        'form' : form
+    })
+
+def form_upload_home(request, url_home):
+    form = UploadFormEth(request.POST or None, request.FILES or None)
+
+    #url_home='home-'+id_generator()
+    full_url_home='http://193.51.236.202:9001/p/'+url_home
+
+    if form.is_valid() :
+
+        repoDir=settings.BASE_DIR
+    	outDir=settings.BASE_DIR
+    	baseUrl=settings.BASE_DIR
+
+        titleData=form.cleaned_data["nom_projet"]
+        logoData=form.cleaned_data["logo"]
+
+        homeDataTmp=request.POST.get("home_data")
+        response = urllib2.urlopen(homeDataTmp)
+        homeData = StringIO.StringIO(response.read())
+
+        modulesData=[]
+        mediasData=[]
+
+        zip=cn.generateArchive(modulesData,mediasData,homeData,titleData,logoData,repoDir,outDir,baseUrl)
+
+        sauvegarde = True
+
+        response= HttpResponse(zip)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = "attachment; filename=\"site.zip\""
+        return response
+
+
+    return render(request, 'escapad_formulaire/form_upload_home.html', {
+        'form': form,
+        'url_home': url_home,
+        'full_url_home': full_url_home,
+        'sauvegarde': False
     })

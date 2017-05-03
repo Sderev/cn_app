@@ -45,7 +45,7 @@
             <ul class ="nav navbar-nav">
               {% if request.user.username %}
                 <li><a>Bonjour {{ request.user.username }} </a></li>
-                <li><a href="/cours"> Studio de cours </a></li>
+                <li><a href="/mes_cours"> Studio de cours </a></li>
                 <li><a href="/deconnexion"> Déconnexion </a></li>
               {% else %}
                 <li><a> Bonjour Visiteur :</a></li>
@@ -73,7 +73,7 @@
       <h1 class="icon-web">Mon compte</h1>
 
       <ul class="nav panel-group" id="accordion">
-        <li class="panel panel-default"><a href="/cours/"><h4 class="panel-title">Studio de cours</h4></a></li>
+        <li class="panel panel-default"><a href="/mes_cours/"><h4 class="panel-title">Studio de cours</h4></a></li>
         <li class="panel panel-default"><a href="/form_upload_eth/"><h4 class="panel-title">Créer un nouveau cours</h4></a></li>
         <li class="panel panel-default"><a href=""><h4 class="panel-title">Importer et rééditer un cours</h4></a></li>
 

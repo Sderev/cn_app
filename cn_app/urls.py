@@ -32,12 +32,12 @@ urlpatterns = [
     url(r'^connexion/$', escapad_formulaire.views.connexion, name='connexion'),
     url(r'^deconnexion/$', escapad_formulaire.views.deconnexion, name='deconnexion'),
     url(r'^inscription/$', escapad_formulaire.views.inscription, name='inscription'),
+    url(r'^mes_cours/$', escapad_formulaire.views.mes_cours, name='mes_cours'),
+    url(r'^form_upload_home/(?P<url_home>[-a-zA-Z\d]+)$', escapad_formulaire.views.form_upload_home, name='form_upload_home'),
+
 
     url(r'^change_password/$', auth_views.password_change, {'template_name' : 'escapad_formulaire/password/password_change_form.html','post_change_redirect' : '/password_changed/'}),
     url(r'^password_changed/$', auth_views.password_change_done, {'template_name' : 'escapad_formulaire/password/password_change_done.html'}),
-
-
-
 
     url(r'^password_reset/$', auth_views.password_reset,
     {'template_name':'escapad_formulaire/password/password_reset_form.html',

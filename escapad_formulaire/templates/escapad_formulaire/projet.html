@@ -1,0 +1,45 @@
+{% extends "app.html" %}
+
+{% block content %}
+  <h1>{{ projet.nom_projet }}</h1>
+
+  {% if user.is_authenticated %}
+    Vous êtes connecté, {{ user.username }} !
+    <table>
+      <tr>
+        <td>{{ projet.nb_module }} Module </td>
+      </tr>
+      <tr>
+        <td>Home : </td>
+        <td> </td>
+        <td><a href='http://193.51.236.202:8000/projet/{{projet.id_projet}}/{{projet.url_home}}'>Modifier</a></td>
+        {% for module in projet.module_set.all %}
+        <tr>
+          <td>Module : </td>
+          <td>{{ module.nom_module }} </td>
+          <td><a href='http://193.51.236.202:8000/projet/{{projet.id_projet}}/{{module.url}}'>Modifier</a></td>
+          <td><a href='http://193.51.236.202:8000/projet/{{projet.id_projet}}/{{module.url}}/delete'>Supprimer</a></td>
+        </tr>
+
+        {% endfor %}
+
+
+      </tr>
+
+    </table>
+
+    <form action='http://193.51.236.202:8000/projet/{{projet.id_projet}}' method="post"  enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset id="home">
+          <legend>Créer un nouveau module</legend>
+          {{ form.as_p}}
+        </fieldset>
+
+        <input type="submit" value="Créer un module" />
+    </form>
+
+  {% else %}
+  <p> Vous n'êtes pas censé avoir accès à cette page, veuillez vous connecter !</p>
+  {% endif %}
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "app.html" %}
+
+{% block content %}
+  <h1>Mes cours</h1>
+
+  {% if user.is_authenticated %}
+    Vous êtes connecté, {{ user.username }} !
+    <table>
+    {% for cours in profil.cours.all %}
+      <tr>
+        <td>{{ cours.nom_cours }}</td>
+        <td>{{ cours.nb_module }} Module </td>
+        <td></td>
+        <td></td>
+        <td><a href='http://193.51.236.202:8000/cours/{{cours.id_cours}}'>Voir le cours</a></td>
+        <td><a href='http://193.51.236.202:8000/cours/{{cours.id_cours}}/delete'>Supprimer le cours</a></td>
+
+      </tr>
+    {% endfor %}
+    </table>
+
+    <form action="{% url 'mes_cours' %}" method="post"  enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset id="home">
+          <legend>Créer un nouveau cours</legend>
+          {{ form.as_p}}
+        </fieldset>
+
+        <input type="submit" value="Commencer à créer" />
+    </form>
+
+  {% else %}
+  <p> Vous n'êtes pas censé avoir accès à cette page, veuillez vous connecter !</p>
+  {% endif %}
+
+{% endblock %}

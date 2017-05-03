@@ -7,16 +7,16 @@ from django import forms
 from django.utils.translation import ugettext as _
 
 from .models import User
-from .models import Projet, Profil
+from .models import Cours, Profil
 
 
 logger = logging.getLogger(__name__)
 
-class CreateCourse(forms.Form):
-    nom_projet = forms.CharField(max_length=100)
+class CreateNew(forms.Form):
+    nom = forms.CharField(max_length=100)
 
 class UploadForm(forms.Form):
-    nom_projet = forms.CharField(max_length=100)
+    nom_cours = forms.CharField(max_length=100)
     logo = forms.ImageField(required=False)
     home = forms.FileField()
 
@@ -28,7 +28,7 @@ class UploadFormLight(forms.Form):
     archive=forms.FileField()
 
 class UploadFormEth(forms.Form):
-    nom_projet = forms.CharField(max_length=100)
+    nom_cours = forms.CharField(max_length=100)
     logo = forms.ImageField(required=False)
 
 class ModuleFormEth(forms.Form):
@@ -45,7 +45,6 @@ class CreateUserForm(forms.Form):
     password1=forms.CharField(max_length=30,widget=forms.PasswordInput()) #render_value=False
     password2=forms.CharField(max_length=30,widget=forms.PasswordInput())
     email=forms.EmailField(required=False)
-    nom_projet=forms.CharField(max_length=30)
     #title = forms.ChoiceField(choices=["blabla","bbb"])
 
     def clean_username(self): # check if username dos not exist before
@@ -75,20 +74,7 @@ class CreateUserForm(forms.Form):
         new_user.last_name = self.cleaned_data['last_name']
         new_profil.user=new_user;
 
-        projet1=Projet(nom_projet=self.cleaned_data['nom_projet'],nb_module=1, url_home='blabla')
-        projet2=Projet(nom_projet='blabla',nb_module=1, url_home='blabla')
-
-        projet1.save()
-        projet2.save()
         new_user.save()
         new_profil.save()
 
-        new_profil.projets.add(projet1)
-        new_profil.projets.add(projet2)
-        new_profil.save()
-
-
-        #print new_user.profil_set.all()
-
-        #return new_user
         return new_profil

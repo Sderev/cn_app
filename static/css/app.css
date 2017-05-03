@@ -1,0 +1,8 @@
+#contenudroite {
+  padding-left: 20px;
+}
+
+th, td {
+    padding-right: 10px;
+    text-align: left;
+}

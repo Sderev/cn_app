@@ -1,31 +1,58 @@
 {% extends "app.html" %}
 
 {% block content %}
-  <h1>Mes cours</h1>
+  <h2>{{ cours.nom_cours }}</h2>
 
   {% if user.is_authenticated %}
-    Vous êtes connecté, {{ user.username }} !
-    <table>
-    {% for projet in profil.projets.all %}
 
+
+
+    <table>
       <tr>
-        <td>{{ projet.nom_projet }}</td>
-        <td>{{ projet.nb_module }} Module </td>
-        <td><a href='http://193.51.236.202:8000/form_upload_home/{{projet.url_home}}'>Modifier</a></td>
+        <td>{{ cours.nb_module }} Module </td>
+      </tr>
+      <tr>
+        <td>Home : </td>
+        <td> </td>
+        <td><a href='http://193.51.236.202:8000/cours/{{cours.id_cours}}/{{cours.url_home}}'>Modifier</a></td>
+        {% for module in cours.module_set.all %}
+        <tr>
+          <td>Module : </td>
+          <td>{{ module.nom_module }} </td>
+          <td><a href='http://193.51.236.202:8000/cours/{{cours.id_cours}}/{{module.url}}'>Modifier</a></td>
+          <td><a href='http://193.51.236.202:8000/cours/{{cours.id_cours}}/{{module.url}}/delete'>Supprimer</a></td>
+        </tr>
+
+        {% endfor %}
+
 
       </tr>
-    {% endfor %}
+
     </table>
 
-    <form action="{% url 'mes_cours' %}" method="post"  enctype="multipart/form-data">
+    <form action='http://193.51.236.202:8000/cours/{{cours.id_cours}}' method="post"  enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset id="home">
-          <legend>Créer un nouveau cours</legend>
+          <legend>Créer un nouveau module</legend>
           {{ form.as_p}}
         </fieldset>
 
-        <input type="submit" value="Commencer à créer" />
+        <input type="submit" value="Créer un module" />
     </form>
+
+    <br>
+
+    <form action='http://193.51.236.202:8000/cours/{{cours.id_cours}}' method="post"  enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <fieldset id="home">
+        <legend>Génération du cours</legend>
+        {{ form2.as_p}}
+      </fieldset>
+      <input type="submit" value="Submit" />
+    </form>
+
+    <a href='http://193.51.236.202:8000/cours'><button>Retour</button></a>
 
   {% else %}
   <p> Vous n'êtes pas censé avoir accès à cette page, veuillez vous connecter !</p>

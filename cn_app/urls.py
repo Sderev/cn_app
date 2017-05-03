@@ -32,8 +32,12 @@ urlpatterns = [
     url(r'^connexion/$', escapad_formulaire.views.connexion, name='connexion'),
     url(r'^deconnexion/$', escapad_formulaire.views.deconnexion, name='deconnexion'),
     url(r'^inscription/$', escapad_formulaire.views.inscription, name='inscription'),
-    url(r'^mes_cours/$', escapad_formulaire.views.mes_cours, name='mes_cours'),
-    url(r'^form_upload_home/(?P<url_home>[-a-zA-Z\d]+)$', escapad_formulaire.views.form_upload_home, name='form_upload_home'),
+
+    url(r'^cours/$', escapad_formulaire.views.mes_cours, name='mes_cours'),
+    url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)$', escapad_formulaire.views.cours, name='cours'),
+    url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)/delete$', escapad_formulaire.views.delete_course, name='delete_course'),
+    url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)/(?P<url>[-a-zA-Z\d]+)$', escapad_formulaire.views.cours_edition, name='cours_edition'),
+    url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)/(?P<url>[-a-zA-Z\d]+)/delete$', escapad_formulaire.views.delete_module, name='delete_module'),
 
 
     url(r'^change_password/$', auth_views.password_change, {'template_name' : 'escapad_formulaire/password/password_change_form.html','post_change_redirect' : '/password_changed/'}),
@@ -50,8 +54,6 @@ urlpatterns = [
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
     auth_views.password_reset_confirm,
     {'template_name':'escapad_formulaire/password/password_reset_confirm.html'}, name='password_reset_confirm'),
-    #url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-    #auth_views.password_reset_confirm, {'post_reset_redirect', '/reset/done/'}, name='password_reset_confirm'),
 
     url(r'^reset/done/$', auth_views.password_reset_complete,
     {'template_name':'escapad_formulaire/password/password_reset_complete.html'}, name='password_reset_complete'),

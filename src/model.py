@@ -123,6 +123,51 @@ class Subsection:
         self.src = re.sub('\]\(\s*(\.\/)*\s*media/', ']('+self.section.base_url+'/'+self.section.module+'/media/', self.src)
         #print(self.src)
 
+#-------------------------------------------------------------------------------
+    #GET & SET for subsection class
+
+    #HTML_SRC
+    def getHtmlSrc(self):
+        return self.html_src
+
+    def setHtmlSrc(self, newHtmlSrc):
+        """
+        :param newHtmlSrc: new string text in HTML
+        :type newHtmlSrc: string
+        """
+        self.html_src = newHtmlSrc
+
+    #LASTLINE
+    def getLastLine(self):
+        return self.lastLine
+
+    def setLastLine(self, newLastLine):
+        """
+        :param newLastLine: last line read by the parser
+        :type newLastLine: string
+        """
+        self.lastLine = newLastLine
+
+    #SOURCE
+    def getSrc(self):
+        return self.src
+
+    def setSrc(self, newSrc):
+        self.src = newSrc
+
+    #SECTION
+    def getSection(self):
+        return self.section
+
+    #FILENAME
+    def getFileName(self):
+        return self.filename
+
+    #FOLDER
+    def getFolder(self):
+        return self.folder
+
+
 class Cours(Subsection):
     """
     Class for a lecture. If src is not empty and no file is given, then this means that the content has already been parsed in Section.parse().
@@ -203,6 +248,54 @@ class Cours(Subsection):
             video_list += '<iframe src='+v['video_src_link']+' width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>\n'
         return video_list
 
+#-------------------------------------------------------------------------------
+    #GET & SET for Cours class
+
+    #VIDEOS
+    def getVideos(self):
+        return self.videos
+
+    def setVideos(self, videoToAdd):
+        self.videos.append(new_video)
+
+    #NUMBERS
+    def getNum(self):
+        return self.num
+
+    #TITLE
+    def getTitle(self):
+        return self.title
+
+    #HTML_SRC
+    def getHtmlSrc(self):
+        return self.html_src
+
+    def setHtmlSrc(self, newHtmlSrc):
+        """
+        :param newHtmlSrc: new string text in HTML
+        :type newHtmlSrc: string
+        """
+        self.html_src = newHtmlSrc
+
+    #LASTLINE
+    def getLastLine(self):
+        return self.lastLine
+
+    def setLastLine(self, newLastLine):
+        """
+        :param newLastLine: last line read by the parser
+        :type newLastLine: string
+        """
+        self.lastLine = newLastLine
+
+    #SOURCE
+    def getSrc(self):
+        return self.src
+
+    def setSrc(self, newSrc):
+        self.src = newSrc
+
+
 
 class AnyActivity(Subsection):
     """ Abstract class for any activity. Responsible for parsing questions from the gift code in src attribute
@@ -279,6 +372,49 @@ class AnyActivity(Subsection):
         # b) write empty xml test file for moodle export
         return toIMS.create_ims_test(self.questions, self.num+'_'+slugify(self.title), self.title)
 
+#----------------------------------------------------------------------
+    #GET & SET for AnyActivity
+
+    #QUESTIONS
+    def getQuestions(self):
+        return self.questions
+
+    #NUMBERS
+    def getNum(self):
+        return self.num
+
+    #TITLE
+    def title(self):
+        return self.title
+
+    #HTML_SRC
+    def getHtmlSrc(self):
+        return self.html_src
+
+    def setHtmlSrc(self, newHtmlSrc):
+        """
+        :param newHtmlSrc: new string text in HTML
+        :type newHtmlSrc: string
+        """
+        self.html_src = newHtmlSrc
+
+    #LASTLINE
+    def getLastLine(self):
+        return self.lastLine
+
+    def setLastLine(self, newLastLine):
+        """
+        :param newLastLine: last line read by the parser
+        :type newLastLine: string
+        """
+        self.lastLine = newLastLine
+
+    #SOURCE
+    def getSrc(self):
+        return self.src
+
+    def setSrc(self, newSrc):
+        self.src = newSrc
 
 class Comprehension(AnyActivity):
     """Subclass of AnyActivity defining a 'compréhension' type of activity"""
@@ -432,7 +568,8 @@ class Section:
     def toVideoList(self):
         """Returns a text string containing all iframe code of all videos in this section"""
         video_list = ""
-        for sub in self.subsections:
+        subsections = self.getSubSections()
+        for sub in subsections:
             if isinstance(sub, Cours) and len(sub.videos) > 0:
                 video_list += sub.videoIframeList()
         return video_list
@@ -440,12 +577,37 @@ class Section:
     def toEdxProblemsList(self):
         """Returns the xml source code (string) of all questions in EDX XML format"""
         edx_xml_problem_list = ""
-        for sub in self.subsections:
+        subsections = self.getSubSections()
+        for sub in subsections:
             if isinstance(sub, AnyActivity):
                 # add subsection title
                 edx_xml_problem_list += "<!-- "+sub.num+" "+sub.title+" -->\n\n"
                 edx_xml_problem_list += sub.toEdxProblemsList()
         return edx_xml_problem_list
+
+#--------------------------------------------------------------------
+    # GET & SET for Section class
+    #SUBSECTIONS
+    def getSubSections(self):
+        return self.subsections
+
+    def setSubsections(self, newSubsections):
+        """
+        :param newSubsections: list of subsections
+        :type newSubsections: list
+        """
+        self.subsections = newSubsections
+
+    #LASTLINE
+    def getLastLine(self):
+        return self.lastLine
+
+    def setLastLine(self, newLastLine):
+        """
+        :param newLastLine: last line read by the parser
+        :type newLastLine: string
+        """
+        self.lastLine = newLastLine
 
 class Module:
     """ Module structure.
@@ -517,7 +679,7 @@ class Module:
         match = reStartSection.match(l)
         while l and match:
             s = Section(match.group('title'),f, self.module, self.base_url)
-            self.sections.append( s )
+            self.setSections(s)
             l = s.lastLine
             match = reStartSection.match(l)
         # Si qqlch dans l and pas de match -> pas trouvé de section pour démarrer -> WARNING
@@ -525,7 +687,8 @@ class Module:
     # FIXME : is it usefull ?
     def toHTML(self, feedback_option=False):
         """triggers the generation of HTML output for all sections"""
-        for s in self.sections:
+        sections = self.getSections()
+        for s in sections:
             s.toHTML(feedback_option)
 
     def toCourseHTML(self):
@@ -533,7 +696,8 @@ class Module:
 
         :rtype: Returns a string of the concatenation of their HTML output"""
         courseHTML = ""
-        for sec in self.sections:
+        sections = self.getSections()
+        for sec in sections:
             courseHTML += "\n\n<!-- Section "+sec.num+" -->\n"
             courseHTML += sec.toCourseHTML()
         return courseHTML
@@ -542,25 +706,56 @@ class Module:
         """Returns a text string with all questions of all the activities of this modules object.
             Can be used for import a questions bank into moodle"""
         questions_bank = ""
-        for s in self.sections:
+        sections = self.getSections()
+        for s in sections:
             questions_bank += s.toGift()
         return questions_bank
 
     def toVideoList(self):
         """Returns a text string with all video iframe codes """
         video_list = ""
-        for s in self.sections:
+        sections = self.getSections()
+        for s in sections:
             video_list += s.toVideoList()+'\n\n'
         return video_list
 
     # FIXME: should use a template file
     def toEdxProblemsList(self):
         """Returns the xmlL source code of all questions in EDX XML. Usefull for importing a library of problems into EDX. *depends on toEDX.py module*"""
-        edx_xml_problem_list = '<library xblock-family="xblock.v1" display_name="'+self.module+'_'+self.menutitle+'" org="ULille3" library="'+self.module+'_'+self.menutitle+'">\n\n"'
-        for s in self.sections:
+        module = self.getModule()
+        menutitle = self.getMenuTitle()
+        edx_xml_problem_list = '<library xblock-family="xblock.v1" display_name="'+module+'_'+menutitle+'" org="ULille3" library="'+module+'_'+menutitle+'">\n\n"'
+        sections = self.getSections()
+        for s in sections:
             edx_xml_problem_list += s.toEdxProblemsList()
         edx_xml_problem_list += "\n</library>"
         return edx_xml_problem_list
+
+#---------------------------------------------------------
+    #GET & SET FOR MODULE CLASS
+
+    #SECTIONS
+    def setSections(self,sectionToAdd):
+        """
+        :param newSections:  list of sections
+        :type newSections: list
+        """
+        self.sections.append(sectionToAdd)
+
+    def getSections(self):
+        return self.sections
+
+    #MENUTITLE
+    def getMenuTitle(self):
+        return self.menutitle
+
+    #MODULE
+    def getModule(self):
+        return self.module
+
+    #BASE_URL
+    def getBaseUrl(self):
+        return self.base_url
 
 # param syntax
 # :param mode: Specifies the mode of transport to use when calculating

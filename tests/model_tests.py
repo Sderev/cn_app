@@ -128,19 +128,6 @@ class ModuleParsingTestCase(unittest.TestCase):
         print("[ModuleParsingTestCase]-- Exact match OK --")
 
 
-# class HtmlGenerationTestCase(ModuleParsingTestCase):
-#     """ Basic class for testing output generation in HTML """
-#     def setUp(self):
-#         super(HtmlGenerationTestCase, self).setUp()
-#         # then build html output for control and sample
-#         # module_template = jenv.get_template("module.html")
-#         # module_html_content = module_template.render(module=module)
-#         # html = site_template.render(course=course_obj, module_content=module_html_content, body_class="modules", logo=logo)
-#         # utils.write_file(html, os.getcwd(), outDir, module.module+'.html')
-#
-#     def runTest(self):
-#         print("[HtmlGenerationTestCase] (nothing) OK")
-
 class FctParserTestCase(unittest.TestCase):
 
     # def JSON_string_header(author, base_url, css, language, menutitle, module, title):

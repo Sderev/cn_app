@@ -6,7 +6,7 @@
     {% if q.type == "MULTICHOICE" or q.type == "TRUEFALSE" %}
     <multiplechoiceresponse>
         <choicegroup type="MultipleChoice">
-            {% for a in q.answers %}
+            {% for a in q.answers.answers %}
             <choice correct="{{ 'true' if a.is_right else 'false'}}">{{a.answer_text|striptags}}
                 {% if a.feedback|length > 1 %}
                 <choicehint>{{a.feedback|striptags}}</choicehint>

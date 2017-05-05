@@ -3,7 +3,8 @@
     <legend>
         {{ q.text|tohtml }}
     </legend>
-    {% if q.type == "MULTICHOICE" or q.type == "TRUEFALSE" %}
+    {{ q.EDX }}
+    <!-- {% if q.type == "MULTICHOICE" or q.type == "TRUEFALSE" %}
     <multiplechoiceresponse>
         <choicegroup type="MultipleChoice">
             {% for a in q.answers.answers %}
@@ -30,8 +31,8 @@
             </choice>
             {% endfor %}
         </checkboxgroup>
-    </choiceresponse>
-    {% elif q.type == 'ESSAY' %}
+    </choiceresponse> -->
+    <!-- {% elif q.type == 'ESSAY' %}
     {% include 'edx_problem_essay_script.xml' %}
     <customresponse cfn="checkAnswerEssay">
     	<textline size="40" correct_answer="" label="Problem Text"/>
@@ -41,7 +42,7 @@
     <solution>
         <div class="detailed-solution">{{ q.global_feedback|tohtml }}</div>
     </solution>
-    {% endif %}
+    {% endif %} -->
 </problem>
 <!-- FIN problem {{q.title}} -->
 {#<demandhint>        <hint>A fruit is the fertilized ovary from a flower.</hint>        <hint>A fruit contains seeds of the plant.</hint>    </demandhint> #}

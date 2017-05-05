@@ -68,6 +68,7 @@ def generateEDXArchive(module, moduleOutDir):
                 utils.write_file(sub.html_src, edx_outdir, 'html', sub.getFilename() )
             elif sub.folder in ('Activite', 'ActiviteAvancee', 'Comprehension'):
                 for question in sub.questions:
+                    question.toEDX()
                     fname =  ('%s.xml' % question.id)
                     utils.write_file(toEdxProblemXml(question), edx_outdir, 'problem', fname )
 

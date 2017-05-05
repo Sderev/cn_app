@@ -1,47 +1,82 @@
+
+<!-- Page for dealing with a course -->
+
 {% extends "app.html" %}
 
+{% if userFound %}
+  <p> Partage du projet effectué avec succès ! </p>
+{% endif %}
+
 {% block content %}
-  <h2>{{ cours.nom_cours }}</h2>
 
   {% if user.is_authenticated %}
 
+    <h2>{{ cours.nom_cours }}</h2>
 
 
-    <table>
-      <tr>
-        <td>{{ cours.nb_module }} Module </td>
-      </tr>
-      <tr>
-        <td>Home : </td>
-        <td> </td>
-        <td><a href='http://193.51.236.202:8000/cours/{{cours.id_cours}}/{{cours.url_home}}'>Modifier</a></td>
-        {% for module in cours.module_set.all %}
+    <!-- General informations about the course -->
+    <fieldset id="home">
+      <legend>Infos du cours</legend>
+
+      <h5>Contributeurs</h5>
+      <ul>
+      {% for profil in cours.profil_set.all %}
+          <li>{{ profil.user.username }}</li>
+      {% endfor %}
+      </ul>
+
+      <h5>Plan du cours</h5>
+      <table>
         <tr>
-          <td>Module : </td>
-          <td>{{ module.nom_module }} </td>
-          <td><a href='http://193.51.236.202:8000/cours/{{cours.id_cours}}/{{module.url}}'>Modifier</a></td>
-          <td><a href='http://193.51.236.202:8000/cours/{{cours.id_cours}}/{{module.url}}/delete'>Supprimer</a></td>
+          <th>{{ cours.nb_module }} Module(s) </th>
+          <th>Modification</th>
+          <th>Suppression</th>
         </tr>
+        <tr>
+          <td>Home : </td>
+          <td><a href='http://193.51.236.202:8000/cours/{{cours.id_cours}}/{{cours.url_home}}'>Voir le home</a></td>
+          {% for module in cours.module_set.all %}
+          <tr>
+            <td>Module : {{ module.nom_module }} </td>
+            <td><a href='http://193.51.236.202:8000/cours/{{cours.id_cours}}/{{module.url}}'>Voir le module</a></td>
+            <td><a href='http://193.51.236.202:8000/cours/{{cours.id_cours}}/{{module.url}}/delete'>Supprimer</a></td>
+          </tr>
 
-        {% endfor %}
+          {% endfor %}
 
+        </tr>
+      </table>
+      <a href='http://193.51.236.202:8000/cours'><button>Retour à mes cours</button></a>
 
-      </tr>
+    </fieldset>
 
-    </table>
-
+    <!-- Form for creating a new module -->
     <form action='http://193.51.236.202:8000/cours/{{cours.id_cours}}' method="post"  enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset id="home">
           <legend>Créer un nouveau module</legend>
-          {{ form.as_p}}
+          <table><tr>
+            <td>{{ form.as_p}}</td>
+            <td><input type="submit" value="Créer un module" /></td>
+          </tr></table>
         </fieldset>
-
-        <input type="submit" value="Créer un module" />
     </form>
 
-    <br>
 
+    <!-- Form for sharing the course to other users -->
+    <form action='http://193.51.236.202:8000/cours/{{cours.id_cours}}' method="post"  enctype="multipart/form-data">
+      {% csrf_token %}
+      <fieldset id="partage">
+        <legend>Partager le cours</legend>
+        <table><tr>
+          <td>{{ form3.as_p}} </td>
+          <td><input type="submit" value="Partager"/></td>
+        </tr></table>
+      </fieldset>
+
+    </form>
+
+    <!-- Form for generating the course into an archive -->
     <form action='http://193.51.236.202:8000/cours/{{cours.id_cours}}' method="post"  enctype="multipart/form-data">
       {% csrf_token %}
 
@@ -49,10 +84,12 @@
         <legend>Génération du cours</legend>
         {{ form2.as_p}}
       </fieldset>
-      <input type="submit" value="Submit" />
+      <input type="submit" value="Générer l'archive" />
     </form>
 
-    <a href='http://193.51.236.202:8000/cours'><button>Retour</button></a>
+    <br>
+
+    <a href='http://193.51.236.202:8000/cours'><button>Retour à mes cours</button></a>
 
   {% else %}
   <p> Vous n'êtes pas censé avoir accès à cette page, veuillez vous connecter !</p>

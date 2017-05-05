@@ -15,6 +15,20 @@ logger = logging.getLogger(__name__)
 class CreateNew(forms.Form):
     nom = forms.CharField(max_length=100)
 
+class SearchUser(forms.Form):
+    user = forms.CharField(max_length=100)
+
+    def clean_user(self): # check if username dos not exist before
+        try:
+            User.objects.get(username=self.cleaned_data['user']) #get user from user model
+        except User.DoesNotExist :
+            raise forms.ValidationError("l'utilisateur n'existe pas!")
+            return
+        return self.cleaned_data['user']
+
+class MediaForm(forms.Form):
+    url_media = forms.CharField(max_length=100)
+
 class UploadForm(forms.Form):
     nom_cours = forms.CharField(max_length=100)
     logo = forms.ImageField(required=False)
@@ -54,6 +68,15 @@ class CreateUserForm(forms.Form):
             return self.cleaned_data['username']
 
         raise forms.ValidationError("this user exist already")
+
+    def clean_email(self): # check if username dos not exist before
+        try:
+            User.objects.get(email=self.cleaned_data['email']) #get user from user model
+        except User.DoesNotExist :
+            return self.cleaned_data['email']
+
+        raise forms.ValidationError("this email is already associated with an account")
+
 
 
     def clean(self): # check if password 1 and password2 match each other

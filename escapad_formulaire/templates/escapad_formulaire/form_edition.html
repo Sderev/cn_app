@@ -15,8 +15,23 @@
 
     {{url}}
 
+
+
+
+
         <fieldset id="home">
           <legend>Ecriture du cours</legend>
+
+          <form action='http://193.51.236.202:8000/cours/{{id_cours}}/{{url}}' method="post"  enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+              <tr>
+              <td>{{ form_media.as_p}}</td>
+              <td><input type="submit" value="Modifier l'url" /></td>
+              <td>url actuelle: <a href="{{ url_media }}">{{ url_media }}</a></td>
+              </tr>
+            </table>
+          </form>
 
           <iframe id="framehome" name="framehome" src="{{ full_url }}" width=600 height=400></iframe>
           <iframe id="frametest" name="frametest" src="http://193.51.236.202:8000/apercu_module/{{url}}" width=900 height=400></iframe>
@@ -25,6 +40,7 @@
           <button id="buttonTest" onclick="convertir('{{url}}')">Convertir</button>
 
           <input type="hidden" id="id_home_data" name="home_data" value="{{ full_url }}/export/txt">
+
         </fieldset>
 
 

@@ -1,0 +1,31 @@
+@startuml
+
+User <|-- Profil
+Profil "*" -- "*" Cours : Associé
+Cours "1" -- "*" Module : Contient
+
+class User {
+ -username : String
+ -first_name : String
+ -last_name : String
+ -password : String
+}
+
+class Profil {
+ 
+}
+
+class Cours {
+ -id_cours : int
+ -nom_cours : String
+ -url_home : String
+ -nb_module : int
+}
+
+class Module {
+ -url : String
+ -nom_module : String
+}
+
+
+@enduml

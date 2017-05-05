@@ -169,7 +169,7 @@ def buildSiteLight(course_obj, repoDir, outDir, mediasData, mediasNom, homeData,
     return inMemoryOutputFile
 
 # Generate an archive from a complete form, contains InMemoryUploadedFile
-def generateArchive(modulesData, mediasData, homeData, titleData, logoData, repoDir, outDir, baseUrl):
+def generateArchive(modulesData, mediasData, mediaTypes, homeData, titleData, logoData, repoDir, outDir, baseUrl):
     modules=[]
     i=1
     for moduleData in modulesData:
@@ -180,26 +180,31 @@ def generateArchive(modulesData, mediasData, homeData, titleData, logoData, repo
         i=i+1
     c=processRepositoryLight(modules,repoDir,outDir)
 
-    mediasDataObj,mediasNom=extractMediaArchive(mediasData)
+    mediasDataObj,mediasNom=extractMediaArchive(mediasData, mediaTypes)
 
     #outputFile=buildSiteLight(c,repoDir,outDir,mediasData,homeData,titleData, logoData)
     outputFile=buildSiteLight(c,repoDir,outDir,mediasDataObj,mediasNom,homeData,titleData, logoData)
 
     return outputFile
 
-# extract the different medias contained in a tar.gz archive (used in the complete form)
-# return a couple containing a list of each files of each modules, and their names
-def extractMediaArchive(mediasData):
+# extract the different medias contained in a tar.gz or a zip archive (used in the complete form and the general application)
+# return a couple containing a list of each files of each modules (StringIO), and their names
+def extractMediaArchive(mediasData, mediasType):
     mediasDataObj=[]
     mediasNom=[]
 
     # one iteration correspond to one module
-    for mediaData in mediasData:
+    # We want to extract all the files in StringIO iterations
+    for mediaData,mediaType in zip(mediasData,mediasType):
         mediaDataObj=[]
         mediaNom=[]
 
-        # Some modules may not contain media
-        if mediaData:
+        # We determine which type is the media archive.
+        # Only two forms are accepted now: Zip and Tar.Gz
+        # In the other cases, we just skip the file
+
+        # Dealing with tar.gz archive
+        if mediaType == 'application/octet-stream':
             tarArchiveIO = StringIO.StringIO()
             tarArchiveIO.write(mediaData.read())
             tarArchiveIO.seek(0)
@@ -214,10 +219,29 @@ def extractMediaArchive(mediasData):
                 tar.close()
             mediasDataObj.append(mediaDataObj)
             mediasNom.append(mediaNom)
+
+        # Dealing with zip archive
+        elif mediaType == 'application/zip':
+            zipArchiveIO = StringIO.StringIO()
+            zipArchiveIO.write(mediaData.read())
+            zipArchiveIO.seek(0)
+            with ZipFile(zipArchiveIO, 'r') as zipfile:
+                for member in zipfile.namelist():
+                    print member
+                    media=StringIO.StringIO()
+                    media.write(zipfile.read(member))
+                    media.seek(0)
+                    mediaDataObj.append(media)
+                    mediaNom.append(member)
+                zipfile.close()
+
+            mediasDataObj.append(mediaDataObj)
+            mediasNom.append(mediaNom)
+
+        # Default case: Nothing is done here
         else:
             mediasDataObj.append(None)
             mediasNom.append(None)
-
 
     return mediasDataObj,mediasNom
 
@@ -293,7 +317,7 @@ def generateArchiveLight(archiveData, repoDir, outDir, baseUrl):
         i=1
         for moduleData in modulesData:
             #The only way I could find to encode InMemoryUploadedFile into utf-8 (avoid warning)
-            #moduleData = TextIOWrapper(moduleData.read(), encoding='utf-8')
+            # moduleData = TextIOWrapper(moduleData.read(), encoding='utf-8')
             m=processModuleLight("module"+str(i),moduleData,repoDir,outDir,baseUrl)
             modules.append(m)
             i=i+1

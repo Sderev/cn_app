@@ -4,6 +4,8 @@
 from io import open
 import json
 import mock
+from pygiftparser import parser as pygift
+
 from lxml import etree
 import shutil
 from bs4 import BeautifulSoup
@@ -139,8 +141,8 @@ class EDXArchiveTestCase(unittest.TestCase):
         vid = l_video.next()
         self.assertEquals(vid.attrib.get('url_name'),'1-4-1-https-vimeo-com-122104174')
 
-    # def testProblem(self):
-    #     class Question:
+    def testProblem(self):
+        mul
 
     def runTest(self):
         self.testCreationDossierEdx()

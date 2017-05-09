@@ -141,8 +141,7 @@ class EDXArchiveTestCase(unittest.TestCase):
         vid = l_video.next()
         self.assertEquals(vid.attrib.get('url_name'),'1-4-1-https-vimeo-com-122104174')
 
-    def testProblem(self):
-        mul
+    # def testProblem(self):
 
     def runTest(self):
         self.testCreationDossierEdx()

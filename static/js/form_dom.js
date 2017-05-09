@@ -1,4 +1,3 @@
-console.log('hello!');
 
 
 var nb_module=1;

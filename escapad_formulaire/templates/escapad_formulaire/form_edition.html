@@ -15,14 +15,10 @@
 
     {{url}}
 
-
-
-
-
         <fieldset id="home">
           <legend>Ecriture du cours</legend>
 
-          <form action='http://193.51.236.202:8000/cours/{{id_cours}}/{{url}}' method="post"  enctype="multipart/form-data">
+          <form action='/cours/{{id_cours}}/{{url}}' method="post"  enctype="multipart/form-data">
             {% csrf_token %}
             <table>
               <tr>
@@ -34,18 +30,21 @@
           </form>
 
           <iframe id="framehome" name="framehome" src="{{ full_url }}" width=600 height=400></iframe>
-          <iframe id="frametest" name="frametest" src="http://193.51.236.202:8000/apercu_module/{{url}}" width=900 height=400></iframe>
+          <iframe id="frametest" name="frametest" src="/apercu_module/{{url}}" width=900 height=400></iframe>
 
           <br/>
-          <button id="buttonTest" onclick="convertir('{{url}}')">Convertir</button>
-
+          {% if is_home %}
+            <button id="buttonTest" onclick="convertir_home('{{url}}')">Convertir</button>
+          {% else %}
+            <button id="buttonTest" onclick="convertir_module('{{url}}')">Convertir</button>
+          {% endif %}
           <input type="hidden" id="id_home_data" name="home_data" value="{{ full_url }}/export/txt">
 
         </fieldset>
 
 
 
-    <a href='http://193.51.236.202:8000/cours/{{id_cours}}'><button>Retourner au cours </button></a>
+    <a href='/cours/{{id_cours}}'><button>Retourner au cours </button></a>
 
 
 

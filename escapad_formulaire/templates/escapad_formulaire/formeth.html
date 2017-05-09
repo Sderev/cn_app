@@ -4,8 +4,8 @@
 
 {% block onload %}
 onload=
-"give_link_to_iframe('framehome','id_home_data', 10, false);
-give_link_to_iframe('framemod1','id_module_1', 10, true);"
+"give_link_to_iframe('{{ETHERPAD_URL}}','framehome','id_home_data', 10, false);
+give_link_to_iframe('{{ETHERPAD_URL}}','framemod1','id_module_1', 10, true);"
 {% endblock %}
 
 {% block script %}
@@ -25,7 +25,7 @@ give_link_to_iframe('framemod1','id_module_1', 10, true);"
           <legend>Informations générales</legend>
           {{ form.as_p}}
           <iframe id="framehome" name="framehome" src="" width=600 height=400></iframe>
-          <iframe id="frametest" name="frametest" src="http://193.51.236.202:8000/apercu_module/test" width=900 height=400></iframe>
+          <iframe id="frametest" name="frametest" src="/apercu_module/test" width=900 height=400></iframe>
 
           <br/>
           <button id="buttonTest" onclick="convertir()">Convertir</button>
@@ -38,13 +38,13 @@ give_link_to_iframe('framemod1','id_module_1', 10, true);"
           <fieldset id="module1">
             <legend>Module 1</legend>
             <!--<label for="id_module_1">Module 1 :</label>-->
-            <iframe id="framemod1"name="framemod1" src="" width=600 height=400></iframe>
+            <iframe id="framemod1" name="framemod1" src="" width=600 height=400></iframe>
             <input type="hidden" id="id_module_1" name="module_1" value="">
             {{formMod.as_p}}
           </fieldset>
         </div>
 
-        <input type="button" value="Ajouter un module" onclick="create_mod_eth()">
+        <input type="button" value="Ajouter un module" onclick="create_mod_eth('{{ETHERPAD_URL}}')">
         <input type="button" value="Retirer un module" onclick="remove_mod_eth()">
         <input id="nb_module" name="nb_module" type="hidden" value="1"/>
         <input type="submit" value="Submit" />

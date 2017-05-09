@@ -40,6 +40,7 @@ import urllib2
 import string
 import random
 import re
+from cn_app.settings import ETHERPAD_URL
 
 #################################
 #                               #
@@ -193,6 +194,7 @@ def form_upload_eth(request):
         return response
 
     return render(request, 'escapad_formulaire/formeth.html', {
+        'ETHERPAD_URL' : ETHERPAD_URL,
         'form': form,
         'formMod': formMod,
         'sauvegarde': sauvegarde
@@ -209,15 +211,29 @@ def form_upload_eth(request):
 # View showing the preview of a module using the culture-numerique css
 # require the pad id
 def apercu_module(request,id_export):
-    url="http://193.51.236.202:9001/p/"+id_export+"/export/txt"
+    url=ETHERPAD_URL+"p/"+id_export+"/export/txt"
     response = urllib2.urlopen(url)
 
     moduleData= StringIO.StringIO(response.read())
     print moduleData
     MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
-    m = model.Module(moduleData, "module", "base")
-    m.toHTML(True)
-    home_html=m.toCourseHTMLVisualisation()
+    module = model.Module(moduleData, "module", "base")
+    #m.toHTML(True)
+    #home_html=m.toCourseHTMLVisualisation()
+
+    home_html = ''
+    for sec in (module.sections):
+        #print 'sec'
+        home_html += "\n\n<!-- Section "+sec.num+" -->\n"
+        home_html += "\n\n<h1> "+sec.num+". "+sec.title+" </h1>\n";
+        for sub in (sec.subsections):
+            home_html += "\n\n<!-- Subsection "+sub.num+" -->\n"
+            home_html += "\n\n<h2>"+sub.num+". "+sub.title+" </h2>\n"
+            #home_html += markdown.markdown(sub.src, MARKDOWN_EXT)
+            #print 'sub'
+            #print sub
+            #print sub.toHTML(True)
+            home_html += sub.toHTML(True)
 
     return render(request, 'escapad_formulaire/apercu.html', {
         'res': home_html
@@ -226,7 +242,7 @@ def apercu_module(request,id_export):
 # View showing the preview of a home page using the culture-numerique css
 # require the pad id
 def apercu_home(request,id_export):
-    url="http://193.51.236.202:9001/p/"+id_export+"/export/txt"
+    url=ETHERPAD_URL+"p/"+id_export+"/export/txt"
     print url
 
     response = urllib2.urlopen(url)
@@ -268,7 +284,6 @@ def mes_cours(request):
         cours=Cours(id_cours=id_cours, nom_cours=form.cleaned_data['nom'], nb_module=0, url_home=url_home)
         cours.save()
         profil.cours.add(cours)
-        #url_home='http://193.51.236.202:9001/p/'+url_home
 
     return render(request, 'escapad_formulaire/liste_cours.html', {
         'profil' : profil,
@@ -309,7 +324,7 @@ def cours(request, id_cours):
         titleData=form2.cleaned_data["nom_cours"]
         logoData=form2.cleaned_data["logo"]
 
-        url_home='http://193.51.236.202:9001/p/'+cours.url_home+'/export/txt'
+        url_home=ETHERPAD_URL+'p/'+cours.url_home+'/export/txt'
 
 
         # Get the text from the etherpad instance
@@ -325,23 +340,27 @@ def cours(request, id_cours):
         #for each modules from the course
         for module in cours.module_set.all():
             # get the pad content
-            url_module= 'http://193.51.236.202:9001/p/'+module.url+'/export/txt'
+            url_module= ETHERPAD_URL+'p/'+module.url+'/export/txt'
             response = urllib2.urlopen(url_module)
             moduleData = StringIO.StringIO(response.read())
             modulesData.append(moduleData)
 
             # open the dropbox link to get the archive
             url_media=module.url_media
-            response = urllib2.urlopen(url_media)
+            if(url_media):
+                response = urllib2.urlopen(url_media)
 
-            # get the media archive type of content (we try to get either application/zip or application/octet-stream)
-            http_message=response.info()
-            full=http_message.type
-            mediasType.append(full)
+                # get the media archive type of content (we try to get either application/zip or application/octet-stream)
+                http_message=response.info()
+                full=http_message.type
+                mediasType.append(full)
 
-            # read the response and add it to the media datas
-            mediaData = StringIO.StringIO(response.read())
-            mediasData.append(mediaData)
+                # read the response and add it to the media datas
+                mediaData = StringIO.StringIO(response.read())
+                mediasData.append(mediaData)
+            else:
+                mediasData.append(None)
+                mediasType.append(None)
 
 
         zip=cn.generateArchive(modulesData,mediasData,mediasType,homeData,titleData,logoData,repoDir,outDir,baseUrl)
@@ -372,7 +391,10 @@ def cours_edition(request, id_cours ,url):
 
     form_media = MediaForm(request.POST or None)
     cours = Cours.objects.get(id_cours=id_cours)
-    full_url='http://193.51.236.202:9001/p/'+url
+    full_url=ETHERPAD_URL+'p/'+url
+    is_home=False
+    if re.match(r"^home",url):
+        is_home=True
 
     #if we changed the media url
     if form_media.is_valid() :
@@ -408,6 +430,7 @@ def cours_edition(request, id_cours ,url):
         'full_url': full_url,
         'url_media': url_media,
         'form_media': form_media,
+        'is_home': is_home
     })
 
 # Delete a module from a course

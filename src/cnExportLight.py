@@ -96,7 +96,7 @@ def writeMediaFromArchive(zipFile, mediaData, path):
 
 
 # Build the site and return the archive, used in both forms (either InMemoryUploadedFile or StringIO, both have readable attribute)
-def buildSiteLight(course_obj, repoDir, outDir, mediasData, mediasNom, homeData, titleData, logoData):
+def buildSiteLight(course_obj, repoDir, outDir, modulesData, mediasData, mediasNom, homeData, titleData, logoData):
 
     #print BASE_PATH
     inMemoryOutputFile = StringIO.StringIO()
@@ -142,7 +142,7 @@ def buildSiteLight(course_obj, repoDir, outDir, mediasData, mediasNom, homeData,
 
     ####MODULE
     # Loop through modules
-    for module,mediaData, mediaNom in zip(course_obj.modules,mediasData, mediasNom):
+    for module, mediaData, mediaNom in zip(course_obj.modules,mediasData, mediasNom):
         zipFile = toEDX.generateEDXArchiveLight(module, module.module, zipFile)
         zipFile = toIMS.generateImsArchiveLight(module, module.module, zipFile)
 
@@ -163,6 +163,14 @@ def buildSiteLight(course_obj, repoDir, outDir, mediasData, mediasNom, homeData,
         html = site_template.render(course=course_obj, module_content=module_html_content, body_class="modules", logo=logo)
         zipFile.writestr(module.module+'.html', html.encode("UTF-8"))
 
+
+    homeData.seek(0)
+    zipFile.writestr('home.md',homeData.read())
+    i=1
+    for moduleData in modulesData:
+        zipFile.writestr('mod'+str(i)+'.md',moduleData.read())
+        i=i+1
+
     zipFile.close()
     inMemoryOutputFile.seek(0)
 
@@ -177,13 +185,14 @@ def generateArchive(modulesData, mediasData, mediaTypes, homeData, titleData, lo
         #moduleData = TextIOWrapper(moduleData.file, encoding='utf-8')
         m=processModuleLight("module"+str(i),moduleData,repoDir,outDir,baseUrl)
         modules.append(m)
+        moduleData.seek(0)
         i=i+1
     c=processRepositoryLight(modules,repoDir,outDir)
 
     mediasDataObj,mediasNom=extractMediaArchive(mediasData, mediaTypes)
 
     #outputFile=buildSiteLight(c,repoDir,outDir,mediasData,homeData,titleData, logoData)
-    outputFile=buildSiteLight(c,repoDir,outDir,mediasDataObj,mediasNom,homeData,titleData, logoData)
+    outputFile=buildSiteLight(c,repoDir,outDir, modulesData, mediasDataObj,mediasNom,homeData,titleData, logoData)
 
     return outputFile
 

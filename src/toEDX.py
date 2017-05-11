@@ -46,9 +46,7 @@ def loadJinjaEnv():
 
 def toEdxProblemXml(question):
     """ given a question object, return EDX Xml """
-    jenv = loadJinjaEnv()
-    problem_template = jenv.get_template("edx_problem_template.xml")
-    return problem_template.render(q=question)
+    return question.toEDX()
 
 
 def generateEDXArchive(module, moduleOutDir):
@@ -68,7 +66,6 @@ def generateEDXArchive(module, moduleOutDir):
                 utils.write_file(sub.html_src, edx_outdir, 'html', sub.getFilename() )
             elif sub.folder in ('Activite', 'ActiviteAvancee', 'Comprehension'):
                 for question in sub.questions:
-                    question.toEDX()
                     fname =  ('%s.xml' % question.id)
                     utils.write_file(toEdxProblemXml(question), edx_outdir, 'problem', fname )
 

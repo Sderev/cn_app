@@ -22,7 +22,7 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(40)
 
-from src import model,utils,toEDX,toIMS
+from src import model, toEDX
 
 TEST_EDX_DIR = "./testEDX"
 
@@ -141,7 +141,178 @@ class EDXArchiveTestCase(unittest.TestCase):
         vid = l_video.next()
         self.assertEquals(vid.attrib.get('url_name'),'1-4-1-https-vimeo-com-122104174')
 
-    # def testProblem(self):
+        print("[EDXArchiveTestCase]-- check_CNVideo OK --")
+
+    def testProblem(self):
+        io_ourQuestions = StringIO("""
+::MULTIANSWER::
+What two people are entombed in Grant's tomb? {
+~%-100%No one
+~%50%Grant #One comment
+~%50%Grant's wife
+~%-100%Grant's father
+}
+
+::TRUEFALSE::
+Vrai ou Faux?
+{T #Non...#Exact !
+####MEGA COMMENT
+}
+
+::SINGLEANSWER::
+Question {
+=A correct answer
+~Wrong answer1
+#A response to wrong
+~Wrong answer2
+#A response to wrong
+~Wrong answer3
+#A response to wrong
+~Wrong answer4
+#A response to wrong
+}
+
+::ESSAY::
+Blablablabla {
+#### MEGA COMMENT
+}
+
+        """)
+        questions = pygift.parseFile(io_ourQuestions)
+        #QUESTIONS
+        multi = questions[0]
+        trfl = questions[1]
+        sglans = questions[2]
+        essay = questions[3]
+
+        #MULTIANSWER
+        rootm = etree.fromstring(multi.toEDX())
+        self.assertEqual(rootm.tag,"problem", "for MULTIANSWER, problem tag was not created")
+        self.assertEqual(rootm.attrib.get("display_name"),"MULTIANSWER","for MULTIANSWER, title was not assigned")
+        self.assertEqual(rootm.attrib.get("max_attempts"),"1","for MULTIANSWER, max_attempts was not assigned")
+        for i,child in enumerate(rootm):
+            if i == 0:
+                self.assertEqual(child.tag,"legend", "for MULTIANSWER, legend tag was not created")
+            if i == 1:
+                self.assertEqual(child.tag,"choiceresponse", "for MULTIANSWER, choiceresponse tag was not created")
+                self.assertEqual(child.attrib.get("partial_credit"), "EDC")
+                checkbox = child[0]
+                self.assertEqual(checkbox.tag,"checkboxgroup")
+                for j,greatChild in enumerate(checkbox):
+                    self.assertEqual(greatChild.tag,"choice")
+                    self.assertNotEqual(j,4,"for MULTIANSWER, More than 4 elements")
+                    if j == 0:
+                        self.assertEqual(greatChild.text,"No one")
+                    if j == 1:
+                        self.assertEqual(greatChild.text,"Grant")
+                        self.assertEqual(greatChild[0].tag,"choicehint")
+                        self.assertEqual(greatChild[0].attrib.get("selected"),"true")
+                        self.assertEqual(greatChild[0].text,"Grant : One comment")
+                    if j == 2:
+                        self.assertEqual(greatChild.text,"Grant's wife")
+                    if j == 3:
+                        self.assertEqual(greatChild.text,"Grant's father")
+            if i == 2:
+                self.assertEqual(child.tag,"solution")
+                self.assertEqual(child[0].attrib.get("class"),"detailed-solution")
+
+        #TRUEFALSE
+        roottf = etree.fromstring(trfl.toEDX())
+        self.assertEqual(roottf.tag,"problem", "for TRUEFALSE, problem tag was not created")
+        self.assertEqual(roottf.attrib.get("display_name"),"TRUEFALSE","for TRUEFALSE, title was not assigned")
+        self.assertEqual(roottf.attrib.get("max_attempts"),"1","for TRUEFALSE, max_attempts was not assigned")
+        for i,child in enumerate(roottf):
+            if i == 0:
+                self.assertEqual(child.tag,"legend", "for TRUEFALSE, legend tag was not created")
+            if i == 1:
+                self.assertEqual(child.tag,"multiplechoiceresponse", "for TRUEFALSE, multiplechoiceresponse tag was not created")
+                choicegroup = child[0]
+                self.assertEqual(choicegroup.tag,"choicegroup")
+                #TRUE
+                self.assertEqual(choicegroup[0].tag,"choice")
+                self.assertEqual(choicegroup[0].text,"Vrai")
+                self.assertEqual(choicegroup[0].attrib.get("correct"),"true")
+                self.assertEqual(choicegroup[0][0].tag,"choicehint")
+                self.assertEqual(choicegroup[0][0].text,"Exact !")
+                #FALSE
+                self.assertEqual(choicegroup[1].tag,"choice")
+                self.assertEqual(choicegroup[1].text,"Faux")
+                self.assertEqual(choicegroup[1].attrib.get("correct"),"false")
+                self.assertEqual(choicegroup[1][0].tag,"choicehint")
+                self.assertEqual(choicegroup[1][0].text,"Non...")
+            if i == 2:
+                self.assertEqual(child.tag,"solution")
+                self.assertEqual(child[0].attrib.get("class"),"detailed-solution")
+                self.assertEqual(child[0][0].text,"MEGA COMMENT")
+
+        #SINGLEANSWER
+        roots = etree.fromstring(sglans.toEDX())
+        self.assertEqual(roots.tag,"problem", "for SINGLEANSWER, problem tag was not created")
+        self.assertEqual(roots.attrib.get("display_name"),"SINGLEANSWER","for TRUEFALSE, title was not assigned")
+        self.assertEqual(roots.attrib.get("max_attempts"),"1","for SINGLEANSWER, max_attempts was not assigned")
+        for i,child in enumerate(roots):
+            if i == 0:
+                self.assertEqual(child.tag,"legend", "for SINGLEANSWER, legend tag was not created")
+            if i == 1:
+                self.assertEqual(child.tag,"multiplechoiceresponse", "for SINGLEANSWER, multiplechoiceresponse tag was not created")
+                choicegroup = child[0]
+                self.assertEqual(choicegroup.tag,"choicegroup")
+                for j,greatChild in enumerate(choicegroup):
+                    self.assertEqual(greatChild.tag,"choice")
+                    self.assertNotEqual(j,5,"for SINGLEANSWER, More than 4 elements")
+                    if j == 0:
+                        self.assertEqual(greatChild.text,"A correct answer")
+                        self.assertEqual(greatChild.attrib.get("correct"),"true")
+                    if j == 1:
+                        self.assertEqual(greatChild.text,("Wrong answer1"))
+                        self.assertEqual(greatChild.attrib.get("correct"),"false")
+                        self.assertEqual(greatChild[0].tag,("choicehint"))
+                        self.assertEqual(greatChild[0].text,("A response to wrong"))
+                    if j == 2:
+                        self.assertEqual(greatChild.text,("Wrong answer2"))
+                        self.assertEqual(greatChild.attrib.get("correct"),"false")
+                        self.assertEqual(greatChild[0].tag,("choicehint"))
+                        self.assertEqual(greatChild[0].text,("A response to wrong"))
+                    if j == 3:
+                        self.assertEqual(greatChild.text,("Wrong answer3"))
+                        self.assertEqual(greatChild.attrib.get("correct"),"false")
+                        self.assertEqual(greatChild[0].tag,("choicehint"))
+                        self.assertEqual(greatChild[0].text,("A response to wrong"))
+                    if j == 4:
+                        self.assertEqual(greatChild.text,("Wrong answer4"))
+                        self.assertEqual(greatChild.attrib.get("correct"),"false")
+                        self.assertEqual(greatChild[0].tag,("choicehint"))
+                        self.assertEqual(greatChild[0].text,("A response to wrong"))
+                if i == 2:
+                    self.assertEqual(child.tag,"solution")
+                    self.assertEqual(child[0].attrib.get("class"),"detailed-solution")
+
+        #ESSAY
+        roote = etree.fromstring(essay.toEDX())
+        self.assertEqual(roote.tag,"problem", "for ESSAY, problem tag was not created")
+        self.assertEqual(roote.attrib.get("display_name"),"ESSAY","for ESSAY, title was not assigned")
+        self.assertEqual(roote.attrib.get("max_attempts"),"1","for ESSAY, max_attempts was not assigned")
+        for i,child in enumerate(roote):
+            if i == 0:
+                self.assertEqual(child.tag,"legend", "for ESSAY, legend tag was not created")
+            if i == 1:
+                self.assertEqual(child.tag,"script", "for ESSAY, frst script tag was not created")
+                self.assertEqual(child.attrib.get("type"),"loncapa/python")
+            if i == 2:
+                self.assertEqual(child.tag,"span", "for ESSAY, span tag was not created")
+                self.assertEqual(child.attrib.get("id"), str(essay.id))
+            if i == 3:
+                self.assertEqual(child.tag,"script", "for ESSAY, snd script tag was not created")
+                self.assertEqual(child.attrib.get("type"),"text/javascript")
+                self.assertTrue(child.text.find('<textarea style="height:150px" rows="20" cols="70"/>'))
+            if i == 4:
+                self.assertEqual(child.tag,"customresponse", "for ESSAY, customresponse tag was not created")
+                self.assertEqual(child[0].tag,"textline", "for ESSAY, textline tag was not assigned")
+            if i == 5:
+                self.assertEqual(child.tag,"solution")
+                self.assertEqual(child[0].attrib.get("class"),"detailed-solution")
+                self.assertEqual(child[0][0].text,"MEGA COMMENT")
+
 
     def runTest(self):
         self.testCreationDossierEdx()
@@ -149,6 +320,7 @@ class EDXArchiveTestCase(unittest.TestCase):
         self.testNbProblems()
         self.testCntCours()
         self.testCNVideo()
+        self.testProblem()
 
 
 # Main

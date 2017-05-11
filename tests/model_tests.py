@@ -3,6 +3,7 @@
 
 from io import open
 import json
+import mock
 import unittest
 from collections import namedtuple
 from StringIO import StringIO
@@ -93,28 +94,6 @@ class ModuleParsingTestCase(unittest.TestCase):
                     self.assertEqual(sub.folder,control_sub.folder, "no matching type for sec[%d].sub[%d]" % (i,j))
                 except AssertionError as typeMatchingError:
                     pass
-                # # Compare src
-                # try:
-                #     self.assertMultiLineEqual(sub.src,control_sub.src,"src string do not match for sec[%d].sub[%d]" % (i,j))
-                # except AssertionError as srcSplitError:
-                #     pass
-                # # Compare html_src FIXME: should make separate test for all output generation testing HTML | IMS | EDX
-                # try:
-                #     self.assertEqual(sub.html_src,control_sub.html_src, "html src do not match for sec[%d].sub[%d]" % (i,j)) #FIXME : use a xml_based comparison
-                # except AssertionError as htmlSrcMatchingError:
-                #     pass
-        if not typeMatchingError:
-            print("[ModuleParsingTestCase]-- Subsections types OK --")
-        else:
-            raise typeMatchingError
-        if not srcSplitError:
-            print("[ModuleParsingTestCase]-- Subsections split OK --")
-        else:
-            raise srcSplitError
-        if not htmlSrcMatchingError:
-            print("[ModuleParsingTestCase]-- Subsections html_src OK --")
-        else:
-            raise htmlSrcMatchingError
 
     def runTest(self):
         #check number of sections
@@ -299,17 +278,21 @@ Ce texte va être placé dans cours 0
 Ce texte va être placé dans cours 1
 ```comprehension
 ::Comp1::
-[markdown] Hello
+ Hello
 {
 salut}
 ```
 # Title 1
+
 ```activite
 ::Act1::
-[markdown] Je ne suis toujours pas un cours !
+Je ne suis toujours pas un cours !
 ```
+
 ## Cours 3
 Par contre moi oui !
+
+```
         """)
 
         sample_object = model.Module(io_cours, "culnu", "http://culnu.fr")
@@ -332,11 +315,70 @@ Par contre moi oui !
         self.assertNotEqual(sample_cours.sections[1].subsections[0].title, "Cours")
         self.assertNotEqual(sample_cours.sections[1].subsections[0].folder, "webcontent")
         self.assertEqual(sample_cours.sections[1].subsections[1].title, "Cours 3")
-
-
         print("[FctParserTestCase]-- check_cours OK --")
 
-# FIXME : Ajouter le parserGift pour tester le parsing des activités
+    def testActivites(self):
+        """
+        Test For reStartActivityMatch, goodActivity
+        """
+        io_activite = StringIO("""```activite
+Je suis une activité
+```
+""")
+        io_compr = StringIO("""```comprehension
+Je suis une comprehension
+```
+""")
+        io_actav = StringIO("""```activite-avancee
+Je suis une Activité Avancée {
+= Oui
+}
+```
+""")
+        io_rdt = StringIO("""```riendutout
+Je suis Rien du tout
+```
+        """)
+
+        io_anyact = StringIO("""
+Je suis une AnyActivity {
+= Oui
+}
+""")
+        section = mock.MagicMock(num='1') # create Mock Object with as attribute section.num = 1
+
+        #ANYACTIVTY
+        inAct = model.AnyActivity(section,io_anyact)
+        self.assertEqual(inAct.src.replace('\n',''), "Je suis une AnyActivity {= Oui}")
+        self.assertEqual(inAct.lastLine,"")
+        self.assertEqual(len(inAct.questions),1)
+
+        #ACTIVITE
+        matchA = model.reStartActivity.match(io_activite.readline())
+        act = model.goodActivity(matchA)
+        self.assertIsNotNone(act)
+        self.assertEqual(act, model.Activite)
+        self.assertIsNotNone(act(section,io_activite))
+
+        #COMPREHENSION
+        matchC = model.reStartActivity.match(io_compr.readline())
+        comp = model.goodActivity(matchC)
+        self.assertIsNotNone(comp)
+        self.assertEqual(comp, model.Comprehension)
+        self.assertIsNotNone(comp(section,io_compr))
+
+        #ACTIVITEAVANCEE
+        matchAA = model.reStartActivity.match(io_actav.readline())
+        actav = model.goodActivity(matchAA)
+        self.assertIsNotNone(model.goodActivity(matchAA))
+        self.assertEqual(model.goodActivity(matchAA), model.ActiviteAvancee)
+        self.assertIsNotNone(actav(section,io_actav))
+
+        #NOTHING
+        matchN = model.reStartActivity.match(io_rdt.readline())
+        self.assertIsNone(model.goodActivity(matchN))
+
+
 
 
 
@@ -348,6 +390,7 @@ Par contre moi oui !
         self.check_subsections()
         self.check_subsubsections()
         self.check_cours()
+        self.testActivites()
 
 
 # Main

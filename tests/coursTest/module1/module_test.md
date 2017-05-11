@@ -583,10 +583,10 @@ Cela est très pratique pour se connecter avec un ordinateur là où seules des 
 \n
 3G,4G,H+,Edge
 {
-3G -> 2
-4G -> 4
-H+ -> 3
-E (Edge) -> 1
+=3G -> 2
+=4G -> 4
+=H+ -> 3
+=E (Edge) -> 1
 ####
 # Les normes et leurs sigles
 \n

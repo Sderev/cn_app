@@ -49,13 +49,16 @@ tout doit être représenté sous forme de nombres être manipulé par un ordina
                 d.stag('link', rel="stylesheet", href="../../static/css/jasny-bootstrap.min.css", media="screen")
 
         with d.tag('h2'):
-            d.text("Nouveau parser")
+            d.text(str(questions[0].answers.__class__))
 
         for q in questions:
             q.toHTML(d,True)
 
         for q in questions:
             q.toHTML(d,False)
+
+        #Vérifie qu'une seule question a bien été créée
+        self.assertEqual(len(questions),1,"More than one Question for 'Test un choix'")
 
         # TEST HTML
         soup = BeautifulSoup(d.getvalue(), 'html.parser')
@@ -75,10 +78,6 @@ tout doit être représenté sous forme de nombres être manipulé par un ordina
             nb_li = len(form.find_all('li'))
             self.assertEqual(nb_li,3)
 
-
-        for q in questions:
-            q.toEDX()
-            print(q.EDX)
 
         out =  open(TEST_GIFT_DIR+"simplechoice.html", "w")
         out.write (d.getvalue())
@@ -109,13 +108,15 @@ tout doit être représenté sous forme de nombres être manipulé par un ordina
                 d.stag('link', rel="stylesheet", href="../../static/css/jasny-bootstrap.min.css", media="screen")
 
         with d.tag('h2'):
-            d.text("Nouveau parser")
+            d.text(str(questions[0].answers.__class__))
 
         for q in questions:
             q.toHTML(d,True)
 
         for q in questions:
             q.toHTML(d,False)
+
+        self.assertEqual(len(questions),1,"More than one Question for 'TestMultiple'")
 
         # TEST HTML
         soup = BeautifulSoup(d.getvalue(), 'html.parser')
@@ -182,13 +183,15 @@ Voici quelques exemples que nous vous proposons, n'hésitez pas à proposer d'au
                 d.stag('link', rel="stylesheet", href="../../static/css/jasny-bootstrap.min.css", media="screen")
 
         with d.tag('h2'):
-            d.text("Nouveau parser")
+            d.text(str(questions[0].answers.__class__))
 
         for q in questions:
             q.toHTML(d,True)
 
         for q in questions:
             q.toHTML(d,False)
+
+        self.assertEqual(len(questions),1,"More than one Question for 'TestSimpleText'")
 
         # TEST HTML
         soup = BeautifulSoup(d.getvalue(), 'html.parser')
@@ -243,13 +246,16 @@ Les **lentilles pour la vue** ?
                 d.stag('link', rel="stylesheet", href="../../static/css/jasny-bootstrap.min.css", media="screen")
 
         with d.tag('h2'):
-            d.text("Nouveau parser")
+            d.text(str(questions[0].answers.__class__))
 
         for q in questions:
             q.toHTML(d,True)
 
         for q in questions:
             q.toHTML(d,False)
+
+        self.assertEqual(len(questions),1,"More than one Question for 'TestSimpleText2'")
+
 
         # TEST HTML
         soup = BeautifulSoup(d.getvalue(), 'html.parser')
@@ -284,20 +290,24 @@ Les **lentilles pour la vue** ?
 ::first paret of text of Q2::
 //comment in Q2
 second part of text of Q2
-{=answer Q2}
+My Question{
+=2 =Q2 =Question2
+} other part
         """)
 
         questions = pygift.parseFile(io_simple)
         io_simple.close()
 
         with d.tag('h2'):
-            d.text("Nouveau parser")
+            d.text(str(questions[0].answers.__class__))
 
         for q in questions:
             q.toHTML(d,True)
 
         for q in questions:
             q.toHTML(d,False)
+
+        self.assertEqual(len(questions),1,"More than one Question for 'TestAnswerArea 1'")
 
         # AVEC UNE RÉPONSE AU MILIEU DU TEXTE
 
@@ -308,11 +318,17 @@ blabla {} with tail
         questions = pygift.parseFile(io_in)
         io_in.close()
 
+        with d.tag('h2'):
+            d.text(str(questions[0].answers.__class__))
+
         for q in questions:
             q.toHTML(d,True)
 
         for q in questions:
             q.toHTML(d,False)
+
+        self.assertEqual(len(questions),1,"More than one Question for 'TestAnswerArea 1'")
+
 
         out =  open(TEST_GIFT_DIR+"areaAnswer.html", "w")
 
@@ -413,12 +429,12 @@ Match the following countries with their corresponding capitals. {
 **Classez ces modes de connexion du plus lent au plus rapide.**
 3G,4G,H+,Edge
 {
-3G -> 2
-4G -> 4
-H+ -> 3
-E (Edge) -> 1
+=3G -> 2
+=4G -> 4
+=H+ -> 3
+=E (Edge) -> 1
 ####
-# Les normes et leurs sigles
+## Les normes et leurs sigles
 - Les modes de connexion du plus lent au plus rapide.
     - E (Edge) aussi appelé 2G, lent. Ce mode de connexion permet à peine de lire ses mails. Il ne permet pas une navigation fluide sur le Web.
     - 3G (3ème génération) permet de faire des recherches et de surfer sans trop attendre.
@@ -430,7 +446,6 @@ Notez bien que pour pouvoir bénéficier d'une connexion 4G, il faut :
  }
         """)
 
-        #FIXME : PAS GERE !!!
         questions = pygift.parseFile(io_minmax)
         io_minmax.close()
 

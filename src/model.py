@@ -121,7 +121,7 @@ class Subsection:
             links are turned absolute with the base_url and the module name
         """
         #FIXME : Parser le src en repérant les liens href en les encodant
-        
+
         self.src = re.sub('\]\(\s*(\.\/)*\s*media/', ']('+self.section.base_url+'/'+self.section.module+'/media/', self.src)
         #print(self.src)
 
@@ -220,8 +220,7 @@ class AnyActivity(Subsection):
         self.src = ''
         self.parse(f)
         self.absolutizeMediaLinks()
-        self.questions = pygift.parseFile(iter(self.src.splitlines(True)))
-        # self.questions = process_questions(extract_questions(self.src))
+        self.questions = pygift.parseFile(iter(self.src.splitlines(True))) #need to transform String in File pointer with iter function
 
 
     def parse(self,f):
@@ -255,16 +254,6 @@ class AnyActivity(Subsection):
             q.toHTML(d,feedbacks=feedback_option)
         self.html_src = d.getvalue()
         return self.html_src
-
-    def toEdxProblemsList(self):
-        """Returns xml source code of all the questions in EDX XML format. *depends on toEdx.py module*
-
-        :rtype: texte string of xml code
-        """
-        edx_xml_problem_list = ""
-        for question in self.questions:
-            edx_xml_problem_list += '\n'+toEDX.toEdxProblemXml(question)+'\n'
-        return edx_xml_problem_list
 
 
     def toXMLMoodle(self):
@@ -439,15 +428,6 @@ class Section:
                 video_list += sub.videoIframeList()
         return video_list
 
-    def toEdxProblemsList(self):
-        """Returns the xml source code (string) of all questions in EDX XML format"""
-        edx_xml_problem_list = ""
-        for sub in self.subsections:
-            if isinstance(sub, AnyActivity):
-                # add subsection title
-                edx_xml_problem_list += "<!-- "+sub.num+" "+sub.title+" -->\n\n"
-                edx_xml_problem_list += sub.toEdxProblemsList()
-        return edx_xml_problem_list
 
 class Module:
     """ Module structure.
@@ -555,14 +535,6 @@ class Module:
             video_list += s.toVideoList()+'\n\n'
         return video_list
 
-    # FIXME: should use a template file
-    def toEdxProblemsList(self):
-        """Returns the xmlL source code of all questions in EDX XML. Usefull for importing a library of problems into EDX. *depends on toEDX.py module*"""
-        edx_xml_problem_list = '<library xblock-family="xblock.v1" display_name="'+self.module+'_'+self.menutitle+'" org="ULille3" library="'+self.module+'_'+self.menutitle+'">\n\n"'
-        for s in self.sections:
-            edx_xml_problem_list += s.toEdxProblemsList()
-        edx_xml_problem_list += "\n</library>"
-        return edx_xml_problem_list
 
 # param syntax
 # :param mode: Specifies the mode of transport to use when calculating

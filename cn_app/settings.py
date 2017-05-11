@@ -33,6 +33,7 @@ EMAIL_PORT = 587
 
 # Etherpad Configuration
 ETHERPAD_URL = 'http://193.51.236.202:9001/'
+API_KEY = 'fdbf98e9860aec3d5efd467319081eb4b0a6740e93ed0d2634f0f33008e7a695'
 
 
 # Application definition

@@ -94,9 +94,62 @@ def writeMediaFromArchive(zipFile, mediaData, path):
     return zipFile
 """
 
+# Write a XML file in string from a Cours Model (only keep module names and url)
+def writeXMLCourse(cours):
+    print "blabla"
+
+    coursXML = etree.Element("cours")
+    nom = etree.SubElement(coursXML,"nom")
+    nom.text = cours.nom_cours
+    urlMedia = etree.SubElement(coursXML, "urlMedia")
+    urlMedia.text = cours.url_media
+    nbModule = etree.SubElement(coursXML, "nbModule")
+    nbModule.text = str(cours.nb_module)
+
+    for module in cours.module_set.all():
+        moduleXML = etree.SubElement(coursXML,"module")
+        nomModule = etree.SubElement(moduleXML,"nomModule")
+        nomModule.text = module.nom_module
+        urlMedia = etree.SubElement(moduleXML,"urlMedia")
+        urlMedia.text = module.url_media
+
+    return etree.tostring(coursXML, pretty_print=True)
+
+# pack the markdown files and xml file into a tar archive.
+# the user may use it again later for reuploading his course.
+def createExportArchive(zipFile):
+    # pack it up into a tar archive
+    # by using regex to determine which file must be included in that archive
+    # (We have to look into the archive being generated)
+    tab=zipFile.namelist()
+    reExportPath = re.compile('^export/')
+
+    tarArchiveIO = StringIO.StringIO()
+
+    # We open the tar archive inside of the StringIO instance
+    with tarfile.open(mode='w:gz', fileobj=tarArchiveIO) as tar:
+        #for each EDX element belonging to the module
+        for elt in tab:
+            res=reExportPath.match(elt)
+
+            if res:
+                # adding the file to the tar archive
+                # (we need tarInfo and StringIO instance for not writing anything on the disk)
+                path=elt.replace('export/','')
+                data=zipFile.read(elt)
+                info=tarfile.TarInfo(name=path)
+                info.size=len(data)
+                tar.addfile(tarinfo=info, fileobj=StringIO.StringIO(data))
+        tar.close()
+
+    tarArchiveIO.seek(0)
+    zipFile.writestr("export/export.tar.gz", tarArchiveIO.read())
+
+    return zipFile
+
 
 # Build the site and return the archive, used in both forms (either InMemoryUploadedFile or StringIO, both have readable attribute)
-def buildSiteLight(course_obj, repoDir, outDir, modulesData, mediasData, mediasNom, homeData, titleData, logoData):
+def buildSiteLight(course_obj, repoDir, outDir, modulesData, mediasData, mediasNom, homeData, titleData, logoData, xmlCourse):
 
     #print BASE_PATH
     inMemoryOutputFile = StringIO.StringIO()
@@ -107,9 +160,11 @@ def buildSiteLight(course_obj, repoDir, outDir, modulesData, mediasData, mediasN
     jenv.filters['slugify'] = utils.cnslugify
     site_template = jenv.get_template("site_layout.html")
 
+    ####XML
+    zipFile.writestr("export/infos.xml", xmlCourse)
+
     ####LOGO
     #if found, copy logo.png, else use default
-    print logoData
     logo_files=logoData
     if logoData != None:
         logo="logo.png"
@@ -163,13 +218,16 @@ def buildSiteLight(course_obj, repoDir, outDir, modulesData, mediasData, mediasN
         html = site_template.render(course=course_obj, module_content=module_html_content, body_class="modules", logo=logo)
         zipFile.writestr(module.module+'.html', html.encode("UTF-8"))
 
-
+    # write into the archive the different md files
     homeData.seek(0)
-    zipFile.writestr('home.md',homeData.read())
+    zipFile.writestr('export/home.md',homeData.read())
     i=1
     for moduleData in modulesData:
-        zipFile.writestr('mod'+str(i)+'.md',moduleData.read())
+        zipFile.writestr('export/module'+str(i)+'.md',moduleData.read())
         i=i+1
+
+    # create export archive
+    zipFile = createExportArchive(zipFile)
 
     zipFile.close()
     inMemoryOutputFile.seek(0)
@@ -177,7 +235,7 @@ def buildSiteLight(course_obj, repoDir, outDir, modulesData, mediasData, mediasN
     return inMemoryOutputFile
 
 # Generate an archive from a complete form, contains InMemoryUploadedFile
-def generateArchive(modulesData, mediasData, mediaTypes, homeData, titleData, logoData, repoDir, outDir, baseUrl):
+def generateArchive(modulesData, mediasData, mediaTypes, homeData, titleData, logoData, repoDir, outDir, baseUrl, xmlCourse):
     modules=[]
     i=1
     for moduleData in modulesData:
@@ -192,7 +250,7 @@ def generateArchive(modulesData, mediasData, mediaTypes, homeData, titleData, lo
     mediasDataObj,mediasNom=extractMediaArchive(mediasData, mediaTypes)
 
     #outputFile=buildSiteLight(c,repoDir,outDir,mediasData,homeData,titleData, logoData)
-    outputFile=buildSiteLight(c,repoDir,outDir, modulesData, mediasDataObj,mediasNom,homeData,titleData, logoData)
+    outputFile=buildSiteLight(c,repoDir,outDir, modulesData, mediasDataObj,mediasNom,homeData,titleData, logoData, xmlCourse)
 
     return outputFile
 
@@ -236,7 +294,6 @@ def extractMediaArchive(mediasData, mediasType):
             zipArchiveIO.seek(0)
             with ZipFile(zipArchiveIO, 'r') as zipfile:
                 for member in zipfile.namelist():
-                    print member
                     media=StringIO.StringIO()
                     media.write(zipfile.read(member))
                     media.seek(0)

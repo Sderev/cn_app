@@ -51,7 +51,6 @@
                 <li><a> Bonjour Visiteur :</a></li>
                 <li><a href="/connexion">Connexion </a></li>
               {% endif %}
-
             </ul>
 	      </div>
 
@@ -67,7 +66,7 @@
          <li class="panel panel-default"><a href="/form_upload/"><h4 class="panel-title">Upload de cours</h4></a></li>
          <li class="panel panel-default"><a href="/form_upload_light/"><h4 class="panel-title">Upload d'archive</h4></a></li>
          <li class="panel panel-default"><a href="/form_upload_eth/"><h4 class="panel-title">Créer un nouveau cours</h4></a></li>
-         
+
 
       </ul>
       {% if request.user.username %}
@@ -75,7 +74,7 @@
 
       <ul class="nav panel-group" id="accordion">
         <li class="panel panel-default"><a href="/cours/"><h4 class="panel-title">Studio de cours</h4></a></li>
-        <li class="panel panel-default"><a href=""><h4 class="panel-title">Importer et rééditer un cours</h4></a></li>
+        <li class="panel panel-default"><a href="/reupload/"><h4 class="panel-title">Importer et rééditer un cours</h4></a></li>
 
       </ul>
       {% endif %}

@@ -8,8 +8,10 @@ import os
 import shlex
 import subprocess
 import sys
+import tarfile
 
 import forms
+from lxml import etree
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -41,6 +43,8 @@ import string
 import random
 import re
 from cn_app.settings import ETHERPAD_URL
+from cn_app.settings import API_KEY
+
 
 #################################
 #                               #
@@ -201,6 +205,83 @@ def form_upload_eth(request):
     })
 
 
+# View allowing the user to reupload a course with the export.tar.gz provided when generating a course
+def form_reupload(request):
+    sauvegarde = False
+
+    form = UploadFormLight(request.POST or None, request.FILES or None)
+
+    if form.is_valid() :
+        repoDir=settings.BASE_DIR
+        outDir=settings.BASE_DIR
+        baseUrl=settings.BASE_DIR
+
+
+        #tab=zipFile.namelist()
+        #reExportPath = re.compile('^export/')
+
+        tarArchiveIO = StringIO.StringIO(form.cleaned_data["archive"].read())
+        #tarArchiveIO.writestr()
+        #tarArchiveIO.seek(0)
+
+        # We open the tar archive inside of the StringIO instance
+        with tarfile.open(mode='r:gz', fileobj=tarArchiveIO) as tar:
+            #for each EDX element belonging to the module
+
+
+            print tar.getnames()
+            xmlFile = tar.extractfile("infos.xml")
+            tree = etree.parse(xmlFile)
+
+            cours=tree.xpath("/cours")[0]
+            nom=cours.getchildren()[0]
+            print nom.text
+
+
+            """
+            nom= tree.xpath("/cours/nom")[0]
+            print nom.text
+
+            # go through the modules
+            for module in tree.xpath("/cours/module"):
+                print module.nomModule.text
+            """
+
+            """
+            for elt in tab:
+                res=reExportPath.match(elt)
+                if res:
+                    # adding the file to the tar archive
+                    # (we need tarInfo and StringIO instance for not writing anything on the disk)
+                    data=zipFile.read(elt)
+                    info=tarfile.TarInfo(name=elt)
+                    info.size=len(data)
+                    tar.addfile(tarinfo=info, fileobj=StringIO.StringIO(data))
+            """
+            tar.close()
+
+
+        """
+        archiveData=form.cleaned_data["archive"]
+        zip=cn.generateArchiveLight(archiveData, repoDir, outDir, baseUrl)
+
+        sauvegarde = True
+
+        response= HttpResponse(zip)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = "attachment; filename=\"site.zip\""
+        return response
+        """
+
+
+
+        #return redirect(mes_cours)
+
+    return render(request, 'escapad_formulaire/formreupload.html', {
+        'form': form,
+        'sauvegarde': sauvegarde
+    })
+
 ######################################
 #                                    #
 #           PREVIEW VIEWS            #
@@ -293,7 +374,16 @@ def mes_cours(request):
 # View showing the information of a course
 def cours(request, id_cours):
 
-    cours = Cours.objects.get(id_cours=id_cours)
+
+    try:
+        cours = Cours.objects.get(id_cours=id_cours)
+        request.user.profil.cours.get(id_cours=id_cours)
+    except Cours.DoesNotExist:
+        return redirect(mes_cours)
+
+    #if not request.user.profil.cours.get(id_cours=id_cours):
+    #    return redirect(mes_cours)
+
     form = CreateNew(request.POST or None)
     form2 = UploadFormEth(request.POST or None, request.FILES or None)
     form3 = SearchUser(request.POST or None)
@@ -362,8 +452,8 @@ def cours(request, id_cours):
                 mediasData.append(None)
                 mediasType.append(None)
 
-
-        zip=cn.generateArchive(modulesData,mediasData,mediasType,homeData,titleData,logoData,repoDir,outDir,baseUrl)
+        xmlCourse=cn.writeXMLCourse(cours)
+        zip=cn.generateArchive(modulesData,mediasData,mediasType,homeData,titleData,logoData,repoDir,outDir,baseUrl, xmlCourse)
 
 
         response= HttpResponse(zip)
@@ -386,15 +476,43 @@ def cours(request, id_cours):
 # View form for creating the home file
 def cours_edition(request, id_cours ,url):
 
+
+
     if not request.user.is_authenticated:
         return redirect(connexion)
 
+    # Check if the user has the right to be on this page
+    try:
+        cours = Cours.objects.get(id_cours=id_cours)
+        request.user.profil.cours.get(id_cours=id_cours)
+    except Cours.DoesNotExist:
+        return redirect(mes_cours)
+
+    is_home=True
+    name=''
+    # url starting with module: check it it belongs to the course
+    if re.match(r"^module",url):
+        # Check if the module exists
+        try:
+            module=cours.module_set.get(url=url)
+        except Module.DoesNotExist:
+            return redirect(mes_cours)
+        name=module.nom_module
+        url_media = module.url_media
+        is_home = False
+    # url starting with home: check if it is equal to the course url_home
+    elif re.match(r"^home",url):
+        name="home"
+        url_media = cours.url_media
+        if cours.url_home != url:
+            return redirect(mes_cours)
+    # the url doesn't start with "home" nor "module", there is no chance it belongs to the application
+    else:
+        return redirect(mes_cours)
+
     form_media = MediaForm(request.POST or None)
-    cours = Cours.objects.get(id_cours=id_cours)
-    full_url=ETHERPAD_URL+'p/'+url
-    is_home=False
-    if re.match(r"^home",url):
-        is_home=True
+    full_url = ETHERPAD_URL+'p/'+url
+
 
     #if we changed the media url
     if form_media.is_valid() :
@@ -404,25 +522,18 @@ def cours_edition(request, id_cours ,url):
         if re.match(r"^.*dropbox.*dl=",res_url):
             res_url=re.sub(r"^(?P<debut>.*)dl=[0-9](?P<fin>.*)$", r"\g<debut>dl=1\g<fin>", res_url)
 
+        url_media=''
         #If we modify the home page
         if re.match(r"^home",url):
             cours.url_media=res_url
             cours.save()
+            url_media= cours.url_media
         #If we modify a module page
         elif re.match(r"^module",url):
             module=Module.objects.get(url=url)
             module.url_media=res_url
             module.save()
-
-    url_media=''
-    #get the url_media to print on the view
-    #home page
-    if re.match(r"^home",url):
-        url_media= cours.url_media
-    #module page
-    elif re.match(r"^module",url):
-        module=Module.objects.get(url=url)
-        url_media= module.url_media
+            url_media= module.url_media
 
     return render(request, 'escapad_formulaire/form_edition.html', {
         'id_cours': id_cours,
@@ -430,6 +541,7 @@ def cours_edition(request, id_cours ,url):
         'full_url': full_url,
         'url_media': url_media,
         'form_media': form_media,
+        'name': name,
         'is_home': is_home
     })
 
@@ -439,12 +551,30 @@ def delete_module(request, id_cours, url):
     if not request.user.is_authenticated:
         return redirect(connexion)
 
-    module= Module.objects.get(url=url)
+    # Check if the course exists
+    try:
+        course = Cours.objects.get(id_cours=id_cours)
+        request.user.profil.cours.get(id_cours=id_cours)
+    except Cours.DoesNotExist:
+        return redirect(mes_cours)
+
+    # Check if the module exists
+    try:
+        module=course.module_set.get(url=url)
+        #module= Module.objects.get(url=url)
+    except Module.DoesNotExist:
+        return redirect(mes_cours)
+
+    # Delete the pad
+    response = urllib2.urlopen("http://193.51.236.202:9001/api/1/deletePad?apikey="+API_KEY+"&padID="+url)
+
+    # Delete the module model and update the course model
     module.delete()
     c= Cours.objects.get(id_cours=id_cours)
     c.nb_module=c.nb_module-1
     c.save()
     return redirect(cours,id_cours=id_cours)
+
 
 # Delete a course, then redirect the user to its course list page
 # Note: If a course is shared by several user, the course will not be deleted,
@@ -453,9 +583,24 @@ def delete_course(request, id_cours):
     if not request.user.is_authenticated:
         return redirect(connexion)
 
-    course= Cours.objects.get(id_cours=id_cours)
-    if course.profil_set.all().count == 1:
+    # Check if the course exists
+    try:
+        course = Cours.objects.get(id_cours=id_cours)
+        request.user.profil.cours.get(id_cours=id_cours)
+    except Cours.DoesNotExist:
+        return redirect(connexion)
+
+    # delete the home pad
+    response = urllib2.urlopen("http://193.51.236.202:9001/api/1/deletePad?apikey="+API_KEY+"&padID="+course.url_home)
+
+    # Only one contributor to the course: We delete it entirely.
+    if len(course.profil_set.all()) == 1:
+        # delete the pads belonging to the course
+        for module in course.module_set.all():
+            response = urllib2.urlopen("http://193.51.236.202:9001/api/1/deletePad?apikey="+API_KEY+"&padID="+module.url)
+            module.delete()
         course.delete()
+    # More than one contributor: We remove the link between the current user and the course.
     else:
         profil=request.user.profil
         course.profil_set.remove(profil)

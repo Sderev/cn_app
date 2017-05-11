@@ -33,6 +33,8 @@ urlpatterns = [
     url(r'^deconnexion/$', escapad_formulaire.views.deconnexion, name='deconnexion'),
     url(r'^inscription/$', escapad_formulaire.views.inscription, name='inscription'),
 
+    url(r'^reupload/$', escapad_formulaire.views.form_reupload, name='form_reupload'),
+
     url(r'^cours/$', escapad_formulaire.views.mes_cours, name='mes_cours'),
     url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)$', escapad_formulaire.views.cours, name='cours'),
     url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)/delete$', escapad_formulaire.views.delete_course, name='delete_course'),

@@ -1,7 +1,7 @@
 all :
 	python model_tests.py
 	python archive_tests.py
-	python gift_test.py
+	python html_test.py
 
 
 clean : all

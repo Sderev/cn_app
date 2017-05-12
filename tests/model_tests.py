@@ -317,6 +317,21 @@ Par contre moi oui !
         self.assertEqual(sample_cours.sections[1].subsections[1].title, "Cours 3")
         print("[FctParserTestCase]-- check_cours OK --")
 
+    def testSubsections(self):
+        """
+        Test for SubSections
+        """
+        model.Subsection.num = 1
+        sc = mock.MagicMock(num='2')
+        sub = model.Subsection(sc)
+        sub.title = "Title"
+        sub.folder = "Folder"
+        self.assertEqual(sub.section, sc)
+        self.assertEqual(sub.num,"2-1")
+        self.assertEqual(sub.getFilename(),"2-1title_Folder.html")
+        self.assertEqual(sub.getFilename(term="xml"),"2-1title_Folder.xml")
+
+
     def testActivites(self):
         """
         Test For reStartActivityMatch, goodActivity
@@ -380,8 +395,6 @@ Je suis une AnyActivity {
 
 
 
-
-
 # ________________RUNTEST FOR FctParserTestCase____________________________
     def runTest(self):
         self.check_default_parser_head()
@@ -390,6 +403,7 @@ Je suis une AnyActivity {
         self.check_subsections()
         self.check_subsubsections()
         self.check_cours()
+        self.testSubsections()
         self.testActivites()
 
 

@@ -389,7 +389,6 @@ class Section:
             self.build_default_cours(body)
 
 
-
     # FIXME: is this usefull ??
     def toHTML(self, feedback_option=False):
         """Triggers the HTML output generation for all subsections. Does not return anything """

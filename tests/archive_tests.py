@@ -177,6 +177,29 @@ Blablablabla {
 #### MEGA COMMENT
 }
 
+::NUMERICALWITHOUTTOLERANCE::
+1 OU 2 OU 3?{
+#2
+}
+
+::NUMERICALWITHTOLERANCE::
+1 OU 2 OU 3?{
+#2:1
+#### MEGA COMMENT
+}
+
+::NUMERICALMINMAX::
+1 OU 2 OU 3?{
+#1..3
+}
+
+::MATCH::
+Capital {
+=Canada -> Ottawa
+=Italy -> Rome
+=Japan -> Tokyo
+=India -> New Delhi
+}
         """)
         questions = pygift.parseFile(io_ourQuestions)
         #QUESTIONS
@@ -184,6 +207,10 @@ Blablablabla {
         trfl = questions[1]
         sglans = questions[2]
         essay = questions[3]
+        numericalWOT = questions[4]
+        numericalWT = questions[5]
+        numericalMINMAX = questions[6]
+        match = questions[7]
 
         #MULTIANSWER
         rootm = etree.fromstring(multi.toEDX())
@@ -313,6 +340,85 @@ Blablablabla {
                 self.assertEqual(child[0].attrib.get("class"),"detailed-solution")
                 self.assertEqual(child[0][0].text,"MEGA COMMENT")
 
+        #NUMERICAL WITHOUT TOLERANCE
+        rootwot = etree.fromstring(numericalWOT.toEDX())
+        self.assertEqual(rootwot.tag,"problem", "for NUMERICALWITHOUTTOLERANCE, problem tag was not created")
+        self.assertEqual(rootwot.attrib.get("display_name"),"NUMERICALWITHOUTTOLERANCE","for NUMERICALWITHOUTTOLERANCE, title was not assigned")
+        self.assertEqual(rootwot.attrib.get("max_attempts"),"1","for NUMERICALWITHOUTTOLERANCE, max_attempts was not assigned")
+        for i,child in enumerate(rootwot):
+            if i == 0:
+                self.assertEqual(child.tag,"legend", "for NUMERICALWITHOUTTOLERANCE, legend tag was not created")
+            if i == 1:
+                self.assertEqual(child.tag,"numericalresponse")
+                self.assertEqual(child.attrib.get("answer"),"2.0")
+                self.assertEqual(child[0].tag,"formulaequationinput")
+
+        #NUMERICAL WITH TOLERANCE
+        rootwt = etree.fromstring(numericalWT.toEDX())
+        self.assertEqual(rootwt.tag,"problem", "for NUMERICALWITHTOLERANCE, problem tag was not created")
+        self.assertEqual(rootwt.attrib.get("display_name"),"NUMERICALWITHTOLERANCE","for NUMERICALWITHOUTTOLERANCE, title was not assigned")
+        self.assertEqual(rootwt.attrib.get("max_attempts"),"1","for NUMERICALWITHTOLERANCE, max_attempts was not assigned")
+        for i,child in enumerate(rootwt):
+            if i == 0:
+                self.assertEqual(child.tag,"legend", "for NUMERICALWITHTOLERANCE, legend tag was not created")
+            if i == 1:
+                self.assertEqual(child.tag,"numericalresponse")
+                self.assertEqual(child.attrib.get("answer"),"2.0")
+                self.assertEqual(child[0].tag,"responseparam")
+                self.assertEqual(child[0].attrib.get("type"),"tolerance")
+                self.assertEqual(child[0].attrib.get("default"),"1.0")
+                self.assertEqual(child[1].tag,"formulaequationinput")
+            if i == 2:
+                self.assertEqual(child.tag,"solution")
+                self.assertEqual(child[0].attrib.get("class"),"detailed-solution")
+                self.assertEqual(child[0][0].text,"MEGA COMMENT")
+
+        #NUMERICAL MIN MAX
+        rootmm = etree.fromstring(numericalMINMAX.toEDX())
+        self.assertEqual(rootmm.tag,"problem", "for NUMERICALMINMAX, problem tag was not created")
+        self.assertEqual(rootmm.attrib.get("display_name"),"NUMERICALMINMAX","for NUMERICALWITHOUTTOLERANCE, title was not assigned")
+        self.assertEqual(rootmm.attrib.get("max_attempts"),"1","for NUMERICALMINMAX, max_attempts was not assigned")
+        for i,child in enumerate(rootmm):
+            if i == 0:
+                self.assertEqual(child.tag,"legend", "for NUMERICALMINMAX, legend tag was not created")
+            if i == 1:
+                self.assertEqual(child.tag,"numericalresponse")
+                self.assertEqual(child.attrib.get("answer"),"[1,3]")
+                self.assertEqual(child[0].tag,"formulaequationinput")
+
+        #MATCH
+        rootma = etree.fromstring(match.toEDX())
+        self.assertEqual(rootma.tag,"problem", "for MATCH, problem tag was not created")
+        self.assertEqual(rootma.attrib.get("display_name"),"MATCH","for NUMERICALWITHOUTTOLERANCE, title was not assigned")
+        self.assertEqual(rootma.attrib.get("max_attempts"),"1","for MATCH, max_attempts was not assigned")
+        for i,child in enumerate(rootma):
+            if i == 0:
+                self.assertEqual(child.tag,"legend", "for MATCH, legend tag was not created")
+            if (i % 2 == 1):
+                self.assertEqual(child.tag,"h2")
+            elif (i > 0) and (i % 2 == 0):
+                self.assertEqual(child.tag,"optionresponse")
+                self.assertEqual(child[0].tag,"optioninput")
+                if i == 2:
+                    self.assertEqual(child[0].attrib.get("label"),"Canada ")
+                    self.assertEqual(child[0].attrib.get("correct")," Ottawa")
+                if i == 4:
+                    self.assertEqual(child[0].attrib.get("label"),"Italy ")
+                    self.assertEqual(child[0].attrib.get("correct")," Rome")
+                if i == 6:
+                    self.assertEqual(child[0].attrib.get("label"),"Japan ")
+                    self.assertEqual(child[0].attrib.get("correct")," Tokyo")
+                if i == 8:
+                    self.assertEqual(child[0].attrib.get("label"),"India ")
+                    self.assertEqual(child[0].attrib.get("correct")," New Delhi")
+
+
+        # matchedx = match.toEDX()
+        # outfile = open("match.xml","wb")
+        # outfile.write(matchedx)
+        # outfile.close()
+
+        print("[EDXArchiveTestCase]-- check_problem_to_edx OK --")
 
     def runTest(self):
         self.testCreationDossierEdx()

@@ -360,12 +360,19 @@ When was Ulysses S. Grant born? {#
 =1822:0
 =%50%1822:2
 }
+
+::Num4::
+1 2 ou 3 ? {#2}
+}
         """)
+
 
         questions = pygift.parseFile(io_num)
         io_num.close()
 
         for q in questions:
+            with d.tag('h2'):
+                d.text(str(questions[0].answers.__class__))
             q.toHTML(d,True)
 
         for q in questions:
@@ -399,6 +406,9 @@ Match the following countries with their corresponding capitals. {
         """)
         questions = pygift.parseFile(io_match)
         io_match.close()
+
+        with d.tag('h2'):
+            d.text(str(questions[0].answers.__class__))
 
         for q in questions:
             q.toHTML(d,True)
@@ -448,6 +458,9 @@ Notez bien que pour pouvoir bénéficier d'une connexion 4G, il faut :
 
         questions = pygift.parseFile(io_minmax)
         io_minmax.close()
+
+        with d.tag('h2'):
+            d.text(str(questions[0].answers.__class__))
 
         for q in questions:
             q.toHTML(d,True)

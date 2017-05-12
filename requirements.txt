@@ -8,10 +8,12 @@ html
 MarkdownSuperscript
 flask
 requests
-beautifulsoup4
+beautifulsoup
+mock
+coverage
 # used only to generate doc with Sphinx+recommonmark
 Sphinx
 sphinx-rtd-theme
 recommonmark
--e git://github.com/CelestineSauvage/pygiftparser#egg=pygiftparser
+
 

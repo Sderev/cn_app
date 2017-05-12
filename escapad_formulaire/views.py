@@ -207,6 +207,13 @@ def form_upload_eth(request):
 
 # View allowing the user to reupload a course with the export.tar.gz provided when generating a course
 def form_reupload(request):
+
+    if not request.user.is_authenticated:
+        return redirect(connexion)
+
+    myUser=request.user
+    profil= Profil.objects.get(user=myUser)
+
     sauvegarde = False
 
     form = UploadFormLight(request.POST or None, request.FILES or None)
@@ -216,27 +223,48 @@ def form_reupload(request):
         outDir=settings.BASE_DIR
         baseUrl=settings.BASE_DIR
 
-
-        #tab=zipFile.namelist()
-        #reExportPath = re.compile('^export/')
-
         tarArchiveIO = StringIO.StringIO(form.cleaned_data["archive"].read())
-        #tarArchiveIO.writestr()
-        #tarArchiveIO.seek(0)
 
         # We open the tar archive inside of the StringIO instance
         with tarfile.open(mode='r:gz', fileobj=tarArchiveIO) as tar:
             #for each EDX element belonging to the module
 
-
             print tar.getnames()
             xmlFile = tar.extractfile("infos.xml")
             tree = etree.parse(xmlFile)
 
+            # Get the course infos
             cours=tree.xpath("/cours")[0]
-            nom=cours.getchildren()[0]
-            print nom.text
+            nom=cours.getchildren()[0].text
+            url_media=cours.getchildren()[1].text
+            nb_module=cours.getchildren()[2].text
+            if url_media == None :
+                url_media = ''
 
+            # Generate the course and associate with the current user
+            id_cours = id_generator()
+            url_home = 'home-'+id_generator()
+            cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home, url_media=url_media, nb_module=nb_module)
+            cours_obj.save()
+            profil.cours.add(cours_obj)
+            profil.save()
+
+            # Generate each media
+            cpt=1
+            for nomMod, urlMediaMod in zip(tree.xpath("/cours/module/nomModule"),tree.xpath("/cours/module/urlMedia")):
+                moduleFile= tar.extractfile("module"+str(cpt)+".md")
+                url = 'module-'+id_generator()
+                nom_module = nomMod.text
+                url_media = urlMediaMod.text
+                if url_media == None :
+                    url_media = ''
+                module_obj = Module(url=url, nom_module=nom_module, url_media=url_media, cours=cours_obj)
+                module_obj.save()
+
+                os.system("curl -X POST -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
+                os.system("curl -X POST --data '"+moduleFile.read()+"' -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
+
+                cpt+=1
 
             """
             nom= tree.xpath("/cours/nom")[0]

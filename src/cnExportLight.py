@@ -75,25 +75,6 @@ def addFolderToZip(myZipFile,folder_src,folder_dst):
         elif os.path.isdir(file):
             addFolderToZip(myZipFile,file,folder_dst+os.path.basename(file)+'/')
 
-
-"""
-def writeMediaFromArchive(zipFile, mediaData, path):
-
-    #print mediaData.read()
-
-    tarArchiveIO = StringIO.StringIO()
-    tarArchiveIO.write(mediaData.read())
-    tarArchiveIO.seek(0)
-
-    # We open the tar archive inside of the StringIO instance
-    with tarfile.open(mode='r:gz', fileobj=tarArchiveIO) as tar:
-        for member in tar.getnames():
-            zipFile.writestr(path+'/'+member, tar.extractfile(member).read())
-        tar.close()
-
-    return zipFile
-"""
-
 # Write a XML file in string from a Cours Model (only keep module names and url)
 def writeXMLCourse(cours):
     print "blabla"

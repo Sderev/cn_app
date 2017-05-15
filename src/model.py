@@ -240,7 +240,6 @@ class AnyActivity(Subsection):
 
 
     def toHTML(self, feedback_option=False):
-        #COUCOU
         """Assign and return the html_src attribute, i.e. the concatenation of the HTML representation of all questions of this activity.
 
         :param feedback_option: wether or not output should include feedbacks to the questions of the activity

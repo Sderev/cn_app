@@ -63,10 +63,6 @@ def form_upload(request):
 
     if form.is_valid() and formMod.is_valid():
 
-        repoDir=settings.BASE_DIR
-    	outDir=settings.BASE_DIR
-    	baseUrl=settings.BASE_DIR
-
         homeData=form.cleaned_data["home"]
         titleData=form.cleaned_data["nom_cours"]
         logoData=form.cleaned_data["logo"]
@@ -93,7 +89,9 @@ def form_upload(request):
             else:
                 mediasType.append('None')
 
-        zip=cn.generateArchive(modulesData,mediasData,mediasType,homeData,titleData,logoData,repoDir,outDir,baseUrl)
+        mediasDataObj,mediasNom=cn.extractMediaArchive(mediasData, mediasType)
+
+        zip=cn.generateArchive(modulesData,mediasDataObj,mediasNom,homeData,titleData,logoData,"")
 
         sauvegarde = True
 
@@ -121,7 +119,7 @@ def form_upload_light(request):
         baseUrl=settings.BASE_DIR
 
         archiveData=form.cleaned_data["archive"]
-        zip=cn.generateArchiveLight(archiveData, repoDir, outDir, baseUrl)
+        zip=cn.generateArchiveLight(archiveData)
 
         sauvegarde = True
 
@@ -236,7 +234,7 @@ def form_reupload(request):
             # Get the course infos
             cours=tree.xpath("/cours")[0]
             nom=cours.getchildren()[0].text
-            url_media=cours.getchildren()[1].text
+            #url_media=cours.getchildren()[1].text
             nb_module=cours.getchildren()[2].text
             if url_media == None :
                 url_media = ''
@@ -244,7 +242,8 @@ def form_reupload(request):
             # Generate the course and associate with the current user
             id_cours = id_generator()
             url_home = 'home-'+id_generator()
-            cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home, url_media=url_media, nb_module=nb_module)
+            #cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home, url_media=url_media, nb_module=nb_module)
+            cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home, nb_module=nb_module)
             cours_obj.save()
             profil.cours.add(cours_obj)
             profil.save()
@@ -266,44 +265,9 @@ def form_reupload(request):
 
                 cpt+=1
 
-            """
-            nom= tree.xpath("/cours/nom")[0]
-            print nom.text
-
-            # go through the modules
-            for module in tree.xpath("/cours/module"):
-                print module.nomModule.text
-            """
-
-            """
-            for elt in tab:
-                res=reExportPath.match(elt)
-                if res:
-                    # adding the file to the tar archive
-                    # (we need tarInfo and StringIO instance for not writing anything on the disk)
-                    data=zipFile.read(elt)
-                    info=tarfile.TarInfo(name=elt)
-                    info.size=len(data)
-                    tar.addfile(tarinfo=info, fileobj=StringIO.StringIO(data))
-            """
             tar.close()
 
-
-        """
-        archiveData=form.cleaned_data["archive"]
-        zip=cn.generateArchiveLight(archiveData, repoDir, outDir, baseUrl)
-
-        sauvegarde = True
-
-        response= HttpResponse(zip)
-        response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = "attachment; filename=\"site.zip\""
-        return response
-        """
-
-
-
-        #return redirect(mes_cours)
+        return redirect(mes_cours)
 
     return render(request, 'escapad_formulaire/formreupload.html', {
         'form': form,
@@ -399,9 +363,11 @@ def mes_cours(request):
         'form' : form
     })
 
+
+
+
 # View showing the information of a course
 def cours(request, id_cours):
-
 
     try:
         cours = Cours.objects.get(id_cours=id_cours)
@@ -413,34 +379,36 @@ def cours(request, id_cours):
     #    return redirect(mes_cours)
 
     form = CreateNew(request.POST or None)
-    form2 = UploadFormEth(request.POST or None, request.FILES or None)
+    form2 = GenerateCourseForm(request.POST or None, request.FILES or None)
     form3 = SearchUser(request.POST or None)
 
-    # Adding a module to the course
-    if form.is_valid() :
+    userFound = False
+
+    # Create a new module
+    if form.is_valid() and request.POST['id_form'] == '0':
         url = 'module-'+id_generator()
-        module = Module(nom_module=form.cleaned_data['nom'], url=url, cours=cours)
+        nom=request.POST['nom']
+        module = Module(nom_module=nom, url=url, cours=cours)
         module.save()
         cours.nb_module=cours.nb_module+1
         cours.save()
 
-
-    userFound = False
     # Adding a user to the course
-    if form3.is_valid() :
+    elif form3.is_valid() and request.POST['id_form'] == '1':
         user = User.objects.get(username = form3.cleaned_data['user'])
         profil = user.profil
         profil.cours.add(cours)
         userFound = True
 
     # Generating the course
-    if form2.is_valid() :
+    elif form2.is_valid() and request.POST['id_form'] == '2':
         repoDir=settings.BASE_DIR
     	outDir=settings.BASE_DIR
     	baseUrl=settings.BASE_DIR
 
-        titleData=form2.cleaned_data["nom_cours"]
+        titleData=cours.nom_cours
         logoData=form2.cleaned_data["logo"]
+        medias=form2.cleaned_data["medias"]
 
         url_home=ETHERPAD_URL+'p/'+cours.url_home+'/export/txt'
 
@@ -463,6 +431,7 @@ def cours(request, id_cours):
             moduleData = StringIO.StringIO(response.read())
             modulesData.append(moduleData)
 
+            """
             # open the dropbox link to get the archive
             url_media=module.url_media
             if(url_media):
@@ -479,15 +448,22 @@ def cours(request, id_cours):
             else:
                 mediasData.append(None)
                 mediasType.append(None)
+            """
+            #mediasData.append(None)
+            #mediasType.append(None)
+        mediasData, mediasNom=cn.getMediasDataFromArchive(medias, len(cours.module_set.all()))
 
         xmlCourse=cn.writeXMLCourse(cours)
-        zip=cn.generateArchive(modulesData,mediasData,mediasType,homeData,titleData,logoData,repoDir,outDir,baseUrl, xmlCourse)
-
+        #zip=cn.generateArchive(modulesData,mediasData,mediasType,homeData,titleData,logoData,repoDir,outDir,baseUrl, xmlCourse)
+        zip=cn.generateArchive(modulesData,mediasData,mediasNom,homeData,titleData,logoData, xmlCourse)
+        #zip=""
 
         response= HttpResponse(zip)
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = "attachment; filename=\"site.zip\""
         return response
+
+
 
 
     cours=Cours.objects.get(id_cours=id_cours)
@@ -503,8 +479,6 @@ def cours(request, id_cours):
 
 # View form for creating the home file
 def cours_edition(request, id_cours ,url):
-
-
 
     if not request.user.is_authenticated:
         return redirect(connexion)
@@ -526,22 +500,22 @@ def cours_edition(request, id_cours ,url):
         except Module.DoesNotExist:
             return redirect(mes_cours)
         name=module.nom_module
-        url_media = module.url_media
+        #url_media = module.url_media
         is_home = False
     # url starting with home: check if it is equal to the course url_home
     elif re.match(r"^home",url):
         name="home"
-        url_media = cours.url_media
+        #url_media = cours.url_media
         if cours.url_home != url:
             return redirect(mes_cours)
     # the url doesn't start with "home" nor "module", there is no chance it belongs to the application
     else:
         return redirect(mes_cours)
 
-    form_media = MediaForm(request.POST or None)
     full_url = ETHERPAD_URL+'p/'+url
 
-
+    """
+    form_media = MediaForm(request.POST or None)
     #if we changed the media url
     if form_media.is_valid() :
         res_url=form_media.cleaned_data['url_media']
@@ -562,13 +536,14 @@ def cours_edition(request, id_cours ,url):
             module.url_media=res_url
             module.save()
             url_media= module.url_media
+    """
 
     return render(request, 'escapad_formulaire/form_edition.html', {
         'id_cours': id_cours,
         'url': url,
         'full_url': full_url,
-        'url_media': url_media,
-        'form_media': form_media,
+        #'url_media': url_media,
+        #'form_media': form_media,
         'name': name,
         'is_home': is_home
     })

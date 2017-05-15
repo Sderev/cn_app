@@ -45,6 +45,11 @@ class UploadFormEth(forms.Form):
     nom_cours = forms.CharField(max_length=100)
     logo = forms.ImageField(required=False)
 
+# Used for creating a course in a course view
+class GenerateCourseForm(forms.Form):
+    logo = forms.ImageField(required=False)
+    medias = forms.FileField(required=False)
+
 class ModuleFormEth(forms.Form):
     media_1 = forms.FileField(required=False)
 
@@ -88,7 +93,6 @@ class CreateUserForm(forms.Form):
 
 
     def save(self): # create new user
-        print "blablabla"
         new_profil=Profil()
         new_user=User.objects.create_user(self.cleaned_data['username'],
                                   self.cleaned_data['email'],

@@ -18,6 +18,8 @@
         <fieldset id="home">
           <legend>Ecriture du cours</legend>
 
+
+          <!--
           <form action='/cours/{{id_cours}}/{{url}}' method="post"  enctype="multipart/form-data">
             {% csrf_token %}
             <table>
@@ -28,6 +30,7 @@
               </tr>
             </table>
           </form>
+          !-->
 
           <iframe id="framehome" name="framehome" src="{{ full_url }}" width=600 height=400></iframe>
           <iframe id="frametest" name="frametest" src="/apercu_module/{{url}}" width=900 height=400></iframe>

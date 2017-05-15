@@ -41,6 +41,8 @@ urlpatterns = [
     url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)/(?P<url>[-a-zA-Z\d]+)$', escapad_formulaire.views.cours_edition, name='cours_edition'),
     url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)/(?P<url>[-a-zA-Z\d]+)/delete$', escapad_formulaire.views.delete_module, name='delete_module'),
 
+    
+
 
     url(r'^change_password/$', auth_views.password_change, {'template_name' : 'escapad_formulaire/password/password_change_form.html','post_change_redirect' : '/password_changed/'}),
     url(r'^password_changed/$', auth_views.password_change_done, {'template_name' : 'escapad_formulaire/password/password_change_done.html'}),
@@ -59,6 +61,7 @@ urlpatterns = [
 
     url(r'^reset/done/$', auth_views.password_reset_complete,
     {'template_name':'escapad_formulaire/password/password_reset_complete.html'}, name='password_reset_complete'),
+
 
 
 ]

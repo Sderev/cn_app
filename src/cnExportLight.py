@@ -40,15 +40,11 @@ LOGFILE = 'logs/cnExport.log'
 #################
 
 #module="moduleX"
-def processModuleLight(moduleName, moduleData, repoDir, outDir, baseUrl):
+def processModuleLight(moduleName, moduleData):
 
-    moduleDir=repoDir+'/'+moduleName
+    #moduleDir=repoDir+'/'+moduleName
 
-    #f = moduleData
-    #text_f = TextIOWrapper(f.file, encoding='utf-8')
-
-    #m = model.Module(text_f, moduleName, baseUrl)
-    m = model.Module(moduleData, moduleName, baseUrl)
+    m = model.Module(moduleData, moduleName, '')
     m.toHTML(True) # only generate html for all subsections
 
     return m
@@ -57,9 +53,9 @@ def processModuleLight(moduleName, moduleData, repoDir, outDir, baseUrl):
 #####################
 ##    course_obj   ##
 #####################
-def processRepositoryLight(modules, repoDir, outDir):
+def processRepositoryLight(modules):
     #creation course_obj
-    course_obj = model.CourseProgram(repoDir)
+    course_obj = model.CourseProgram('')
 
     for module in modules:
         course_obj.modules.append(module)
@@ -75,6 +71,51 @@ def addFolderToZip(myZipFile,folder_src,folder_dst):
         elif os.path.isdir(file):
             addFolderToZip(myZipFile,file,folder_dst+os.path.basename(file)+'/')
 
+# Go through a tar.gz archive, get all the medias from each modules
+# module1/ -> img,img... module2/ -> img, img......
+def getMediasDataFromArchive(medias, nb_module):
+
+    mediasData=[]
+    mediasNom=[]
+
+    if not medias:
+        for i in range(1,int(nb_module)+1):
+            mediasData.append([])
+            mediasNom.append([])
+        return mediasData, mediasNom
+
+
+    tarArchiveIO = StringIO.StringIO()
+    tarArchiveIO.write(medias.read())
+    tarArchiveIO.seek(0)
+
+
+
+    # We open the tar archive inside of the StringIO instance
+    with tarfile.open(mode='r:gz', fileobj=tarArchiveIO) as tar:
+
+        #go through the archive files and create the StringIO containing modules and medias
+        for i in range(1,int(nb_module)+1):
+            mediaData=[]
+            mediaNom=[]
+            reModuleData = re.compile('^module'+str(i)+'/(?P<nom>.*)$')
+            for member in tar.getnames():
+                res=reModuleData.match(member)
+                if res:
+                    media=StringIO.StringIO()
+                    media.write(tar.extractfile(member).read())
+                    media.seek(0)
+                    mediaData.append(media)
+                    mediaNom.append(res.groupdict()['nom'])
+            mediasData.append(mediaData)
+            mediasNom.append(mediaNom)
+
+    tar.close()
+    return mediasData,mediasNom
+
+
+
+
 # Write a XML file in string from a Cours Model (only keep module names and url)
 def writeXMLCourse(cours):
     print "blabla"
@@ -82,8 +123,8 @@ def writeXMLCourse(cours):
     coursXML = etree.Element("cours")
     nom = etree.SubElement(coursXML,"nom")
     nom.text = cours.nom_cours
-    urlMedia = etree.SubElement(coursXML, "urlMedia")
-    urlMedia.text = cours.url_media
+    #urlMedia = etree.SubElement(coursXML, "urlMedia")
+    #urlMedia.text = cours.url_media
     nbModule = etree.SubElement(coursXML, "nbModule")
     nbModule.text = str(cours.nb_module)
 
@@ -91,8 +132,8 @@ def writeXMLCourse(cours):
         moduleXML = etree.SubElement(coursXML,"module")
         nomModule = etree.SubElement(moduleXML,"nomModule")
         nomModule.text = module.nom_module
-        urlMedia = etree.SubElement(moduleXML,"urlMedia")
-        urlMedia.text = module.url_media
+        #urlMedia = etree.SubElement(moduleXML,"urlMedia")
+        #urlMedia.text = module.url_media
 
     return etree.tostring(coursXML, pretty_print=True)
 
@@ -130,7 +171,7 @@ def createExportArchive(zipFile):
 
 
 # Build the site and return the archive, used in both forms (either InMemoryUploadedFile or StringIO, both have readable attribute)
-def buildSiteLight(course_obj, repoDir, outDir, modulesData, mediasData, mediasNom, homeData, titleData, logoData, xmlCourse):
+def buildSiteLight(course_obj, modulesData, mediasData, mediasNom, homeData, titleData, logoData, xmlCourse):
 
     #print BASE_PATH
     inMemoryOutputFile = StringIO.StringIO()
@@ -187,6 +228,7 @@ def buildSiteLight(course_obj, repoDir, outDir, modulesData, mediasData, mediasN
 
         if mediaData:
             for media,nom in zip(mediaData, mediaNom):
+                print nom
                 zipFile.writestr(file_path+'/media/'+nom, media.read())
             #zipFile=writeMediaFromArchive(zipFile,mediaData,file_path+'/media')
 
@@ -216,22 +258,22 @@ def buildSiteLight(course_obj, repoDir, outDir, modulesData, mediasData, mediasN
     return inMemoryOutputFile
 
 # Generate an archive from a complete form, contains InMemoryUploadedFile
-def generateArchive(modulesData, mediasData, mediaTypes, homeData, titleData, logoData, repoDir, outDir, baseUrl, xmlCourse):
+def generateArchive(modulesData, mediasData, mediasNom, homeData, titleData, logoData, xmlCourse):
     modules=[]
     i=1
     for moduleData in modulesData:
         #The only way I could find to encode InMemoryUploadedFile into utf-8 (avoid warning)
         #moduleData = TextIOWrapper(moduleData.file, encoding='utf-8')
-        m=processModuleLight("module"+str(i),moduleData,repoDir,outDir,baseUrl)
+        m=processModuleLight("module"+str(i),moduleData)
         modules.append(m)
         moduleData.seek(0)
         i=i+1
-    c=processRepositoryLight(modules,repoDir,outDir)
+    c=processRepositoryLight(modules)
 
-    mediasDataObj,mediasNom=extractMediaArchive(mediasData, mediaTypes)
+    #mediasDataObj,mediasNom=extractMediaArchive(mediasData, mediaTypes)
 
     #outputFile=buildSiteLight(c,repoDir,outDir,mediasData,homeData,titleData, logoData)
-    outputFile=buildSiteLight(c,repoDir,outDir, modulesData, mediasDataObj,mediasNom,homeData,titleData, logoData, xmlCourse)
+    outputFile=buildSiteLight(c, modulesData, mediasData,mediasNom,homeData,titleData, logoData, xmlCourse)
 
     return outputFile
 
@@ -303,7 +345,7 @@ def StringIOFromTarFile(tarFile,nomFichier):
 
 
 # Generate the archive with an entire archive which followed the repository model established before
-def generateArchiveLight(archiveData, repoDir, outDir, baseUrl):
+def generateArchiveLight(archiveData):
 
     tarArchiveIO = StringIO.StringIO()
     tarArchiveIO.write(archiveData.read())
@@ -365,11 +407,11 @@ def generateArchiveLight(archiveData, repoDir, outDir, baseUrl):
         for moduleData in modulesData:
             #The only way I could find to encode InMemoryUploadedFile into utf-8 (avoid warning)
             # moduleData = TextIOWrapper(moduleData.read(), encoding='utf-8')
-            m=processModuleLight("module"+str(i),moduleData,repoDir,outDir,baseUrl)
+            m=processModuleLight("module"+str(i),moduleData)
             modules.append(m)
             i=i+1
-        c=processRepositoryLight(modules,repoDir,outDir)
+        c=processRepositoryLight(modules)
 
-        outputFile=buildSiteLight(c,repoDir,outDir,mediasData,mediasNom,homeData,titleData, logoData)
+        outputFile=buildSiteLight(c, modulesData, mediasData, mediasNom, homeData, titleData, logoData, '')
 
         return outputFile

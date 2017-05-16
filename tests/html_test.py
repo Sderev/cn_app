@@ -487,7 +487,7 @@ Notez bien que pour pouvoir bénéficier d'une connexion 4G, il faut :
         self.TestMatch()
         self.TestAnswerArea()
         self.TestNumerical()
-        self.TestMinMaxListing()
+        self.TestMatchListing()
 
 # class GiftParsingEDXTestCase(unittest.TestCase):
 

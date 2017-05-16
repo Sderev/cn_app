@@ -1,7 +1,7 @@
-#TRAVIS Build
-[![Build Status](https://travis-ci.org/CelestineSauvage/cn_app.svg?branch=parserGift)](https://travis-ci.org/CelestineSauvage/cn_app)
-
 # About cn_app
+
+##TRAVIS Build
+[![Build Status](https://travis-ci.org/CelestineSauvage/cn_app.svg?branch=parserGift)](https://travis-ci.org/CelestineSauvage/cn_app)
 
 ## what it is
 application providing services to parse a escapad formated files

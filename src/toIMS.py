@@ -130,11 +130,7 @@ def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
                                 with tag('fieldlabel'):
                                     text("cc_profile")
                                 with tag('fieldentry'):
-                                    try:
-                                        text(CC_PROFILES[question.answer.cc_profile)
-                                    except:
-                                        # default to essay
-                                        text(CC_PROFILES['ESSAY'])
+                                    text(CC_PROFILES[question.answers.cc_profile])
                             with tag('qtimetadatafield'):
                                 with tag('fieldlabel'):
                                     text("cc_question_category")
@@ -145,7 +141,7 @@ def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
                         # Enoncé
                         with tag('material'):
                             with tag('mattext', texttype='text/html'):
-                                text(question.text)
+                                text(question.textHTML)
                         # réponses possibles
                         # if 'ESSAY' in question.type:
                         #     with tag('response_str', rcardinality='Single', ident='response_'+str(question.id)):
@@ -233,7 +229,7 @@ def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
                             with tag('flow_mat'):
                                 with tag('material'):
                                     with tag('mattext', texttype='text/html'):
-                                        text(question.generalFeedback)
+                                        text(question.generalFeedbackHTML)
                     ## autres feedbacks
                     question.answers.toIMSFB(doc,tag,text)
                     # for id_a, answer in enumerate(question.answers.answers):

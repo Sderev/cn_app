@@ -23,6 +23,7 @@ class RepositoryAdmin(admin.ModelAdmin):
         return '%s/%s' % (obj.git_username, obj.git_name)
 
     def build_url(self, obj):
+        print obj.slug
         url = reverse('build_repo', args=(obj.slug,))
         return '<a href="%s" target="_blank">%s<a>' % (url, 'build')
     build_url.allow_tags = True

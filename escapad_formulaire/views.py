@@ -210,7 +210,16 @@ def form_reupload(request):
         return redirect(connexion)
 
     myUser=request.user
-    profil= Profil.objects.get(user=myUser)
+
+    # For those who subscribe with django shell command (createsuperuser...)
+    # Create and associate a profile to the user.
+    try:
+        profil = Profil.objects.get(user=myUser)
+    except Profil.DoesNotExist:
+        profil = Profil(user=myUser)
+        profil.save()
+
+
 
     sauvegarde = False
 
@@ -235,9 +244,9 @@ def form_reupload(request):
             cours=tree.xpath("/cours")[0]
             nom=cours.getchildren()[0].text
             #url_media=cours.getchildren()[1].text
-            nb_module=cours.getchildren()[2].text
-            if url_media == None :
-                url_media = ''
+            nb_module=cours.getchildren()[1].text
+            #if url_media == None :
+            #    url_media = ''
 
             # Generate the course and associate with the current user
             id_cours = id_generator()
@@ -250,18 +259,28 @@ def form_reupload(request):
 
             # Generate each media
             cpt=1
-            for nomMod, urlMediaMod in zip(tree.xpath("/cours/module/nomModule"),tree.xpath("/cours/module/urlMedia")):
+            #for nomMod, urlMediaMod in zip(tree.xpath("/cours/module/nomModule"),tree.xpath("/cours/module/urlMedia")):
+            for nomMod in zip(tree.xpath("/cours/module/nomModule")):
                 moduleFile= tar.extractfile("module"+str(cpt)+".md")
                 url = 'module-'+id_generator()
-                nom_module = nomMod.text
-                url_media = urlMediaMod.text
-                if url_media == None :
-                    url_media = ''
-                module_obj = Module(url=url, nom_module=nom_module, url_media=url_media, cours=cours_obj)
+                nom_module = nomMod[0].text
+                #url_media = urlMediaMod.text
+                #if url_media == None :
+                #    url_media = ''
+                #module_obj = Module(url=url, nom_module=nom_module, url_media=url_media, cours=cours_obj)
+                module_obj = Module(url=url, nom_module=nom_module, cours=cours_obj)
                 module_obj.save()
 
+                content=moduleFile.read()
+                content=content.replace('\"','\\\"')
+                content=content.replace('`','\\`')
+
                 os.system("curl -X POST -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
-                os.system("curl -X POST --data '"+moduleFile.read()+"' -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
+                os.system("curl -X POST --data \""+content+"\" -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
+                #print "curl -X POST --data '"+content+"' -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post"
+
+                print content
+
 
                 cpt+=1
 
@@ -348,7 +367,16 @@ def mes_cours(request):
         return redirect(connexion)
 
     myUser=request.user
-    profil= Profil.objects.get(user=myUser)
+
+    # For those who subscribe with django shell command (createsuperuser...)
+    # Create and associate a profile to the user.
+    try:
+        profil = Profil.objects.get(user=myUser)
+    except Profil.DoesNotExist:
+        profil = Profil(user=myUser)
+        profil.save()
+
+    #profil= Profil.objects.get(user=myUser)
     form = CreateNew(request.POST or None)
     print myUser.first_name
     if form.is_valid() :
@@ -369,14 +397,19 @@ def mes_cours(request):
 # View showing the information of a course
 def cours(request, id_cours):
 
+
+    if not request.user.is_authenticated:
+        return redirect(connexion)
+
+    if not request.user.profil.cours.get(id_cours=id_cours):
+        return redirect(mes_cours)
+
     try:
         cours = Cours.objects.get(id_cours=id_cours)
         request.user.profil.cours.get(id_cours=id_cours)
     except Cours.DoesNotExist:
         return redirect(mes_cours)
 
-    #if not request.user.profil.cours.get(id_cours=id_cours):
-    #    return redirect(mes_cours)
 
     form = CreateNew(request.POST or None)
     form2 = GenerateCourseForm(request.POST or None, request.FILES or None)

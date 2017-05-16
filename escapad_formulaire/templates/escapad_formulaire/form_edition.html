@@ -5,6 +5,12 @@
 {% block script %}
 <script type="text/javascript" src="/static/js/form_dom.js"></script>
 <script type="text/javascript" src="/static/js/form_eth_dom.js"></script>
+<script type="text/javascript" src="/static/js/detect_change.js"></script>
+
+{% endblock %}
+
+{% block onload %}
+onload="initDetect()"
 {% endblock %}
 
 {% block content %}

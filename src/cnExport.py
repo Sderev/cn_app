@@ -48,8 +48,8 @@ def processModule(args, repoDir, outDir, module):
     utils.write_file(m.toVideoList(), moduleOutDir, '', module+'.video_iframe_list.txt')
 
     # EDX files
-    if args.edx:
-        m.edx_archive_path = toEDX.generateEDXArchive(m, moduleOutDir)
+    # if args.edx:
+    #     m.edx_archive_path = toEDX.generateEDXArchive(m, moduleOutDir)
 
     # # if chosen, generate IMS archive
     # if args.ims:

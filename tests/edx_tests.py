@@ -318,7 +318,7 @@ Capital {
         roote = etree.fromstring(essay.toEDX())
         self.assertEqual(roote.tag,"problem", "for ESSAY, problem tag was not created")
         self.assertEqual(roote.attrib.get("display_name"),"ESSAY","for ESSAY, title was not assigned")
-        self.assertEqual(roote.attrib.get("max_attempts"),"1","for ESSAY, max_attempts was not assigned")
+        self.assertEqual(roote.attrib.get("max_attempts"),"unlimited","for ESSAY, max_attempts was not assigned")
         for i,child in enumerate(roote):
             if i == 0:
                 self.assertEqual(child.tag,"legend", "for ESSAY, legend tag was not created")

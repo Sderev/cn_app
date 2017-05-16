@@ -456,8 +456,8 @@ Notez bien que pour pouvoir bénéficier d'une connexion 4G, il faut :
  }
         """)
 
-        questions = pygift.parseFile(io_minmax)
-        io_minmax.close()
+        questions = pygift.parseFile(io_match)
+        io_match.close()
 
         with d.tag('h2'):
             d.text(str(questions[0].answers.__class__))

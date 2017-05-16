@@ -131,7 +131,7 @@ def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
                                     text("cc_profile")
                                 with tag('fieldentry'):
                                     try:
-                                        text(CC_PROFILES[question.type])
+                                        text(CC_PROFILES[question.answer.cc_profile)
                                     except:
                                         # default to essay
                                         text(CC_PROFILES['ESSAY'])

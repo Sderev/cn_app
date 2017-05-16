@@ -423,7 +423,7 @@ Match the following countries with their corresponding capitals. {
         out.close()
 
 
-    def TestMinMaxListing(self):
+    def TestMatch(self):
 
         d = yattag.Doc()
         d.asis('<!DOCTYPE html>')
@@ -434,7 +434,7 @@ Match the following countries with their corresponding capitals. {
                 d.stag('link', rel="stylesheet", href="../../static/css/modules.css")
                 d.stag('link', rel="stylesheet", href="../../static/css/jasny-bootstrap.min.css", media="screen")
 
-        io_minmax = StringIO("""
+        io_match = StringIO("""
 ::Les normes et leurs sigles::
 **Classez ces modes de connexion du plus lent au plus rapide.**
 3G,4G,H+,Edge

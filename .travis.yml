@@ -10,4 +10,8 @@ before_script :
   - pip install -e git://github.com/CelestineSauvage/pygiftparser#egg=pygiftparser
 
 script :
-  - cd tests && make all
+  - cd tests
+  - python edx_tests.py
+  - python html_test.py
+  - python model_tests.py
+  - python ims_test.py

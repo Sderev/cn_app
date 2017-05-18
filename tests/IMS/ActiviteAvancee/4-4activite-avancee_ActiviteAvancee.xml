@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.imsglobal.org/xsd/ims_qtiasiv1p2 http://www.imsglobal.org/profile/cc/ccv1p1/ccv1p1_qtiasiv1p2p1_v1p0.xsd">
+  <assessment ident="4-4_activite-avancee" title="Activité avancée">
+    <!--  Metadata  -->
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>qmd_scoretype</fieldlabel>
+        <fieldentry>Percentage</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_hintspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_feedbackpermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_profile</fieldlabel>
+        <fieldentry>cc.exam.v0p1</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_maxattempts</fieldlabel>
+        <fieldentry>unlimited</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_assessmenttype</fieldlabel>
+        <fieldentry>Examination</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_solutionspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+    <rubric>
+      <material label="Summary">
+        <mattext texttype="text/html"></mattext>
+      </material>
+    </rubric>
+    <section ident="section_1_test_4-4_activite-avancee">
+      <item ident="q_0" title="L'ICANN et la CNIL">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.essay.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank Activité avancée</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        <presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; Internet n'est pas un monde totalement libre et sans loi comme on pourrait être tenté de le croire. De grands acteurs internationaux et nationaux participent de la régulation d'internet. Nous vous proposons ici d'en découvrir deux.&lt;/p&gt;&lt;p&gt; En utilisant les ressources suivantes (et d'autres) :&lt;/p&gt;&lt;pre&gt;&lt;code&gt;- [http://fr.wikipedia.org/wiki/Domain_Name_System](http://fr.wikipedia.org/wiki/Domain_Name_System)- [http://fr.wikipedia.org/wiki/Internet_Corporation_for_Assigned_Names_and_Numbers](http://fr.wikipedia.org/wiki/Internet_Corporation_for_Assigned_Names_and_Numbers)- [http://www.cnil.fr/](http://www.cnil.fr/)- [http://www.cnil.fr/fileadmin/documents/La_CNIL/publications/CNIL_RA2012_web.pdf](http://www.cnil.fr/fileadmin/documents/La_CNIL/publications/CNIL_RA2012_web.pdf)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt; cherchez les réponses aux questions suivantes :&lt;/p&gt;&lt;p&gt; &lt;strong&gt;  domaines de premier niveau &lt;/strong&gt;&lt;/p&gt;&lt;ul&gt; &lt;li&gt;  Qu'est un domaine de premier niveau ? &lt;/li&gt; &lt;li&gt;  Donnez quelques exemples. &lt;/li&gt; &lt;li&gt;  Qui les gère ? &lt;/li&gt; &lt;li&gt;  Qu'en pensez-vous ? &lt;/li&gt;&lt;/ul&gt;&lt;p&gt; &lt;strong&gt;  la CNIL &lt;/strong&gt;&lt;/p&gt;&lt;ul&gt; &lt;li&gt;  Quel est le rôle de la CNIL ? &lt;/li&gt; &lt;li&gt;  Avec combien d'employés remplit-elle ses missions ? &lt;/li&gt; &lt;li&gt;  Qu'en pensez-vous ? &lt;/li&gt;&lt;/ul&gt;</mattext>
+          </material>
+          <response_str ident="response_4ac98b11-f0c1-4d78-baf9-7d959bcfeab7" rcardinality="Single">
+            <render_fib prompt="Box" rows="5" fibtype="String" />
+          </response_str>
+        </presentation>
+        <resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition continue="Yes" title="General feedback">
+            <conditionvar>
+              <other />
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+        </resprocessing>
+        <itemfeedback ident="general_fb">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt; &lt;strong&gt;  Domaines de premier niveau &lt;/strong&gt;&lt;/p&gt;&lt;p&gt; Les domaines de premier niveau sont les plus élevés dans la hiérarchie des noms de domaines. Ce sont notamment les domaines identifiants un pays ( &lt;code&gt;  .fr, .de, .uk &lt;/code&gt; ...) ou les domaines &lt;code&gt;  .org &lt;/code&gt; pour les organisations et &lt;code&gt;  .com &lt;/code&gt; pour les sites à caractère commercial. Chacun de ces domaines est géré par une organisation propre, mais c'est un organisme unique, &lt;em&gt;  l'ICANN &lt;/em&gt; , qui délègue cette gestion aux autres organismes.&lt;/p&gt;&lt;p&gt; &lt;strong&gt;  La CNIL &lt;/strong&gt;&lt;/p&gt;&lt;p&gt; La CNIL ( &lt;em&gt;  Commission Nationale de l'Informatique et des Libertés &lt;/em&gt; ) est l'instance française chargée de veiller au respect des libertés et de la vie privée sur internet. À ce titre, elle régule notamment l'usage des données personnelles et traces que tout un chacun laisse lorsqu'il utilise internet.Au 20 juillet 2013, la CNIL était composée de 17 membres et 174 agents.&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+    </section>
+  </assessment>
+</questestinterop>

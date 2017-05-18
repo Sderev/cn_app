@@ -3,6 +3,7 @@
 
 import os
 import sys
+import mock
 sys.path.append('..')
 from pygiftparser import parser as pygift
 from src import model
@@ -489,7 +490,23 @@ Notez bien que pour pouvoir bénéficier d'une connexion 4G, il faut :
         self.TestNumerical()
         self.TestMatch()
 
-# class GiftParsingEDXTestCase(unittest.TestCase):
+class GiftParserTestCase(unittest.TestCase):
+
+        def TestParseHead(self) :
+            io_head1 = ("""::Macumba::
+blabla""")
+            question = pygift.Question('','','')
+            question._parseHead(io_head1)
+            self.assertEqual(question.title,"Macumba")
+            self.assertEqual(question.text,"blabla")
+
+
+        def runTest(self):
+            try :
+                os.makedirs(TEST_GIFT_DIR)
+            except :
+                pass
+            self.TestParseHead()
 
 
 # Main

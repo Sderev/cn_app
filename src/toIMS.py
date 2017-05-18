@@ -89,11 +89,10 @@ def set_qti_metadata(questions):
     meta, tag, text = Doc().tagtext()
     meta.asis("<!--  Metadata  -->")
     metadata = DEFAULT_QTI_META
-    max_attempts = "1"
+    max_attempts = '1'
     for q in questions :
-        if q.answers.max_att == 'unlimited' :
+        if q.max_att == 'unlimited':
             max_attempts = 'unlimited'
-            break;
     metadata['cc_maxattempts'] = max_attempts
     with tag('qtimetadata'):
         for key, value in metadata.iteritems():
@@ -105,7 +104,7 @@ def set_qti_metadata(questions):
 
     return indent(meta.getvalue())
 
-def create_ims_test(questions, test_id, test_title):
+def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
     """
     Supported types : ESSAY, MULTICHOICE, MULTIANSWER, TRUEFALSE, DESCRIPTION
 
@@ -147,7 +146,8 @@ def create_ims_test(questions, test_id, test_title):
                         # Enoncé
                         with tag('material'):
                             with tag('mattext', texttype='text/html'):
-                                text(question.textHTML)
+                                txt = utils.cntohtml(question.text)
+                                text(utils.add_target_blank(txt))
                         # réponses possibles
                         # if 'ESSAY' in question.type:
                         #     with tag('response_str', rcardinality='Single', ident='response_'+str(question.id)):
@@ -235,7 +235,8 @@ def create_ims_test(questions, test_id, test_title):
                             with tag('flow_mat'):
                                 with tag('material'):
                                     with tag('mattext', texttype='text/html'):
-                                        text(pygift.mdToHtml(question.generalFeedback))
+                                        fb = utils.cntohtml(question.generalFeedback)
+                                        text(utils.add_target_blank(fb))
                     ## autres feedbacks
                     question.answers.toIMSFB(doc,tag,text)
                     # for id_a, answer in enumerate(question.answers.answers):
@@ -248,7 +249,6 @@ def create_ims_test(questions, test_id, test_title):
     doc.asis('</questestinterop>\n')
     doc_value = indent(doc.getvalue().replace('\n', '')) #pre-escaping new lines because of a bug in moodle that turn them in <br>
     doc_value = doc_value.replace('kontinue', 'continue')
-    doc_value = utils.add_target_blank(doc_value)
     return doc_value
 
 def create_empty_ims_test(id, num, title, max_attempts):

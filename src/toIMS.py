@@ -91,7 +91,7 @@ def set_qti_metadata(questions):
     metadata = DEFAULT_QTI_META
     max_attempts = '1'
     for q in questions :
-        if q.max_att == 'unlimited':
+        if q.answers.max_att == 'unlimited':
             max_attempts = 'unlimited'
     metadata['cc_maxattempts'] = max_attempts
     with tag('qtimetadata'):

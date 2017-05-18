@@ -12,6 +12,6 @@ before_script :
 script :
   - cd tests
   - python edx_tests.py
-  - python html_test.py
+  - python parsergift_test.py
   - python model_tests.py
   - python ims_test.py

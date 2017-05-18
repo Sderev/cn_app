@@ -612,7 +612,6 @@ Généralement le débit est mesuré en bit par seconde `bit/s` ou ses variantes
 \n
 Du débit, dépend notamment le *temps* nécessaire pour télécharger un morceau de musique ou la qualité d'une vidéo lue en continu.
 Le nombre de bits que l'on peut stocker sur un DVD Blu-ray double couche est 50 gigaoctets (Go), soit 400 gigabits, car un octet est une séquence de 8 bits. Calculer le temps de transmission d'un DVD Blu-ray double couche complet dans les cas suivants:
-\n
     - l'ADSL à 10Mb/s
     - La fibre à 1Gb/s
     - Le wifi à 50Mb/s

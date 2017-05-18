@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.imsglobal.org/xsd/ims_qtiasiv1p2 http://www.imsglobal.org/profile/cc/ccv1p1/ccv1p1_qtiasiv1p2p1_v1p0.xsd">
+  <assessment ident="2-2_comprehension" title="Compréhension">
+    <!--  Metadata  -->
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>qmd_scoretype</fieldlabel>
+        <fieldentry>Percentage</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_hintspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_feedbackpermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_profile</fieldlabel>
+        <fieldentry>cc.exam.v0p1</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_maxattempts</fieldlabel>
+        <fieldentry>1</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_assessmenttype</fieldlabel>
+        <fieldentry>Examination</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_solutionspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+    <rubric>
+      <material label="Summary">
+        <mattext texttype="text/html"></mattext>
+      </material>
+    </rubric>
+    <section ident="section_1_test_2-2_comprehension">
+      <item ident="q_0" title="Rejoindre le réseau">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.multiple_response.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank Compréhension</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        <presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; Lorsqu'un ordinateur rejoint un réseau, que doit-ilobtenir pour rejoindre internet ?&lt;/p&gt;</mattext>
+          </material>
+          <response_lid ident="response_5640a98c-9266-4ffe-bfc2-f41970317e25" rcardinality="Multiple">
+            <render_choice shuffle="No">
+              <response_label ident="answer_5640a98c-9266-4ffe-bfc2-f41970317e25_0">
+                <material>
+                  <mattext texttype="text/html">Une adresseIP.</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_5640a98c-9266-4ffe-bfc2-f41970317e25_1">
+                <material>
+                  <mattext texttype="text/html">Un nom de code.</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_5640a98c-9266-4ffe-bfc2-f41970317e25_2">
+                <material>
+                  <mattext texttype="text/html">Une autorisation de l'État ?</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_5640a98c-9266-4ffe-bfc2-f41970317e25_3">
+                <material>
+                  <mattext texttype="text/html">L'adresse d'un serveur de noms.</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_5640a98c-9266-4ffe-bfc2-f41970317e25_4">
+                <material>
+                  <mattext texttype="text/html">L'adresse d'un routeur.</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_5640a98c-9266-4ffe-bfc2-f41970317e25_5">
+                <material>
+                  <mattext texttype="text/html">L'accès à un moteur de recherche.</mattext>
+                </material>
+              </response_label>
+            </render_choice>
+          </response_lid>
+        </presentation>
+        <resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition continue="Yes" title="General feedback">
+            <conditionvar>
+              <other />
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+          <respcondition continue="No" title="Correct">
+            <conditionvar>
+              <and>
+                <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_0</varequal>
+                <not>
+                  <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_1</varequal>
+                </not>
+                <not>
+                  <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_2</varequal>
+                </not>
+                <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_3</varequal>
+                <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_4</varequal>
+                <not>
+                  <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_5</varequal>
+                </not>
+              </and>
+            </conditionvar>
+            <setvar action="Set" varname="SCORE">100</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_0</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_0" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_1</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_1" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_2</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_2" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_3</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_3" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_4</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_4" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_5640a98c-9266-4ffe-bfc2-f41970317e25">answer_5640a98c-9266-4ffe-bfc2-f41970317e25_5</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_5" />
+          </respcondition>
+        </resprocessing>
+        <itemfeedback ident="general_fb">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt; En fait, il doit obtenir 3 éléments : une adresse IP, l'adresse d'un serveur de noms et l'adresse d'un routeur.&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_0">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">Oui, entre autres...</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_1">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">Et non... </mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_2">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">Vraiment ?</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_3">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">C'est bien l'un</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_4">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">Oui, mais pas seulement. </mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_5">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">Pas du tout.</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+      <item ident="q_1" title="le routeur">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.multiple_choice.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank Compréhension</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        <presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; Pourquoi la machine qui assure l'interconnexion avecles autres réseaux d'internet (le routeur) est-elle une place de choixpour y installer des fonctions de filtrage ?&lt;/p&gt;</mattext>
+          </material>
+          <response_lid ident="response_0acace27-14f1-453b-8529-f7fa12595d50" rcardinality="Single">
+            <render_choice shuffle="No">
+              <response_label ident="answer_0acace27-14f1-453b-8529-f7fa12595d50_0">
+                <material>
+                  <mattext texttype="text/html">Parce que toutes les informations passent par là.</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_0acace27-14f1-453b-8529-f7fa12595d50_1">
+                <material>
+                  <mattext texttype="text/html">Parce que c'est la machine la plus puissante.</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_0acace27-14f1-453b-8529-f7fa12595d50_2">
+                <material>
+                  <mattext texttype="text/html">Parce qu'elle est en général bien cachée.</mattext>
+                </material>
+              </response_label>
+            </render_choice>
+          </response_lid>
+        </presentation>
+        <resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition continue="Yes" title="General feedback">
+            <conditionvar>
+              <other />
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+          <respcondition title="Correct">
+            <conditionvar>
+              <varequal respident="response_0acace27-14f1-453b-8529-f7fa12595d50">answer_0acace27-14f1-453b-8529-f7fa12595d50_0</varequal>
+            </conditionvar>
+            <setvar action="Set" varname="SCORE">100</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_0" />
+          </respcondition>
+          <respcondition title="">
+            <conditionvar>
+              <varequal respident="response_0acace27-14f1-453b-8529-f7fa12595d50">answer_0acace27-14f1-453b-8529-f7fa12595d50_1</varequal>
+            </conditionvar>
+            <setvar action="Set" varname="SCORE">0</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_1" />
+          </respcondition>
+          <respcondition title="">
+            <conditionvar>
+              <varequal respident="response_0acace27-14f1-453b-8529-f7fa12595d50">answer_0acace27-14f1-453b-8529-f7fa12595d50_2</varequal>
+            </conditionvar>
+            <setvar action="Set" varname="SCORE">0</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_2" />
+          </respcondition>
+        </resprocessing>
+        <itemfeedback ident="general_fb">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt; Parce que toutes les informations transitent par elle.&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_0">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">C'est exact !</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_1">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">Et bien, non.</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_2">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">Pas du</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+      <item ident="q_2" title="La charte informatique de l'université">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.essay.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank Compréhension</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        <presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; &lt;strong&gt;  La charte informatique de l'université &lt;/strong&gt; Pour utiliser les &lt;em&gt;  services numériques &lt;/em&gt; de l'université, vous avez signé une &lt;strong&gt;  charte informatique &lt;/strong&gt; lors de votre inscription :Quel paragraphe de la charte &lt;a href="http://www.univ-lille3.fr/portail/charte-informatique/" target="_blank"&gt;  http://www.univ-lille3.fr/portail/charte-informatique/ &lt;/a&gt; met en lumière la question du suivi des informations des utilisateurs.Si vous vous connectez avec la &lt;strong&gt;  4G &lt;/strong&gt; depuis l'université, devez-vous respecter cette charte ? Et avec votre smartphone et une connexion wifi ?&lt;/p&gt;</mattext>
+          </material>
+          <response_str ident="response_f37b9dbe-4cfd-4c73-a1c3-b2aa7059e3ff" rcardinality="Single">
+            <render_fib prompt="Box" rows="5" fibtype="String" />
+          </response_str>
+        </presentation>
+        <resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition continue="Yes" title="General feedback">
+            <conditionvar>
+              <other />
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+        </resprocessing>
+        <itemfeedback ident="general_fb">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html"> &lt;p&gt; 1/ Quel paragraphe de la charte &lt;a href="http://www.univ-lille3.fr/portail/charte-informatique/" target="_blank"&gt;  http://www.univ-lille3.fr/portail/charte-informatique/ &lt;/a&gt; met en lumière la question du filtrage et du suivi ? &lt;em&gt;  Les engagements de l'Université &lt;/em&gt; &lt;code&gt;  Réglementairement, l'Université recueille et conserve les informations sur les accès à ses services numériques. L'Université peut être obligée de fournir ces informations lors d'une enquête judiciaire. &lt;/code&gt; 2/ Si vous vous connectez avec la &lt;strong&gt;  4G &lt;/strong&gt; depuis l'université, devez-vous respecter cette charte ? Et avec votre smartphone et une connexion wifi ? &lt;br/&gt; OUI et OUI, les services numériques en particulier ceux accessibles depuis &lt;strong&gt;  l'ENT &lt;/strong&gt; sont soumis à cette charte &lt;strong&gt;  quel que soit le mode de connexion &lt;/strong&gt; . En revanche, si vous vous connectez en 4G à d'autres sites que ceux de l'université tout en étant physiquement dans les batiments de l'établissement, aucune information ne sera collectée par l'université.&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+    </section>
+  </assessment>
+</questestinterop>

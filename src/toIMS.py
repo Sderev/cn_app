@@ -19,6 +19,7 @@ from yattag import Doc
 
 import model
 import utils
+from pygiftparser import parser as pygift
 
 # utf8 hack, python 2 only !!
 if sys.version_info[0] == 2:
@@ -83,11 +84,16 @@ DEFAULT_QTI_META = {
     'cc_maxattempts':'unlimited'
 }
 
-def set_qti_metadata(max_attempts):
+def set_qti_metadata(questions):
 
     meta, tag, text = Doc().tagtext()
     meta.asis("<!--  Metadata  -->")
     metadata = DEFAULT_QTI_META
+    max_attempts = "1"
+    for q in questions :
+        if q.answers.max_att == 'unlimited' :
+            max_attempts = 'unlimited'
+            break;
     metadata['cc_maxattempts'] = max_attempts
     with tag('qtimetadata'):
         for key, value in metadata.iteritems():
@@ -99,7 +105,7 @@ def set_qti_metadata(max_attempts):
 
     return indent(meta.getvalue())
 
-def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
+def create_ims_test(questions, test_id, test_title):
     """
     Supported types : ESSAY, MULTICHOICE, MULTIANSWER, TRUEFALSE, DESCRIPTION
 
@@ -112,7 +118,7 @@ def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
     # else:
     #     max_attempts = 1
     with tag('assessment', ident=test_id, title=test_title):
-        doc.asis(set_qti_metadata(max_attempts))
+        doc.asis(set_qti_metadata(questions))
         #<!-- Titre de l'excercice  -->
         with tag('rubric'):
             with tag('material', label="Summary"):
@@ -229,7 +235,7 @@ def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
                             with tag('flow_mat'):
                                 with tag('material'):
                                     with tag('mattext', texttype='text/html'):
-                                        text(question.generalFeedbackHTML)
+                                        text(pygift.mdToHtml(question.generalFeedback))
                     ## autres feedbacks
                     question.answers.toIMSFB(doc,tag,text)
                     # for id_a, answer in enumerate(question.answers.answers):
@@ -242,6 +248,7 @@ def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
     doc.asis('</questestinterop>\n')
     doc_value = indent(doc.getvalue().replace('\n', '')) #pre-escaping new lines because of a bug in moodle that turn them in <br>
     doc_value = doc_value.replace('kontinue', 'continue')
+    doc_value = utils.add_target_blank(doc_value)
     return doc_value
 
 def create_empty_ims_test(id, num, title, max_attempts):

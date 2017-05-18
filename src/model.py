@@ -252,7 +252,7 @@ class AnyActivity(Subsection):
         for q in self.questions:
             # append each question to html output
             q.toHTML(d,feedbacks=feedback_option)
-        self.html_src = d.getvalue()
+        self.html_src = utils.add_target_blank(d.getvalue())
         return self.html_src
 
 

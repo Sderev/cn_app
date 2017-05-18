@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.imsglobal.org/xsd/ims_qtiasiv1p2 http://www.imsglobal.org/profile/cc/ccv1p1/ccv1p1_qtiasiv1p2p1_v1p0.xsd">
+  <assessment ident="1-2_comprehension" title="Compréhension">
+    <!--  Metadata  -->
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>qmd_scoretype</fieldlabel>
+        <fieldentry>Percentage</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_hintspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_feedbackpermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_profile</fieldlabel>
+        <fieldentry>cc.exam.v0p1</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_maxattempts</fieldlabel>
+        <fieldentry>1</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_assessmenttype</fieldlabel>
+        <fieldentry>Examination</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_solutionspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+    <rubric>
+      <material label="Summary">
+        <mattext texttype="text/html"></mattext>
+      </material>
+    </rubric>
+    <section ident="section_1_test_1-2_comprehension">
+      <item ident="q_0" title="Pourquoi représenter avec des nombres ?">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.multiple_choice.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank Compréhension</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        <presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; Pourquoi faut-il représenter les textes, images, son,etc, par des nombres dans un ordinateur ?&lt;/p&gt;</mattext>
+          </material>
+          <response_lid ident="response_96735820-2b41-411b-bf38-5ef968cd397f" rcardinality="Single">
+            <render_choice shuffle="No">
+              <response_label ident="answer_96735820-2b41-411b-bf38-5ef968cd397f_0">
+                <material>
+                  <mattext texttype="text/html">&lt;p&gt;C'est un choix industriel.&lt;/p&gt;</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_96735820-2b41-411b-bf38-5ef968cd397f_1">
+                <material>
+                  <mattext texttype="text/html">&lt;p&gt;Les ordinateurs ont été inventés par des mathématiciens.&lt;/p&gt;</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_96735820-2b41-411b-bf38-5ef968cd397f_2">
+                <material>
+                  <mattext texttype="text/html">&lt;p&gt;Tout ordinateur est fondamentalement une machine qui calcule avec desnombres.&lt;/p&gt;</mattext>
+                </material>
+              </response_label>
+            </render_choice>
+          </response_lid>
+        </presentation>
+        <resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition continue="Yes" title="General feedback">
+            <conditionvar>
+              <other />
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+          <respcondition title="">
+            <conditionvar>
+              <varequal respident="response_96735820-2b41-411b-bf38-5ef968cd397f">answer_96735820-2b41-411b-bf38-5ef968cd397f_0</varequal>
+            </conditionvar>
+            <setvar action="Set" varname="SCORE">0</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_0" />
+          </respcondition>
+          <respcondition title="">
+            <conditionvar>
+              <varequal respident="response_96735820-2b41-411b-bf38-5ef968cd397f">answer_96735820-2b41-411b-bf38-5ef968cd397f_1</varequal>
+            </conditionvar>
+            <setvar action="Set" varname="SCORE">0</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_1" />
+          </respcondition>
+          <respcondition title="Correct">
+            <conditionvar>
+              <varequal respident="response_96735820-2b41-411b-bf38-5ef968cd397f">answer_96735820-2b41-411b-bf38-5ef968cd397f_2</varequal>
+            </conditionvar>
+            <setvar action="Set" varname="SCORE">100</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_2" />
+          </respcondition>
+        </resprocessing>
+        <itemfeedback ident="general_fb">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt; Un ordinateur ne manipule que des nombres, tout doit donc être représenté sous forme de nombres pour qu'il puisse le manipuler.&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_0">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt;Non, les industriels n'avaient pas le choix.&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_1">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt;Non, les mathématiciens savent manipuler autre chose que des nombres, et les ordinateurs sont le fruit de l'interaction entre de nombreuses sciences.&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_2">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt;Oui, comme un ordinateur ne manipule que des nombres,</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+      <item ident="q_1" title="Numérisation">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.multiple_choice.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank Compréhension</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        <presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; Que signifie &lt;em&gt;  numérisation &lt;/em&gt; ?&lt;/p&gt;</mattext>
+          </material>
+          <response_lid ident="response_7dd868e3-d425-4127-88aa-7695c72e4d09" rcardinality="Single">
+            <render_choice shuffle="No">
+              <response_label ident="answer_7dd868e3-d425-4127-88aa-7695c72e4d09_0">
+                <material>
+                  <mattext texttype="text/html">&lt;p&gt;L'opération qui consiste à représenter sous forme de nombres uneinformation quelle qu'elle soit.&lt;/p&gt;</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_7dd868e3-d425-4127-88aa-7695c72e4d09_1">
+                <material>
+                  <mattext texttype="text/html">&lt;p&gt;L'opération qui consiste à citer tous les nombres (1, 2, 3, 4, ….).&lt;/p&gt;</mattext>
+                </material>
+              </response_label>
+            </render_choice>
+          </response_lid>
+        </presentation>
+        <resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition continue="Yes" title="General feedback">
+            <conditionvar>
+              <other />
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+          <respcondition title="Correct">
+            <conditionvar>
+              <varequal respident="response_7dd868e3-d425-4127-88aa-7695c72e4d09">answer_7dd868e3-d425-4127-88aa-7695c72e4d09_0</varequal>
+            </conditionvar>
+            <setvar action="Set" varname="SCORE">100</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_0" />
+          </respcondition>
+          <respcondition title="">
+            <conditionvar>
+              <varequal respident="response_7dd868e3-d425-4127-88aa-7695c72e4d09">answer_7dd868e3-d425-4127-88aa-7695c72e4d09_1</varequal>
+            </conditionvar>
+            <setvar action="Set" varname="SCORE">0</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_1" />
+          </respcondition>
+        </resprocessing>
+        <itemfeedback ident="general_fb">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt; La numérisation est l'opération qui consiste à représenter sous forme de nombres une information, quelle qu'elle soit.&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_0">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt;Oui !&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_1">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt;Non, citer tous les nombres c'est compter...&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+      <item ident="q_2" title="Où sont les processeurs ?">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.multiple_response.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank Compréhension</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        <presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; Parmi ces objets, quels sont ceux équipés deprocesseur(s) :&lt;/p&gt;</mattext>
+          </material>
+          <response_lid ident="response_0f322b13-af71-4e3d-9ba5-6788e059f245" rcardinality="Multiple">
+            <render_choice shuffle="No">
+              <response_label ident="answer_0f322b13-af71-4e3d-9ba5-6788e059f245_0">
+                <material>
+                  <mattext texttype="text/html">&lt;p&gt;tablettes&lt;/p&gt;</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_0f322b13-af71-4e3d-9ba5-6788e059f245_1">
+                <material>
+                  <mattext texttype="text/html">&lt;p&gt;smartphones&lt;/p&gt; </mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_0f322b13-af71-4e3d-9ba5-6788e059f245_2">
+                <material>
+                  <mattext texttype="text/html">&lt;p&gt;box ADSL&lt;/p&gt;</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_0f322b13-af71-4e3d-9ba5-6788e059f245_3">
+                <material>
+                  <mattext texttype="text/html">&lt;p&gt;lecteur mp3&lt;/p&gt; </mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_0f322b13-af71-4e3d-9ba5-6788e059f245_4">
+                <material>
+                  <mattext texttype="text/html">&lt;p&gt;ordinateur&lt;/p&gt;</mattext>
+                </material>
+              </response_label>
+              <response_label ident="answer_0f322b13-af71-4e3d-9ba5-6788e059f245_5">
+                <material>
+                  <mattext texttype="text/html">&lt;p&gt;aucun&lt;/p&gt;</mattext>
+                </material>
+              </response_label>
+            </render_choice>
+          </response_lid>
+        </presentation>
+        <resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition continue="Yes" title="General feedback">
+            <conditionvar>
+              <other />
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+          <respcondition continue="No" title="Correct">
+            <conditionvar>
+              <and>
+                <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_0</varequal>
+                <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_1</varequal>
+                <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_2</varequal>
+                <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_3</varequal>
+                <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_4</varequal>
+                <not>
+                  <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_5</varequal>
+                </not>
+              </and>
+            </conditionvar>
+            <setvar action="Set" varname="SCORE">100</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_0</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_0" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_1</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_1" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_2</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_2" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_3</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_3" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_4</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_4" />
+          </respcondition>
+          <respcondition continue="No">
+            <conditionvar>
+              <varequal case="Yes" respident="response_0f322b13-af71-4e3d-9ba5-6788e059f245">answer_0f322b13-af71-4e3d-9ba5-6788e059f245_5</varequal>
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_5" />
+          </respcondition>
+        </resprocessing>
+        <itemfeedback ident="general_fb">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt; Tousces objets sont équipés de micro-processeurs !&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_0">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html"></mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_1">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html"></mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_2">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html"></mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_3">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html"></mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_4">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html"></mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_5">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt;Tous !&lt;/p&gt; </mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+    </section>
+  </assessment>
+</questestinterop>

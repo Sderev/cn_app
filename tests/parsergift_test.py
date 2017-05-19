@@ -424,58 +424,6 @@ Match the following countries with their corresponding capitals. {
         out.close()
 
 
-    def TestMatch(self):
-
-        d = yattag.Doc()
-        d.asis('<!DOCTYPE html>')
-        with d.tag('html'):
-            with d.tag('head'):
-                d.stag('meta', charset="utf-8")
-                d.stag('link', rel="stylesheet", href="../../static/css/bootstrap.min.css")
-                d.stag('link', rel="stylesheet", href="../../static/css/modules.css")
-                d.stag('link', rel="stylesheet", href="../../static/css/jasny-bootstrap.min.css", media="screen")
-
-        io_match = StringIO("""
-::Les normes et leurs sigles::
-**Classez ces modes de connexion du plus lent au plus rapide.**
-3G,4G,H+,Edge
-{
-=3G -> 2
-=4G -> 4
-=H+ -> 3
-=E (Edge) -> 1
-####
-## Les normes et leurs sigles
-- Les modes de connexion du plus lent au plus rapide.
-    - E (Edge) aussi appelé 2G, lent. Ce mode de connexion permet à peine de lire ses mails. Il ne permet pas une navigation fluide sur le Web.
-    - 3G (3ème génération) permet de faire des recherches et de surfer sans trop attendre.
-    - H+, est une amélioration de la 3G. il est plus rapide que le wifi si les connexions sont optimales. Et l'accès à la musique en ligne où aux vidéos peut être envisagé.
-    - 4G, plus rapide que le wifi si les connexions sont optimales. À condition bien sûr que cette connexion soit de bonne qualité ("plusieurs petites briques"), l'accès à internet est alors très fluide, et les jeux en ligne, les vidéos en streaming ou le téléchargement de gros fichiers devient possible.
-Notez bien que pour pouvoir bénéficier d'une connexion 4G, il faut :
- - que cette connexion soit disponible là où vous vous trouvez,
- - que votre smartphone soit équipé d'une antenne 4G, c'est loin d'être le cas sur tous les modèles y compris sur des appareils récents.
- }
-        """)
-
-        questions = pygift.parseFile(io_match)
-        io_match.close()
-
-        with d.tag('h2'):
-            d.text(str(questions[0].answers.__class__))
-
-        for q in questions:
-            q.toHTML(d,True)
-
-        for q in questions:
-            q.toHTML(d,False)
-
-        out =  open(TEST_GIFT_DIR+"minMaxListing.html", "w")
-
-        #FERMETURE ET ECRITURE DU FICHIER
-        out.write (d.getvalue())
-        out.close()
-
-
     def runTest(self):
         try :
             os.makedirs(TEST_GIFT_DIR)
@@ -493,15 +441,34 @@ Notez bien que pour pouvoir bénéficier d'une connexion 4G, il faut :
 class GiftParserTestCase(unittest.TestCase):
 
         def TestParseHead(self) :
+            """
+            """
             io_head1 = ("""::Macumba::
-blabladjzqjdpzojq
-
-dnzqdnoizqdnozqn
+[markdown]
+blabla
+\n
+bleble
 {}""")
+            io_head2 = ("""[html]
+Macumba
+blabla
+\n
+bleble
+{}""")
+            #HEAD 1
             question = pygift.Question('','','')
             question._parseHead(io_head1)
             self.assertEqual(question.title,"Macumba")
-            self.assertEqual(question.text,"blabla")
+            self.assertEqual(question.text,"blabla\n\n\nbleble\n{}")
+            self.assertEqual(question.markup,"markdown")
+
+            #HEAD 2
+            question2 = pygift.Question('','','')
+            question2._parseHead(io_head2)
+            self.assertEqual(question2.title,"Quizz")
+            self.assertEqual(question2.text,"Macumba\nblabla\n\n\nbleble\n{}")
+            self.assertEqual(question2.markup,"html")
+
 
 
 

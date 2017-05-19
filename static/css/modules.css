@@ -95,7 +95,6 @@ h3 {
 p {
 	/*font-size:120%;*/
 	color: #4C4C4C;
-	/*display: inline-grid;*/
 }
 
 hr {
@@ -331,6 +330,10 @@ span.sec-title{
 }
 .question ul{
     list-style: none;
+}
+
+.question li > p {
+	display: inline-grid;
 }
 
 .right_answer {

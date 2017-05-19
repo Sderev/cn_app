@@ -20,8 +20,6 @@ from jinja2 import Template, Environment, FileSystemLoader
 import utils
 import model
 
-#QUESTION : Test travis
-
 MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
 BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 EDX_TEMPLATES_PATH = os.path.join(BASE_PATH, 'templates', 'toEDX' )
@@ -67,8 +65,11 @@ def generateEDXArchive(module, moduleOutDir):
                 utils.write_file(sub.html_src, edx_outdir, 'html', sub.getFilename() )
             elif sub.folder in ('Activite', 'ActiviteAvancee', 'Comprehension'):
                 for question in sub.questions:
-                    fname =  ('%s.xml' % question.id)
-                    utils.write_file(toEdxProblemXml(question), edx_outdir, 'problem', fname )
+                    if type(question) == None:
+                        print('oui')
+                    else:
+                        fname =  ('%s.xml' % question.id)
+                        utils.write_file(toEdxProblemXml(question), edx_outdir, 'problem', fname )
 
     # Add other files
     for folder, dfile in EDX_DEFAULT_FILES.items():

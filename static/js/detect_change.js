@@ -1,62 +1,45 @@
 
-console.log('hehehe');
+// must have url and is_home defined previously
+// this script add a listener to the window and launch the preview update whenever an event is throw at it.
+// The event comes from etherpad whenever a change is made into the pad. (thrown from collab_client.js -> handleMessageFromServer)
 
+  var can_update = true;
+  var waiting = false;
 
-function iframeRef( frameRef ) {
-    return frameRef.contentWindow
-        ? frameRef.contentWindow.document
-        : frameRef.contentDocument
-}
+  function setValue(){
+    can_update=true;
+    waiting=false;
+    update_preview();
+  }
 
+  function update_preview(){
+    console.log(is_home);
+    if (is_home){
+      convertir_home(url);
+    }
+    else{
+      convertir_module(url);
+    }
+  }
 
-/*
-$('#framehome').load(function() {
-  alert("the iframe has been loaded");
-});*/
-
-function initDetect(){
-
-
-
-  console.log('detect!!!');
-
-  /*
-  var inside = iframeRef( document.getElementById('framehome') );
-  var test= inside.getElementById("innerdocbody");
-  console.log(test);
-  */
-
-
-
-  $(document).ready(function () {
-    //var iframe = $('framehome').contents();
-    //console.log(iframe);
-    //iframe
-
-
-
-    var res=$('#framehome').contents().find("html").html();
-    console.log(res);
+  function receiver(e) {
+    if(!waiting){
+     window.setTimeout("setValue()",5000);
+     waiting=true;
+    }
+    if(can_update){
+      can_update=false;
+    }
 
 
 
-  });
 
-  /*
-  console.log('detect!!!');
-  //var framehome = document.getElementById("innerdocbody");
+  }
 
-  //code before the pause
-  setTimeout(function(){
-    console.log('detect!!!');
-    //do what you need here
-    var innerdocbody = document.getElementById("innerdocbody");
-
-    console.log();
-    console.log(innerdocbody);
-
-        textNode.addEventListener("DOMCharacterDataModified", function(evt) {
-            alert("Text changed from '" + evt.prevValue + "' to '" + evt.newValue + "'");
-          }, false);
-  }, 5000);*/
-}
+  function addlistener(){
+    if (!window.addEventListener) {
+       window.attachEvent('onmessage', receiver);
+   } else {
+       window.addEventListener('message', receiver, false);
+   }
+  }

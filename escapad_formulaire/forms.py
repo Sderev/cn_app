@@ -18,7 +18,7 @@ class CreateNew(forms.Form):
 class SearchUser(forms.Form):
     user = forms.CharField(max_length=100)
 
-    def clean_user(self): # check if username dos not exist before
+    def clean_user(self): # check if username does not already exists
         try:
             User.objects.get(username=self.cleaned_data['user']) #get user from user model
         except User.DoesNotExist :

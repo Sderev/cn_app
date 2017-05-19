@@ -19,6 +19,21 @@
     <link href="/static/css/common.css" rel="stylesheet">
 
     <script type="text/javascript" src="/static/js/process_preview.js"></script>
+    <script type="text/javascript" src="/static/js/jquery/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(window).scroll(function() {
+      sessionStorage.scrollTop = $(this).scrollTop();
+    });
+
+    $(document).ready(function() {
+      if (sessionStorage.scrollTop != "undefined") {
+        $(window).scrollTop(sessionStorage.scrollTop);
+      }
+    });
+
+
+    </script>
+
 
     <style>
       body {

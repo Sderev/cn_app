@@ -199,6 +199,10 @@ Capital {
 =Japan -> Tokyo
 =India -> New Delhi
 }
+
+::SHORT::
+What is the color of the white horse of Henri IV ?
+{ = blanc = white }
         """)
         questions = pygift.parseFile(io_ourQuestions)
         #QUESTIONS
@@ -210,6 +214,7 @@ Capital {
         numericalWT = questions[5]
         numericalMINMAX = questions[6]
         match = questions[7]
+        short = questions[8]
 
         #MULTIANSWER
         rootm = etree.fromstring(multi.toEDX())
@@ -317,7 +322,7 @@ Capital {
         roote = etree.fromstring(essay.toEDX())
         self.assertEqual(roote.tag,"problem", "for ESSAY, problem tag was not created")
         self.assertEqual(roote.attrib.get("display_name"),"ESSAY","for ESSAY, title was not assigned")
-        self.assertEqual(roote.attrib.get("max_attempts"),"unlimited","for ESSAY, max_attempts was not assigned")
+        self.assertEqual(roote.attrib.get("max_attempts"),"","for ESSAY, max_attempts was not assigned")
         for i,child in enumerate(roote):
             if i == 0:
                 self.assertEqual(child.tag,"legend", "for ESSAY, legend tag was not created")
@@ -412,10 +417,26 @@ Capital {
                     self.assertEqual(child[0].attrib.get("correct")," New Delhi")
 
 
-        # matchedx = match.toEDX()
-        # outfile = open("match.xml","wb")
-        # outfile.write(matchedx)
-        # outfile.close()
+        #SHORT ANSWER
+        rootsh =  etree.fromstring(short.toEDX())
+        self.assertEqual(rootsh.tag,"problem", "for SHORT, problem tag was not created")
+        self.assertEqual(rootsh.attrib.get("display_name"),"SHORT","for SHORT, title was not assigned")
+        self.assertEqual(rootsh.attrib.get("max_attempts"),"1","for SHORT, max_attempts was not assigned")
+        for i,child in enumerate(rootsh):
+            if i == 0:
+                self.assertEqual(child.tag,"legend", "for SHORT, legend tag was not created")
+            if i == 1:
+                self.assertEqual(child.tag,"stringresponse", "for SHORT, stringresponse tag was not created")
+                self.assertEqual(child.attrib.get("answer"), "blanc")
+                self.assertEqual(child.attrib.get("type"), "ci")
+                #ADDITIONAL
+                self.assertEqual(child[0].tag,"additional_answer", "for SHORT, additionnal_answer was not created")
+                self.assertEqual(child[0].attrib.get("answer"), "white")
+                #TEXTLINE
+                self.assertEqual(child[1].tag,"textline", "for SHORT, textline was not created")
+                self.assertEqual(child[1].attrib.get("size"),"20", "for SHORT, size was not assigned")
+
+
 
         print("[EDXArchiveTestCase]-- check_problem_to_edx OK --")
 

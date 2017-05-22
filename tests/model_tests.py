@@ -38,81 +38,12 @@ from src import model,utils
 
 """
 
-
-class ModuleParsingTestCase(unittest.TestCase):
-    """ Here we only test if the parsing works right and ends up with a correct module object.
-        Does not treat the generation of IMS or EDX archive """
-
-    def setUp(self):
-        """ Build up control_module from tests.config.json file and sample_module from parsing of module_test.md"""
-        #self.longMessage=True # for more verbose exception messages
-        with open('tests.config.json', encoding='utf-8') as jsf:
-            self.control_module = json.load(jsf, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-
-        with open("coursTest/module1/module_test.md", encoding='utf-8') as sample_file:
-            self.sample_object = model.Module(sample_file, "tests", "http://culturenumerique.univ-lille3.fr")
-            self.sample_object.toHTML(False)
-            # outfile = open('sample.config.json', 'wb')
-            # outfile.write(self.sample_object.toJson())
-            self.sample_module = json.loads(self.sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-            del self.sample_object
-
-    # def tearDown(self):
-    #
-    #     self.control_module = None
-    #     self.sample_module = None
-
-    def check_number_of_sections(self):
-        """for  sample module 'sample_m', match the number of sections with control module 'control_m'"""
-        self.assertEqual(len(self.control_module.sections),len(self.sample_module.sections), "Not the same number of sections")
-        print("[ModuleParsingTestCase]-- Number of sections OK --")
-
-
-    def check_headers_parsing(self):
-        """Check if info placed in the header of test md file gets correctly parsed"""
-        self.assertEqual(self.control_module.author, self.sample_module.author, "Not the same author")
-        self.assertEqual(self.control_module.menutitle, self.sample_module.menutitle, "Not the same menutitle")
-        self.assertEqual(self.control_module.language, self.sample_module.language, "Not the same language")
-        self.assertEqual(self.control_module.css, self.sample_module.css, "Not the same CSS")
-        self.assertEqual(self.control_module.title, self.sample_module.title, "Not the same title")
-        print("[ModuleParsingTestCase]-- Parsing Header OK --")
-
-
-    def check_subsections(self):
-        """Loop through all subsections and check
-            we catch and keep each type of exception to separate checks
-        """
-        typeMatchingError = None
-        srcSplitError = None
-        htmlSrcMatchingError = None
-        for i,sec in enumerate(self.sample_module.sections):
-            for j,sub in enumerate(sec.subsections):
-                self.assertIsNotNone(self.control_module.sections[i].subsections[j], "actual subsection out of bound for sec[%d].sub[%d]" % (i,j))
-                control_sub = self.control_module.sections[i].subsections[j]
-                # Compare type stored in 'folder' attribute
-                try:
-                    self.assertEqual(sub.folder,control_sub.folder, "no matching type for sec[%d].sub[%d]" % (i,j))
-                except AssertionError as typeMatchingError:
-                    pass
-
-    def runTest(self):
-        #check number of sections
-        self.check_number_of_sections()
-        #check header parsing
-        self.check_headers_parsing()
-        #check subsections are splited right and with right types
-        self.check_subsections()
-        #Module object exact match
-        # self.assertEqual(self.control_module, self.sample_module, msg="Module objects do not match exactly")
-        print("[ModuleParsingTestCase]-- Exact match OK --")
-
-
 class FctParserTestCase(unittest.TestCase):
 
     # def JSON_string_header(author, base_url, css, language, menutitle, module, title):
     #     return ("{'author': '"+author+"', 'base_url': '"+base_url+"', 'css':'"+css+"', 'language': '"+language+"','menutitle': '"+menutitle+"','module': '"+module+"','title': '"+title+"' }")
 
-    def check_default_parser_head(self):
+    def test_default_parser_head(self):
         """
         This method check default values of header.
         """
@@ -149,7 +80,7 @@ class FctParserTestCase(unittest.TestCase):
         self.assertEqual(control_header.module, sample_header.module, "Not the same module in default_parser_head")
         print("[FctParserTestCase]-- default_parser_head OK --")
 
-    def check_wrong_case_header(self):
+    def test_wrong_case_header(self):
         """
         Check if an incorrect data can be write
         """
@@ -169,7 +100,7 @@ CHICKEN: Cot Cot
         #FIXME : Réussir à capturer le warning avec logging
         print("[FctParserTestCase]-- wrong_case_header OK --")
 
-    def check_sections(self): #FIXME : Need to begin with a # and not (## or ###)
+    def test_sections(self): #FIXME : Need to begin with a # and not (## or ###)
         """
         """
         #Title parsed
@@ -200,7 +131,7 @@ Fin
 
         print("[FctParserTestCase]-- check_sections OK --")
 
-    def check_subsections(self):
+    def test_subsections(self):
         """
         """
         # PARSE
@@ -236,7 +167,7 @@ Blablabla
 
         print("[FctParserTestCase]-- check_subsections OK --")
 
-    def check_subsubsections(self):
+    def test_subsubsections(self):
         """
         """
         # PARSE
@@ -264,8 +195,9 @@ Blabla
 
         print("[FctParserTestCase]-- check_subsubsections OK --")
 
-    def check_cours(self):
+    def test_cours(self): # à refaire
         """
+        Test for parsing course
         """
         io_cours = StringIO("""
 # Title 0
@@ -315,7 +247,52 @@ Par contre moi oui !
         self.assertNotEqual(sample_cours.sections[1].subsections[0].title, "Cours")
         self.assertNotEqual(sample_cours.sections[1].subsections[0].folder, "webcontent")
         self.assertEqual(sample_cours.sections[1].subsections[1].title, "Cours 3")
+
         print("[FctParserTestCase]-- check_cours OK --")
+
+    def testParseVideoLinks(self):
+        """
+        """
+        io_video = """# Title 0
+[MaVideo](https://vimeo.com/0123456789){: .cours_video }
+        """
+
+        class TestParseVideo(model.Cours):
+            def __init__(self):
+                self.src = io_video
+                self.videos = []
+
+        testvideo = TestParseVideo()
+        self.assertTrue(testvideo.parseVideoLinks())
+
+        self.assertEqual(len(testvideo.videos),1,"problem for created new video object")
+        self.assertEqual(testvideo.videos[0].get("video_title"),"MaVideo")
+        self.assertEqual(testvideo.videos[0].get("video_link"),"https://vimeo.com/0123456789")
+        self.assertEqual(testvideo.videos[0].get("video_thumbnail"),'https://i.vimeocdn.com/video/536038298_640.jpg')
+
+        print("[FctParserTestCase]-- check_video_parse_links OK --")
+
+
+    def testvideoIframeList(self):
+        """
+        """
+        newVideoObject = {
+            'video_title':"title",
+            'video_link':"link",
+            'video_src_link':"src_link",
+            'video_thumbnail':"thumbnail"
+        }
+
+        class TestVideoIframe(model.Cours):
+            def __init__(self):
+                self.num = '1'
+                self.title = "hello"
+                self.videos = [newVideoObject]
+
+        testvideo = TestVideoIframe()
+        testvideo.videoIframeList()
+
+
 
     def testSubsections(self):
         """
@@ -330,6 +307,9 @@ Par contre moi oui !
         self.assertEqual(sub.num,"2-1")
         self.assertEqual(sub.getFilename(),"2-1title_Folder.html")
         self.assertEqual(sub.getFilename(term="xml"),"2-1title_Folder.xml")
+
+        print("[FctParserTestCase]-- class Subsection check OK --")
+
 
 
     def testActivites(self):
@@ -393,18 +373,7 @@ Je suis une AnyActivity {
         matchN = model.reStartActivity.match(io_rdt.readline())
         self.assertIsNone(model.goodActivity(matchN))
 
-
-
-# ________________RUNTEST FOR FctParserTestCase____________________________
-    def runTest(self):
-        self.check_default_parser_head()
-        self.check_wrong_case_header()
-        self.check_sections()
-        self.check_subsections()
-        self.check_subsubsections()
-        self.check_cours()
-        self.testSubsections()
-        self.testActivites()
+        print("[FctParserTestCase]-- anyactivity check --")
 
 
 # Main

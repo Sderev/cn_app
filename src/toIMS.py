@@ -306,7 +306,8 @@ def generateIMSManifest(m):
                     section_id = "sec_"+(str(idA))
                     with tag('item', identifier=section_id):
                         with tag('title'):
-                            doc.asis('<![CDATA[<span class="sumtitle">'+section.num+' '+section.title+'</span>]]>')
+                            doc.text(section.num+' '+section.title)
+                            # doc.asis('<![CDATA[<span class="sumtitle">'+section.num+' '+section.title+'</span>]]>')
                         subsec_type_old = ''
                         subsec_type = ''
                         for idB, subsection in enumerate(section.subsections):

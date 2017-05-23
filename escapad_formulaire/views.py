@@ -37,6 +37,7 @@ from src import cnExportLight as cn
 import markdown
 import StringIO
 import urllib2
+import os
 
 #RANDOM
 import string
@@ -222,6 +223,8 @@ def form_reupload(request):
 
 
     sauvegarde = False
+    erreurs = []
+    modules_obj=[]
 
     form = UploadFormLight(request.POST or None, request.FILES or None)
 
@@ -236,71 +239,75 @@ def form_reupload(request):
         with tarfile.open(mode='r:gz', fileobj=tarArchiveIO) as tar:
             #for each EDX element belonging to the module
 
-            print tar.getnames()
-            xmlFile = tar.extractfile("infos.xml")
-            tree = etree.parse(xmlFile)
+            try:
+                xmlFile = tar.extractfile("infos.xml")
+                tree = etree.parse(xmlFile)
 
-            # Get the course infos
-            cours=tree.xpath("/cours")[0]
-            nom=cours.getchildren()[0].text
-            #url_media=cours.getchildren()[1].text
-            nb_module=cours.getchildren()[1].text
-            #if url_media == None :
-            #    url_media = ''
+                # Get the course infos
+                cours=tree.xpath("/cours")[0]
+                nom=cours.getchildren()[0].text
+                nb_module=cours.getchildren()[1].text
 
-            # Generate the course and associate with the current user
-            id_cours = id_generator()
-            url_home = 'home-'+id_generator()
-            #cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home, url_media=url_media, nb_module=nb_module)
-            cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home, nb_module=nb_module)
+                # Generate the course and associate with the current user
+                id_cours = id_generator()
+                url_home = 'home-'+id_generator()
+                #cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home, url_media=url_media, nb_module=nb_module)
+                cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home, nb_module=nb_module)
+
+                try:
+                    # Generate home
+                    homeFile= tar.extractfile("home.md")
+                    content=homeFile.read()
+                    content=content.replace('\"','\\\"')
+                    content=content.replace('`','\\`')
+
+                    os.system("curl -X POST -H 'X-PAD-ID:"+ url_home+"' " +ETHERPAD_URL+"post")
+                    os.system("curl -X POST --data \""+content+"\" -H 'X-PAD-ID:"+ url_home +"' " +ETHERPAD_URL+"post")
+                except KeyError:
+                    erreurs.append("Erreur de structure: Impossible de trouver home.md !");
+
+                # Generate each media
+                cpt=1
+                modules_obj=[]
+                for nomMod in zip(tree.xpath("/cours/module/nomModule")):
+                    try:
+                        moduleFile= tar.extractfile("module"+str(cpt)+".md")
+                        url = 'module-'+id_generator()
+                        nom_module = nomMod[0].text
+                        module_obj = Module(url=url, nom_module=nom_module, cours=cours_obj)
+                        modules_obj.append(module_obj)
+
+                        content=moduleFile.read()
+                        content=content.replace('\"','\\\"')
+                        content=content.replace('`','\\`')
+
+                        os.system("curl -X POST -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
+                        os.system("curl -X POST --data \""+content+"\" -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
+                    except KeyError:
+                        erreurs.append("Erreur de structure: Impossible de trouver module"+str(cpt)+".md ! \n")
+                    cpt+=1
+
+            except KeyError:
+                erreurs.append("Erreur de structure: Impossible de trouver infos.xml ! \n")
+
+
+            tar.close()
+        if not erreurs:
+
+            # we can save if there's no errors
             cours_obj.save()
             profil.cours.add(cours_obj)
             profil.save()
 
-            # Generate home
-            homeFile= tar.extractfile("home.md")
-
-            content=homeFile.read()
-            content=content.replace('\"','\\\"')
-            content=content.replace('`','\\`')
-
-            os.system("curl -X POST -H 'X-PAD-ID:"+ url_home+"' " +ETHERPAD_URL+"post")
-            os.system("curl -X POST --data \""+content+"\" -H 'X-PAD-ID:"+ url_home +"' " +ETHERPAD_URL+"post")
-
-            # Generate each media
-            cpt=1
-            #for nomMod, urlMediaMod in zip(tree.xpath("/cours/module/nomModule"),tree.xpath("/cours/module/urlMedia")):
-            for nomMod in zip(tree.xpath("/cours/module/nomModule")):
-                moduleFile= tar.extractfile("module"+str(cpt)+".md")
-                url = 'module-'+id_generator()
-                nom_module = nomMod[0].text
-                #url_media = urlMediaMod.text
-                #if url_media == None :
-                #    url_media = ''
-                #module_obj = Module(url=url, nom_module=nom_module, url_media=url_media, cours=cours_obj)
-                module_obj = Module(url=url, nom_module=nom_module, cours=cours_obj)
+            for module_obj in modules_obj:
                 module_obj.save()
 
-                content=moduleFile.read()
-                content=content.replace('\"','\\\"')
-                content=content.replace('`','\\`')
-
-                os.system("curl -X POST -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
-                os.system("curl -X POST --data \""+content+"\" -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
-                #print "curl -X POST --data '"+content+"' -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post"
-
-                print content
-
-
-                cpt+=1
-
-            tar.close()
-
-        return redirect(mes_cours)
+            return redirect(mes_cours)
 
     return render(request, 'escapad_formulaire/formreupload.html', {
         'form': form,
-        'sauvegarde': sauvegarde
+        'sauvegarde': sauvegarde,
+        'erreurs' : erreurs
     })
 
 ######################################

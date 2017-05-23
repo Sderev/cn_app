@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from .models import User
 from .models import Cours, Profil
 
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,13 @@ class ModuleForm(forms.Form):
 class UploadFormLight(forms.Form):
     archive=forms.FileField()
 
+    def clean_archive(self): # check if the archive is a tar.gz archive
+        archiveName=self.cleaned_data['archive'].name
+        if not re.match(r'.*\.tar\.gz$',archiveName):
+            raise forms.ValidationError("Veuillez utilisez une archive tar.gz !")
+            return
+        return self.cleaned_data['archive']
+
 class UploadFormEth(forms.Form):
     nom_cours = forms.CharField(max_length=100)
     logo = forms.ImageField(required=False)
@@ -49,6 +57,14 @@ class UploadFormEth(forms.Form):
 class GenerateCourseForm(forms.Form):
     logo = forms.ImageField(required=False)
     medias = forms.FileField(required=False)
+
+    def clean_medias(self):  # check if the archive is a tar.gz archive
+        if self.cleaned_data['medias']:
+            archiveName=self.cleaned_data['medias'].name
+            if not re.match(r'.*\.tar\.gz$',archiveName):
+                raise forms.ValidationError("Veuillez utilisez une archive tar.gz !")
+                return
+            return self.cleaned_data['medias']
 
 class ModuleFormEth(forms.Form):
     media_1 = forms.FileField(required=False)

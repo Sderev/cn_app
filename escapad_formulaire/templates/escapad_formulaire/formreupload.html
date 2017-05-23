@@ -4,6 +4,11 @@
 
 {% block content %}
 
+    <ul>
+    {% for erreur in erreurs %}
+      <li>{{erreur}}</li>
+    {% endfor %}
+    </ul>
 
     <h2>Réuploader un cours sur la plateforme</h2>
     <h4>Veuillez insérer l'archive export.tar.gz fournie lors de la génération du site</h4>

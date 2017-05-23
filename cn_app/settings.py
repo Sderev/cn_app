@@ -24,17 +24,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-# Mail server Configuration
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'culnum@gmail.com'
-EMAIL_HOST_PASSWORD = 'vivelenumerique'
-EMAIL_PORT = 587
-
-# Etherpad Configuration
-ETHERPAD_URL = 'http://193.51.236.202:9001/'
-API_KEY = 'fdbf98e9860aec3d5efd467319081eb4b0a6740e93ed0d2634f0f33008e7a695'
-
 
 # Application definition
 

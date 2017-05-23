@@ -257,6 +257,16 @@ def form_reupload(request):
             profil.cours.add(cours_obj)
             profil.save()
 
+            # Generate home
+            homeFile= tar.extractfile("home.md")
+
+            content=homeFile.read()
+            content=content.replace('\"','\\\"')
+            content=content.replace('`','\\`')
+
+            os.system("curl -X POST -H 'X-PAD-ID:"+ url_home+"' " +ETHERPAD_URL+"post")
+            os.system("curl -X POST --data \""+content+"\" -H 'X-PAD-ID:"+ url_home +"' " +ETHERPAD_URL+"post")
+
             # Generate each media
             cpt=1
             #for nomMod, urlMediaMod in zip(tree.xpath("/cours/module/nomModule"),tree.xpath("/cours/module/urlMedia")):

@@ -602,7 +602,7 @@ def delete_module(request, id_cours, url):
         return redirect(mes_cours)
 
     # Delete the pad
-    response = urllib2.urlopen("http://193.51.236.202:9001/api/1/deletePad?apikey="+API_KEY+"&padID="+url)
+    response = urllib2.urlopen(ETHERPAD_URL+"api/1/deletePad?apikey="+API_KEY+"&padID="+url)
 
     # Delete the module model and update the course model
     module.delete()
@@ -627,13 +627,13 @@ def delete_course(request, id_cours):
         return redirect(connexion)
 
     # delete the home pad
-    response = urllib2.urlopen("http://193.51.236.202:9001/api/1/deletePad?apikey="+API_KEY+"&padID="+course.url_home)
+    response = urllib2.urlopen(ETHERPAD_URL+"api/1/deletePad?apikey="+API_KEY+"&padID="+course.url_home)
 
     # Only one contributor to the course: We delete it entirely.
     if len(course.profil_set.all()) == 1:
         # delete the pads belonging to the course
         for module in course.module_set.all():
-            response = urllib2.urlopen("http://193.51.236.202:9001/api/1/deletePad?apikey="+API_KEY+"&padID="+module.url)
+            response = urllib2.urlopen(ETHERPAD_URL+"api/1/deletePad?apikey="+API_KEY+"&padID="+module.url)
             module.delete()
         course.delete()
     # More than one contributor: We remove the link between the current user and the course.

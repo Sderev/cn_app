@@ -22,26 +22,10 @@
 
     <h2>Modification du module : {{ name }}</h2>
 
-    {% if sauvegarde  %} Votre message a bien été envoyé !{% endif %}
-
     {{url}}
 
         <fieldset id="home">
           <legend>Ecriture du cours</legend>
-
-
-          <!--
-          <form action='/cours/{{id_cours}}/{{url}}' method="post"  enctype="multipart/form-data">
-            {% csrf_token %}
-            <table>
-              <tr>
-              <td>{{ form_media.as_p}}</td>
-              <td><input type="submit" value="Modifier l'url" /></td>
-              <td>url actuelle: <a href="{{ url_media }}">{{ url_media }}</a></td>
-              </tr>
-            </table>
-          </form>
-          !-->
 
           <iframe id="framehome" name="framehome" src="{{ full_url }}" width=600 height=400></iframe>
           <iframe id="frametest" name="frametest" src="/apercu_module/{{url}}" width=900 height=400></iframe>

@@ -66,7 +66,6 @@ def addFolderToZip(myZipFile,folder_src,folder_dst):
     folder_src = folder_src.encode('ascii') #convert path to ascii for ZipFile Method
     for file in glob.glob(folder_src+"/*"):
         if os.path.isfile(file):
-            #print folder_dst+os.path.basename(file)
             myZipFile.write(file, folder_dst+os.path.basename(file), zipfile.ZIP_DEFLATED)
         elif os.path.isdir(file):
             addFolderToZip(myZipFile,file,folder_dst+os.path.basename(file)+'/')
@@ -118,13 +117,10 @@ def getMediasDataFromArchive(medias, nb_module):
 
 # Write a XML file in string from a Cours Model (only keep module names and url)
 def writeXMLCourse(cours):
-    print "blabla"
 
     coursXML = etree.Element("cours")
     nom = etree.SubElement(coursXML,"nom")
     nom.text = cours.nom_cours
-    #urlMedia = etree.SubElement(coursXML, "urlMedia")
-    #urlMedia.text = cours.url_media
     nbModule = etree.SubElement(coursXML, "nbModule")
     nbModule.text = str(cours.nb_module)
 
@@ -132,8 +128,6 @@ def writeXMLCourse(cours):
         moduleXML = etree.SubElement(coursXML,"module")
         nomModule = etree.SubElement(moduleXML,"nomModule")
         nomModule.text = module.nom_module
-        #urlMedia = etree.SubElement(moduleXML,"urlMedia")
-        #urlMedia.text = module.url_media
 
     return etree.tostring(coursXML, pretty_print=True)
 
@@ -173,7 +167,6 @@ def createExportArchive(zipFile):
 # Build the site and return the archive, used in both forms (either InMemoryUploadedFile or StringIO, both have readable attribute)
 def buildSiteLight(course_obj, modulesData, mediasData, mediasNom, homeData, titleData, logoData, xmlCourse):
 
-    #print BASE_PATH
     inMemoryOutputFile = StringIO.StringIO()
     zipFile = ZipFile(inMemoryOutputFile, 'w')
     addFolderToZip(zipFile,BASE_PATH+'/static/','static/')
@@ -228,9 +221,7 @@ def buildSiteLight(course_obj, modulesData, mediasData, mediasNom, homeData, tit
 
         if mediaData:
             for media,nom in zip(mediaData, mediaNom):
-                print nom
                 zipFile.writestr(file_path+'/media/'+nom, media.read())
-            #zipFile=writeMediaFromArchive(zipFile,mediaData,file_path+'/media')
 
         zipFile.writestr(file_path+'/'+module.module+'.questions_bank.gift.txt', module.toGift().encode("UTF-8"))
         zipFile.writestr(file_path+'/'+module.module+'.video_iframe_list.txt', module.toVideoList().encode("UTF-8"))
@@ -258,7 +249,7 @@ def buildSiteLight(course_obj, modulesData, mediasData, mediasNom, homeData, tit
     return inMemoryOutputFile
 
 # Generate an archive from a complete form, contains InMemoryUploadedFile
-def generateArchive(modulesData, mediasData, mediasNom, homeData, titleData, logoData, xmlCourse):
+def generateArchive(modulesData, mediasData, mediasNom, homeData, titleData, logoData, xmlCourse=""):
     modules=[]
     i=1
     for moduleData in modulesData:
@@ -353,13 +344,25 @@ def generateArchiveLight(archiveData):
 
     titleData=''
     homeData=StringIO.StringIO()
+    erreurs=[]
 
     # We open the tar archive inside of the StringIO instance
     with tarfile.open(mode='r:gz', fileobj=tarArchiveIO) as tar:
 
-        titleData=tar.extractfile('title.md').read()
-        homeData=StringIOFromTarFile(tar,'home.md')
-        logoData=StringIOFromTarFile(tar,'logo.png')
+        try:
+            titleData=StringIOFromTarFile(tar,'title.md')
+            #titleData=tar.extractfile('title.md').read()
+        except KeyError:
+            erreurs.append("Erreur de structure: Impossible de trouver title.md !");
+        try:
+            homeData=StringIOFromTarFile(tar,'home.md')
+        except KeyError:
+            erreurs.append("Erreur de structure: Impossible de trouver home.md !");
+        try:
+            logoData=StringIOFromTarFile(tar,'logo.png')
+        except KeyError:
+            erreurs.append("Erreur de structure: Impossible de trouver logo.png !");
+
         modulesData=[]
         mediasData=[]
         mediasNom=[]
@@ -375,7 +378,6 @@ def generateArchiveLight(archiveData):
                 nbModule = res.groupdict()['cptModule']
                 if maxModule < nbModule:
                     maxModule = nbModule
-        print maxModule
 
         #go through the archive files and create the StringIO containing modules and medias
         for i in range(1,int(maxModule)+1):
@@ -383,19 +385,22 @@ def generateArchiveLight(archiveData):
             reMediaData = re.compile('^module'+str(i)+'/media/(?P<nom>.*)$')
             mediaData=[]
             nomData=[]
+            oneModuleFound=False
             for member in tar.getnames():
                 res = reModuleData.match(member)
-                if(res):
+                if res and not oneModuleFound:
                     module=StringIOFromTarFile(tar,member)
                     modulesData.append(module)
+                    oneModuleFound=True
                 res = reMediaData.match(member)
                 if(res):
                     media=StringIOFromTarFile(tar,member)
                     mediaData.append(media)
                     nomData.append(res.groupdict()['nom'])
+            if not oneModuleFound:
+                erreurs.append("Il manque le module "+str(i)+" !")
             mediasData.append(mediaData)
             mediasNom.append(nomData)
-        print mediasNom
 
 
         tar.close()
@@ -412,6 +417,8 @@ def generateArchiveLight(archiveData):
             i=i+1
         c=processRepositoryLight(modules)
 
-        outputFile=buildSiteLight(c, modulesData, mediasData, mediasNom, homeData, titleData, logoData, '')
+        outputFile=""
+        if not erreurs:
+            outputFile=buildSiteLight(c, modulesData, mediasData, mediasNom, homeData, titleData, logoData, '')
 
-        return outputFile
+        return outputFile,erreurs

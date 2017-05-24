@@ -27,8 +27,8 @@ class SearchUser(forms.Form):
             return
         return self.cleaned_data['user']
 
-class MediaForm(forms.Form):
-    url_media = forms.CharField(max_length=100)
+#class MediaForm(forms.Form):
+#    url_media = forms.CharField(max_length=100)
 
 class UploadForm(forms.Form):
     nom_cours = forms.CharField(max_length=100)
@@ -45,7 +45,7 @@ class UploadFormLight(forms.Form):
     def clean_archive(self): # check if the archive is a tar.gz archive
         archiveName=self.cleaned_data['archive'].name
         if not re.match(r'.*\.tar\.gz$',archiveName):
-            raise forms.ValidationError("Veuillez utilisez une archive tar.gz !")
+            raise forms.ValidationError("Veuillez utiliser une archive tar.gz !")
             return
         return self.cleaned_data['archive']
 
@@ -62,7 +62,7 @@ class GenerateCourseForm(forms.Form):
         if self.cleaned_data['medias']:
             archiveName=self.cleaned_data['medias'].name
             if not re.match(r'.*\.tar\.gz$',archiveName):
-                raise forms.ValidationError("Veuillez utilisez une archive tar.gz !")
+                raise forms.ValidationError("Veuillez utiliser une archive tar.gz !")
                 return
             return self.cleaned_data['medias']
 
@@ -80,7 +80,6 @@ class CreateUserForm(forms.Form):
     password1=forms.CharField(max_length=30,widget=forms.PasswordInput()) #render_value=False
     password2=forms.CharField(max_length=30,widget=forms.PasswordInput())
     email=forms.EmailField(required=False)
-    #title = forms.ChoiceField(choices=["blabla","bbb"])
 
     def clean_username(self): # check if username dos not exist before
         try:
@@ -97,7 +96,6 @@ class CreateUserForm(forms.Form):
             return self.cleaned_data['email']
 
         raise forms.ValidationError("this email is already associated with an account")
-
 
 
     def clean(self): # check if password 1 and password2 match each other

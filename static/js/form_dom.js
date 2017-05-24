@@ -1,7 +1,9 @@
 
+// DOM manipulation used in the simple course generation form
 
 var nb_module=1;
 
+// remove a module from the form
 function removeModule(){
   if(nb_module>1){
     var module= document.getElementById('module'+nb_module);
@@ -11,8 +13,8 @@ function removeModule(){
   }
 }
 
+// create a module in the form
 function createModule(){
-
   nb_module+=1;
   var nbMod=document.getElementById('nb_module').setAttribute("value",nb_module);
   var modules= document.getElementById('modules');

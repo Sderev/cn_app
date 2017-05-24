@@ -13,7 +13,6 @@
 
     <h2>{{ cours.nom_cours }}</h2>
 
-
     <!-- General informations about the course -->
     <fieldset id="home">
       <legend>Infos du cours</legend>
@@ -56,7 +55,7 @@
         <fieldset id="home">
           <legend>Créer un nouveau module</legend>
           <table><tr>
-            <td>{{ form.as_p}}</td>
+            <td>{{ form_new_module.as_p}}</td>
             <td><input type="submit" value="Créer un module" /></td>
           </tr></table>
         </fieldset>
@@ -70,7 +69,7 @@
       <fieldset id="partage">
         <legend>Partager le cours</legend>
         <table><tr>
-          <td>{{ form3.as_p}} </td>
+          <td>{{ form_add_user.as_p}} </td>
           <td><input type="submit" value="Partager"/></td>
         </tr></table>
       </fieldset>
@@ -84,7 +83,7 @@
 
       <fieldset id="home">
         <legend>Génération du cours</legend>
-        {{ form2.as_p}}
+        {{ form_generate.as_p}}
       </fieldset>
       <input type="submit" value="Générer l'archive" />
       <input type="hidden" name="id_form" value="2">

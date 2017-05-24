@@ -57,7 +57,6 @@ from cn_app.settings import API_KEY
 # Each module is composed of a markdown file, and a media folder
 def form_upload(request):
     sauvegarde = False
-    print request.user.username
 
     form = UploadForm(request.POST or None, request.FILES or None)
     formMod = ModuleForm(request.POST or None, request.FILES or None)
@@ -92,7 +91,7 @@ def form_upload(request):
 
         mediasDataObj,mediasNom=cn.extractMediaArchive(mediasData, mediasType)
 
-        zip=cn.generateArchive(modulesData,mediasDataObj,mediasNom,homeData,titleData,logoData,"")
+        zip=cn.generateArchive(modulesData,mediasDataObj,mediasNom,homeData,titleData,logoData)
 
         sauvegarde = True
 
@@ -111,7 +110,7 @@ def form_upload(request):
 # Generate directly the website
 def form_upload_light(request):
     sauvegarde = False
-
+    erreurs =[]
     form = UploadFormLight(request.POST or None, request.FILES or None)
 
     if form.is_valid() :
@@ -120,18 +119,20 @@ def form_upload_light(request):
         baseUrl=settings.BASE_DIR
 
         archiveData=form.cleaned_data["archive"]
-        zip=cn.generateArchiveLight(archiveData)
+        zip,erreurs=cn.generateArchiveLight(archiveData)
 
         sauvegarde = True
 
-        response= HttpResponse(zip)
-        response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = "attachment; filename=\"site.zip\""
-        return response
+        if not erreurs:
+            response= HttpResponse(zip)
+            response['Content-Type'] = 'application/octet-stream'
+            response['Content-Disposition'] = "attachment; filename=\"site.zip\""
+            return response
 
     return render(request, 'escapad_formulaire/formlight.html', {
         'form': form,
-        'sauvegarde': sauvegarde
+        'sauvegarde': sauvegarde,
+        'erreurs': erreurs
     })
 
 
@@ -220,8 +221,6 @@ def form_reupload(request):
         profil = Profil(user=myUser)
         profil.save()
 
-
-
     sauvegarde = False
     erreurs = []
     modules_obj=[]
@@ -251,7 +250,6 @@ def form_reupload(request):
                 # Generate the course and associate with the current user
                 id_cours = id_generator()
                 url_home = 'home-'+id_generator()
-                #cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home, url_media=url_media, nb_module=nb_module)
                 cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home, nb_module=nb_module)
 
                 try:
@@ -324,7 +322,6 @@ def apercu_module(request,id_export):
     response = urllib2.urlopen(url)
 
     moduleData= StringIO.StringIO(response.read())
-    print moduleData
     MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
     module = model.Module(moduleData, "module", "base")
     #m.toHTML(True)
@@ -332,16 +329,12 @@ def apercu_module(request,id_export):
 
     home_html = ''
     for sec in (module.sections):
-        #print 'sec'
         home_html += "\n\n<!-- Section "+sec.num+" -->\n"
         home_html += "\n\n<h1> "+sec.num+". "+sec.title+" </h1>\n";
         for sub in (sec.subsections):
             home_html += "\n\n<!-- Subsection "+sub.num+" -->\n"
             home_html += "\n\n<h2>"+sub.num+". "+sub.title+" </h2>\n"
             #home_html += markdown.markdown(sub.src, MARKDOWN_EXT)
-            #print 'sub'
-            #print sub
-            #print sub.toHTML(True)
             home_html += sub.toHTML(True)
 
     return render(request, 'escapad_formulaire/apercu.html', {
@@ -352,12 +345,10 @@ def apercu_module(request,id_export):
 # require the pad id
 def apercu_home(request,id_export):
     url=ETHERPAD_URL+"p/"+id_export+"/export/txt"
-    print url
 
     response = urllib2.urlopen(url)
 
     moduleData= response.read()
-    print moduleData
     MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
     home_html = markdown.markdown(moduleData, MARKDOWN_EXT)
 
@@ -395,7 +386,6 @@ def mes_cours(request):
 
     #profil= Profil.objects.get(user=myUser)
     form = CreateNew(request.POST or None)
-    print myUser.first_name
     if form.is_valid() :
         url_home='home-'+id_generator()
         id_cours=id_generator()
@@ -428,14 +418,14 @@ def cours(request, id_cours):
         return redirect(mes_cours)
 
 
-    form = CreateNew(request.POST or None)
-    form2 = GenerateCourseForm(request.POST or None, request.FILES or None)
-    form3 = SearchUser(request.POST or None)
+    form_new_module = CreateNew(request.POST or None)
+    form_generate = GenerateCourseForm(request.POST or None, request.FILES or None)
+    form_add_user = SearchUser(request.POST or None)
 
     userFound = False
 
     # Create a new module
-    if form.is_valid() and request.POST['id_form'] == '0':
+    if form_new_module.is_valid() and request.POST['id_form'] == '0':
         url = 'module-'+id_generator()
         nom=request.POST['nom']
         module = Module(nom_module=nom, url=url, cours=cours)
@@ -444,21 +434,21 @@ def cours(request, id_cours):
         cours.save()
 
     # Adding a user to the course
-    elif form3.is_valid() and request.POST['id_form'] == '1':
-        user = User.objects.get(username = form3.cleaned_data['user'])
+    elif form_add_user.is_valid() and request.POST['id_form'] == '1':
+        user = User.objects.get(username = form_add_user.cleaned_data['user'])
         profil = user.profil
         profil.cours.add(cours)
         userFound = True
 
     # Generating the course
-    elif form2.is_valid() and request.POST['id_form'] == '2':
+    elif form_generate.is_valid() and request.POST['id_form'] == '2':
         repoDir=settings.BASE_DIR
     	outDir=settings.BASE_DIR
     	baseUrl=settings.BASE_DIR
 
         titleData=cours.nom_cours
-        logoData=form2.cleaned_data["logo"]
-        medias=form2.cleaned_data["medias"]
+        logoData=form_generate.cleaned_data["logo"]
+        medias=form_generate.cleaned_data["medias"]
 
         url_home=ETHERPAD_URL+'p/'+cours.url_home+'/export/txt'
 
@@ -480,49 +470,23 @@ def cours(request, id_cours):
             response = urllib2.urlopen(url_module)
             moduleData = StringIO.StringIO(response.read())
             modulesData.append(moduleData)
-
-            """
-            # open the dropbox link to get the archive
-            url_media=module.url_media
-            if(url_media):
-                response = urllib2.urlopen(url_media)
-
-                # get the media archive type of content (we try to get either application/zip or application/octet-stream)
-                http_message=response.info()
-                full=http_message.type
-                mediasType.append(full)
-
-                # read the response and add it to the media datas
-                mediaData = StringIO.StringIO(response.read())
-                mediasData.append(mediaData)
-            else:
-                mediasData.append(None)
-                mediasType.append(None)
-            """
-            #mediasData.append(None)
-            #mediasType.append(None)
         mediasData, mediasNom=cn.getMediasDataFromArchive(medias, len(cours.module_set.all()))
 
         xmlCourse=cn.writeXMLCourse(cours)
-        #zip=cn.generateArchive(modulesData,mediasData,mediasType,homeData,titleData,logoData,repoDir,outDir,baseUrl, xmlCourse)
         zip=cn.generateArchive(modulesData,mediasData,mediasNom,homeData,titleData,logoData, xmlCourse)
-        #zip=""
 
         response= HttpResponse(zip)
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = "attachment; filename=\"site.zip\""
         return response
 
-
-
-
     cours=Cours.objects.get(id_cours=id_cours)
 
     return render(request, 'escapad_formulaire/cours.html', {
         'cours' : cours,
-        'form' : form,
-        'form2' : form2,
-        'form3' : form3,
+        'form_new_module' : form_new_module,
+        'form_generate' : form_generate,
+        'form_add_user' : form_add_user,
         'userFound' : userFound
 
     })
@@ -564,36 +528,10 @@ def cours_edition(request, id_cours ,url):
 
     full_url = ETHERPAD_URL+'p/'+url
 
-    """
-    form_media = MediaForm(request.POST or None)
-    #if we changed the media url
-    if form_media.is_valid() :
-        res_url=form_media.cleaned_data['url_media']
-        #if the url if from dropbox, we change dl=0 to dl=1, in order to create a direct download link
-        # (not provided by dropbox directly), I guess it's better to do it rather than asking the user.
-        if re.match(r"^.*dropbox.*dl=",res_url):
-            res_url=re.sub(r"^(?P<debut>.*)dl=[0-9](?P<fin>.*)$", r"\g<debut>dl=1\g<fin>", res_url)
-
-        url_media=''
-        #If we modify the home page
-        if re.match(r"^home",url):
-            cours.url_media=res_url
-            cours.save()
-            url_media= cours.url_media
-        #If we modify a module page
-        elif re.match(r"^module",url):
-            module=Module.objects.get(url=url)
-            module.url_media=res_url
-            module.save()
-            url_media= module.url_media
-    """
-
     return render(request, 'escapad_formulaire/form_edition.html', {
         'id_cours': id_cours,
         'url': url,
         'full_url': full_url,
-        #'url_media': url_media,
-        #'form_media': form_media,
         'name': name,
         'is_home': is_home
     })
@@ -692,7 +630,6 @@ def inscription(request):
     error = False
     if request.method == "POST":
         form = CreateUserForm(request.POST)
-        print form.is_valid()
         if form.is_valid():
             form.save();
             return redirect(connexion)

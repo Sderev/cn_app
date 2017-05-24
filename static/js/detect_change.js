@@ -6,12 +6,14 @@
   var can_update = true;
   var waiting = false;
 
+  // occur after we detect a change in the pad's content and 5 seconds has passed
   function setValue(){
     can_update=true;
     waiting=false;
     update_preview();
   }
 
+  // update the iframe
   function update_preview(){
     console.log(is_home);
     if (is_home){
@@ -22,6 +24,8 @@
     }
   }
 
+  // occur after we detect a change in the pad's content
+  // wait for 5 seconds, then update the preview in the other iframe
   function receiver(e) {
     if(!waiting){
      window.setTimeout("setValue()",5000);
@@ -31,11 +35,9 @@
       can_update=false;
     }
 
-
-
-
   }
 
+  // add the listener to the window
   function addlistener(){
     if (!window.addEventListener) {
        window.attachEvent('onmessage', receiver);

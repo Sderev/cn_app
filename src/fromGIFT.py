@@ -130,6 +130,8 @@ class GiftQuestion():
                         if self.type in ['MULTICHOICE', 'TRUEFALSE']:
                             if answer['is_right'] and bool(feedback_option):
                                 answer_class = 'right_answer'
+                            elif bool(feedback_option):
+                                answer_class = 'wrong_answer'
                             else:
                                 answer_class = ''
                             with tag('li', klass=answer_class):
@@ -138,6 +140,8 @@ class GiftQuestion():
                         elif self.type == 'MULTIANSWER':
                             if float(answer['credit']) > 0.0 and feedback_option:
                                 answer_class = 'right_answer'
+                            elif feedback_option:
+                                answer_class = 'wrong_answer'
                             else:
                                 answer_class = ''
                             with tag('li', klass=answer_class):

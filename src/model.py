@@ -18,16 +18,16 @@ import sys
 import re
 import json
 import markdown
-import requests
+import yattag
+
 import logging
 from unidecode import unidecode
 from inspect import isclass
 
-from lxml import etree
-from lxml import html
 from slugify import slugify
 
-from fromGIFT import extract_questions, process_questions
+from pygiftparser import parser as pygift
+# from fromGIFT import extract_questions, process_questions
 import toIMS
 import toEDX
 import utils
@@ -38,13 +38,22 @@ VIDEO_THUMB_API_URL = 'https://vimeo.com/api/v2/video/'
 DEFAULT_VIDEO_THUMB_URL = 'https://i.vimeocdn.com/video/536038298_640.jpg'
 DEFAULT_BASE_URL = 'http://culturenumerique.univ-lille3.fr'
 
+
 # Regexps
-reEndHead = re.compile('^#')
+reEndHead = re.compile('^#\s.+$')
 reStartSection = re.compile('^#\s+(?P<title>.*)$')
 reStartSubsection = re.compile('^##\s+(?P<title>.*)$')
 reStartActivity = re.compile('^```(?P<type>.*)$')
 reEndActivity = re.compile('^```\s*$')
-reMetaData = re.compile('^(?P<meta>.*?):\s*(?P<value>.*)\s*$')
+reMetaData = re.compile('^(?P<meta>([A-Z])+?):\s*(?P<value>.*)\s*$')
+
+#Warning messages
+DEFAULT_PLACEMENT_BODY = "[UTIL]Ce fragment de texte n'a été placé dans aucune sous-section, placement automatique dans une sous-section \"Cours\": "
+METADATA_NOT_FOUND = "[UTIL]Cette balise de Header ne correspond à aucun attribut modifiable, vérifier l'orthographe/l'existence de cette balise: "
+NOT_START_SECTION = "[UTIL]Cette partie de texte qui suit le header n'est pas placée dans une section, mettez un \"# <titre>\" après l'en-tête: "
+
+#Hiérarchie
+hierarchie = ''
 
 def goodActivity(match):
     """ utility function used with 'reStartActivity' regex pattern to determine wether the 'type' variable of the given matched pattern fits the name of class defined in this module
@@ -111,7 +120,10 @@ class Subsection:
         """ returns the instance src attribute (i.e the bit of source code corresponding to this subsection) modified so that relative media
             links are turned absolute with the base_url and the module name
         """
+        #FIXME : Parser le src en repérant les liens href en les encodant
+
         self.src = re.sub('\]\(\s*(\.\/)*\s*media/', ']('+self.section.base_url+'/'+self.section.module+'/media/', self.src)
+        #print(self.src)
 
 class Cours(Subsection):
     """
@@ -208,7 +220,7 @@ class AnyActivity(Subsection):
         self.src = ''
         self.parse(f)
         self.absolutizeMediaLinks()
-        self.questions = process_questions(extract_questions(self.src))
+        self.questions = pygift.parseFile(iter(self.src.splitlines(True))) #need to transform String in File pointer with iter function
 
 
     def parse(self,f):
@@ -223,7 +235,7 @@ class AnyActivity(Subsection):
         """Returns a text string containing the gift code of all the questions of this AnyActivity instance"""
         gift_src=''
         for question in self.questions:
-            gift_src+='\n'+question.gift_src+'\n'
+            gift_src+='\n'+question.source+'\n'
         return gift_src
 
 
@@ -236,15 +248,13 @@ class AnyActivity(Subsection):
         :rtype: text string with html code
         """
         self.html_src = ''
-        for question in self.questions:
+        d = yattag.Doc()
+        for q in self.questions:
             # append each question to html output
-            self.html_src+=question.to_html(feedback_option)
-            if self.html_src == '': # fallback when question is not yet properly formated
-                self.html_src = '<p>'+self.src+'</p>'
-            # post-process Gift source replacing markdown formated questions text by html equivalent
-            if question.text_format in (("markdown")):
-                question.md_src_to_html()
+            q.toHTML(d,feedbacks=feedback_option)
+        self.html_src = utils.add_target_blank(d.getvalue())
         return self.html_src
+
 
 
     def toEdxProblemsList(self):
@@ -264,10 +274,11 @@ class AnyActivity(Subsection):
         :rtype: texte string of xml code
         """
         # a) depending on the type, get max number of attempts for the test
-        if isinstance(self, Comprehension):
-            max_attempts = '1'
-        else:
-            max_attempts = 'unlimited'
+        #FIXME : It is usefull?
+        # if isinstance(self, Comprehension):
+        #     max_attempts = '1'
+        # else:
+        #     max_attempts = 'unlimited'
         # b) write empty xml test file for moodle export
         return toIMS.create_ims_test(self.questions, self.num+'_'+slugify(self.title), self.title)
 
@@ -326,7 +337,18 @@ class Section:
         Section.num +=1
         Subsection.num=1
 
-    def parse(self, f):
+    def build_default_cours(self, text):
+        """
+        Build a default Cours with text without subsections
+
+        :param body: Text which contains a part of class
+        :type body: String
+        """
+        self.subsections.append(Cours(self,src=text))
+        logging.warning (DEFAULT_PLACEMENT_BODY + "%s", text) # placement automatique du contenu de body dans une sous-section cours
+
+
+    def parse(self, f): #FIXME : Beaucoup de if/else, changer les conditions & regrouper tout
         """Read lines in file pointer 'f' until the start of a new section. If the start of a new subsection or new activity is detected, parsing is continued in corresponding subsection parse method that returns the newly created object
         """
         body = ''
@@ -337,7 +359,8 @@ class Section:
             if match:
                 # for sections with only text:
                 if body and not body.isspace():
-                    self.subsections.append(Cours(self,src=body))
+                    self.build_default_cours(body)
+                    body = ''
                 break
             else:
                 # is it a new subsection ?
@@ -346,7 +369,8 @@ class Section:
                     # should I create a subsection (text just below a section
                     # or between activities
                     if body and not body.isspace():
-                        self.subsections.append(Cours(self,src=body))
+                        self.build_default_cours(body)
+                        body = ''
                     sub = Cours(self,file=f,title=match.group('title')) #parsing is then continued in Cours parse method,
                     self.subsections.append(sub)
                     # The next line is the last line read in the parse of the subsection
@@ -361,19 +385,21 @@ class Section:
                             # should I create a subsection (text just below a section
                             # or between activities
                             if body and not body.isspace():
-                                self.subsections.append(Cours(self,src=body))
+                                self.build_default_cours(body)
                                 body = ''
                             self.subsections.append(act(self,f))
                             # read a new line after the end of blocks
-                            self.lastLine = f.readline()
                         else:
-                            logging.warning ("Unknown activity type %s",self.lastLine)
+                            logging.warning ("Type d'activité inconnu %s",self.lastLine) # écrit un message dans le logging
                             body += self.lastLine
-                            self.lastLine = f.readline()
                     else:
                         # no match, add the line to the body and read a new line
                         body += self.lastLine
-                        self.lastLine = f.readline()
+                    self.lastLine = f.readline()
+        # If lastLine is empty (file is ending), we write the body in Cours Subsection
+        if body and not body.isspace():
+            self.build_default_cours(body)
+
 
     # FIXME: is this usefull ??
     def toHTML(self, feedback_option=False):
@@ -413,15 +439,6 @@ class Section:
                 video_list += sub.videoIframeList()
         return video_list
 
-    def toEdxProblemsList(self):
-        """Returns the xml source code (string) of all questions in EDX XML format"""
-        edx_xml_problem_list = ""
-        for sub in self.subsections:
-            if isinstance(sub, AnyActivity):
-                # add subsection title
-                edx_xml_problem_list += "<!-- "+sub.num+" "+sub.title+" -->\n\n"
-                edx_xml_problem_list += sub.toEdxProblemsList()
-        return edx_xml_problem_list
 
     def toCourseHTMLVisualisation(self):
         """Loops through Cours subsections only.
@@ -464,6 +481,12 @@ class Module:
         self.parse(f)
         self.act_counter = { c.__name__ : c.actnum for c in [Comprehension, Activite, ActiviteAvancee]}
 
+
+    def __del__(self):
+        for c in [Comprehension, Activite, ActiviteAvancee]:
+            c.actnum = 0
+
+
     def parseHead(self,f) :
         """Called by module.parse() method. Captures meta-data within the first lines of the source file. Stops and return the first line starting with #, which means the start of the first section
 
@@ -478,7 +501,13 @@ class Module:
         while l and not reEndHead.match(l) :
             m = reMetaData.match(l)
             if m:
-                setattr(self, m.group('meta').lower(), m.group('value'))
+                meta = m.group('meta').lower()
+                value = m.group('value')
+                if not (meta in self.__dict__):
+                    logging.warning(METADATA_NOT_FOUND + "%s", meta.upper())
+                setattr(self, meta, value)
+            elif (l != '\n') :
+                logging.warning(NOT_START_SECTION + l)
             l = f.readline()
 
         return l
@@ -503,6 +532,7 @@ class Module:
             self.sections.append( s )
             l = s.lastLine
             match = reStartSection.match(l)
+        # Si qqlch dans l and pas de match -> pas trouvé de section pour démarrer -> WARNING
 
     # FIXME : is it usefull ?
     def toHTML(self, feedback_option=False):
@@ -535,14 +565,6 @@ class Module:
             video_list += s.toVideoList()+'\n\n'
         return video_list
 
-    # FIXME: should use a template file
-    def toEdxProblemsList(self):
-        """Returns the xmlL source code of all questions in EDX XML. Usefull for importing a library of problems into EDX. *depends on toEDX.py module*"""
-        edx_xml_problem_list = '<library xblock-family="xblock.v1" display_name="'+self.module+'_'+self.menutitle+'" org="ULille3" library="'+self.module+'_'+self.menutitle+'">\n\n"'
-        for s in self.sections:
-            edx_xml_problem_list += s.toEdxProblemsList()
-        edx_xml_problem_list += "\n</library>"
-        return edx_xml_problem_list
 
     def toCourseHTMLVisualisation(self):
         """To CourseHTML with title (used for getting preview of the website)
@@ -574,6 +596,7 @@ class CourseProgram:
 
 
 ############### main ################
+#FIXME : it is useless ?
 if __name__ == "__main__":
     import io
 
@@ -630,5 +653,4 @@ apres activite
     module_folder = "tmp"
     utils.createDirs(module_folder)
 
-    m.toHTMLFiles(module_folder)
     m.toXMLMoodle(module_folder)

@@ -22,8 +22,8 @@ import escapad_formulaire
 
 urlpatterns = [
     #url(r'', include('django.contrib.auth.urls')),
-    url(r'^admin/', admin.site.urls),
     url(r'^', include('escapad.urls')), #escapad is the sole app so far
+    url(r'^admin/', admin.site.urls),
     url(r'^', include('escapad_formulaire.urls')),
 
 

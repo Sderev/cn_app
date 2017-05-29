@@ -49,9 +49,7 @@ def loadJinjaEnv():
 
 def toEdxProblemXml(question):
     """ given a question object, return EDX Xml """
-    jenv = loadJinjaEnv()
-    problem_template = jenv.get_template("edx_problem_template.xml")
-    return problem_template.render(q=question)
+    return question.toEDX()
 
 
 def generateEDXArchive(module, moduleOutDir):

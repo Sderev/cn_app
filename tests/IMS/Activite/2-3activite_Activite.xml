@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.imsglobal.org/xsd/ims_qtiasiv1p2 http://www.imsglobal.org/profile/cc/ccv1p1/ccv1p1_qtiasiv1p2p1_v1p0.xsd">
+  <assessment ident="2-3_activite" title="Activité">
+    <!--  Metadata  -->
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>qmd_scoretype</fieldlabel>
+        <fieldentry>Percentage</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_hintspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_feedbackpermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_profile</fieldlabel>
+        <fieldentry>cc.exam.v0p1</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_maxattempts</fieldlabel>
+        <fieldentry>unlimited</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_assessmenttype</fieldlabel>
+        <fieldentry>Examination</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_solutionspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+    <rubric>
+      <material label="Summary">
+        <mattext texttype="text/html"></mattext>
+      </material>
+    </rubric>
+    <section ident="section_1_test_2-3_activite">
+      <item ident="q_0" title="Utiliser les serveurs de noms">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.essay.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank Activité</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        <presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; &lt;strong&gt;  Utiliser les serveurs de noms &lt;/strong&gt;&lt;/p&gt;&lt;p&gt; Il existe des &lt;em&gt;  outils &lt;/em&gt; dans votre ordinateur pour interroger les serveurs de noms et faire donc la &lt;em&gt;  conversion &lt;/em&gt; entre &lt;code&gt;  adresses IP &lt;/code&gt; et &lt;code&gt;  noms &lt;/code&gt; . Ils sont intégrés par exemple dans le navigateur web et la plupart des outils qui utilisent internet. Même s'il est possible de les utiliser directement, ils sont assez techniques.Nous vous proposons d'utiliser plutôt un &lt;strong&gt;  service &lt;/strong&gt; disponible sur internet à travers le navigateur : &lt;a href="http://www.monip.fr" target="_blank"&gt;  http://www.monip.fr &lt;/a&gt; Selon ce site :  - quelle est votre adresse IP ?  - où vous trouvez-vous ?&lt;/p&gt;&lt;p&gt; D'après ce site, où se trouvent les machines suivantes :&lt;/p&gt;&lt;ul&gt; &lt;li&gt;  &lt;a href="www.wikipedia.org" target="_blank"&gt;   www.wikipedia.org  &lt;/a&gt; &lt;/li&gt; &lt;li&gt;  &lt;a href="www.facebook.com" target="_blank"&gt;   www.facebook.com  &lt;/a&gt; &lt;/li&gt; &lt;li&gt;  &lt;a href="www.google.com" target="_blank"&gt;   www.google.com  &lt;/a&gt; &lt;/li&gt;&lt;/ul&gt;&lt;p&gt; Quelle est l'adresse IP de la machine qui porte le nom &lt;a href="www.grappa.univ-lille3.fr" target="_blank"&gt;  www.grappa.univ-lille3.fr &lt;/a&gt; ?&lt;/p&gt;&lt;p&gt; &lt;strong&gt;  Copiez &lt;/strong&gt; l'adresse IP que vous venez de  trouver dans la &lt;strong&gt;  barre d'adresse de votre navigateur. &lt;/strong&gt; Dans un autre onglet, &lt;strong&gt;  copiez &lt;/strong&gt; le &lt;strong&gt;  nom &lt;/strong&gt; : www.grappa.univ-lille3.fr dans la barre d'adresse.&lt;/p&gt;&lt;ul&gt; &lt;li&gt;  Que constatez vous ? &lt;/li&gt;&lt;/ul&gt;&lt;p&gt; Une fois validé votre rendu, vous pourrez consulter la correction pour vous auto-évaluer, ...&lt;/p&gt;</mattext>
+          </material>
+          <response_str ident="response_23d9c74b-b7f9-44e6-bb5f-771e5c1be7b4" rcardinality="Single">
+            <render_fib prompt="Box" rows="5" fibtype="String" />
+          </response_str>
+        </presentation>
+        <resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition continue="Yes" title="General feedback">
+            <conditionvar>
+              <other />
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+        </resprocessing>
+        <itemfeedback ident="general_fb">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;h2&gt; Utiliser les serveurs de noms&lt;/h2&gt;&lt;h3&gt; Votre propre IP&lt;/h3&gt;&lt;p&gt; Grâce à &lt;a href="http://www.monip.fr" target="_blank"&gt;  http://www.monip.fr &lt;/a&gt; vous avez trouvé votre adresse IP, elle est évidemment différente pour chacun d'entre nous.Si vous recommencez depuis une autre machine ou avec la même machine connectée différemment (wifi domicile ou wifi eduroam, connexion filaire à l'université ou eduroam université, connexion wifi ou connexion 3G/4G) vous obtiendrez à chaque fois un résultat &lt;strong&gt;  différent &lt;/strong&gt; .&lt;/p&gt;&lt;p&gt; Pour ce qui est de la &lt;strong&gt;  localisation &lt;/strong&gt; , vous avez sûrement obtenu une adresse géographiquement proche de la votre, celle-ci est en fait l' &lt;em&gt;  adresse du  routeur du fournisseur d'accès &lt;/em&gt; du réseau auquel vous êtes connecté.Vous pouvez également constater que vos informations personnelles telles que :&lt;/p&gt;&lt;ul&gt; &lt;li&gt;  le navigateur que vous utilisez, &lt;/li&gt; &lt;li&gt;  la langue utilisée, &lt;/li&gt; &lt;li&gt;  la taille de votre écran, ... &lt;/li&gt;&lt;/ul&gt;&lt;p&gt; ont été &lt;strong&gt;  repérés &lt;/strong&gt; par le site www.monip.fr et vous sont renvoyés dans la liste des informations.&lt;/p&gt;&lt;h3&gt; Wikipedia, facebook et google&lt;/h3&gt;&lt;p&gt; Vous avez dû trouver que la localisation de wikipedia est aux &lt;em&gt;  Pays-Bas &lt;/em&gt; , près &lt;em&gt;  d'Amsterdam &lt;/em&gt; . C'est en effet là que se trouve la copie la plus proche.D'autres répliques de la célèbre encyclopédie existent également en &lt;em&gt;  Floride &lt;/em&gt; et en &lt;em&gt;  Corée du  Sud &lt;/em&gt; . &lt;code&gt;  Facebook &lt;/code&gt; est hébergé à &lt;em&gt;  Kensington &lt;/em&gt; , dans &lt;em&gt;  l'Ohio &lt;/em&gt; aux &lt;em&gt;  États-Unis &lt;/em&gt; , c'est là que les &lt;em&gt;  données &lt;/em&gt; de tous les utilisateurs sont stockées.Alors que &lt;code&gt;  Google &lt;/code&gt; se trouve à &lt;em&gt;  Mountain View &lt;/em&gt; en &lt;em&gt;  Californie &lt;/em&gt; .Toutes les &lt;strong&gt;  lois &lt;/strong&gt; concernant la sécurisation de nos données et les respect de &lt;strong&gt;  notre vie privée &lt;/strong&gt; pour ces 2 sites sont donc des lois &lt;strong&gt;  américaines &lt;/strong&gt; .&lt;/p&gt;&lt;h3&gt; www.monip.fr&lt;/h3&gt;&lt;p&gt; et oui, ce site est une version traduite en français d'un site Allemand.&lt;/p&gt;&lt;h3&gt; www.grappa.univ-lille3.fr&lt;/h3&gt;&lt;p&gt; l'adresse &lt;strong&gt;  IP &lt;/strong&gt; de l'équipe de recherche Grappa est : &lt;code&gt;  194.254.132.190 &lt;/code&gt; Si vous copiez cette adresse dans dans la barre d'adresse de votre navigateur, vous tombez exactement sur la &lt;strong&gt;  même page &lt;/strong&gt; que si vous allez sur &lt;a href="www.grappa.univ-lille3.fr" target="_blank"&gt;  www.grappa.univ-lille3.fr &lt;/a&gt; .Cela ne doit pas vous surprendre si vous avez compris l'objet de cette séquence.&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+    </section>
+  </assessment>
+</questestinterop>

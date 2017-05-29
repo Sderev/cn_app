@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.imsglobal.org/xsd/ims_qtiasiv1p2 http://www.imsglobal.org/profile/cc/ccv1p1/ccv1p1_qtiasiv1p2p1_v1p0.xsd">
+  <assessment ident="1-3_activite" title="Activité">
+    <!--  Metadata  -->
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>qmd_scoretype</fieldlabel>
+        <fieldentry>Percentage</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_hintspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_feedbackpermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_profile</fieldlabel>
+        <fieldentry>cc.exam.v0p1</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_maxattempts</fieldlabel>
+        <fieldentry>unlimited</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_assessmenttype</fieldlabel>
+        <fieldentry>Examination</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_solutionspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+    <rubric>
+      <material label="Summary">
+        <mattext texttype="text/html"></mattext>
+      </material>
+    </rubric>
+    <section ident="section_1_test_1-3_activite">
+      <item ident="q_0" title="Le numérique concerne tout le monde">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.essay.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank Activité</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        <presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; &lt;strong&gt;  Quels étudiants sont concernés par le numérique ? &lt;/strong&gt;&lt;/p&gt;&lt;p&gt; Le numérique concerne évidemment les étudiants en informatique et plus généralement les étudiants des filières scientifiques.  Mais vous qui êtes inscrits dans une université de sciences humaines et sociales, êtes-vous concernés ?&lt;/p&gt;&lt;p&gt; Choisissez au moins 3 des domaines suivants et faites des recherches pour voir en quoi ils sont impactés par le numérique : les médias, la santé, l'histoire, la sociologie, la linguistique, les arts, la culture, l'enseignement, l'archéologie.&lt;/p&gt;&lt;p&gt; Faites une synthèse en quelques lignes de vos recherches en précisant les domaines auxquels vous vous êtes intéressés. Indiquez les liens des sites sur lesquels vous avez trouvé ces informations. La liste est non exhaustive et vous pouvez vous intéresser à d'autres domaines.&lt;/p&gt;</mattext>
+          </material>
+          <response_str ident="response_b868cfb8-6072-40b4-8996-2d6e67a62cf2" rcardinality="Single">
+            <render_fib prompt="Box" rows="5" fibtype="String" />
+          </response_str>
+        </presentation>
+        <resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition continue="Yes" title="General feedback">
+            <conditionvar>
+              <other />
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+        </resprocessing>
+        <itemfeedback ident="general_fb">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;h1&gt; Le numérique concerne tout le monde&lt;/h1&gt;&lt;p&gt; Ces recherches ont dû vous convaincre, si c'était nécessaire, que le numérique &lt;strong&gt;  n'est pas réservé &lt;/strong&gt; aux informaticiens, il concerne tout le monde, toutes les disciplines.S'agissant plus particulièrement des &lt;strong&gt;  sciences humaines &lt;/strong&gt; , la prise en compte du numérique a fait évoluer les champs disciplinaires pour faire apparaître ce qu'on appelle les &lt;strong&gt;  humanités numériques &lt;/strong&gt; ( &lt;em&gt;  digital humanities &lt;/em&gt; en anglais).&lt;/p&gt;&lt;p&gt; Voici quelques exemples que nous vous proposons, n'hésitez pas à proposer d'autres exemples dans le forum de discussion :&lt;/p&gt;&lt;ul&gt; &lt;li&gt;  Dans les  &lt;strong&gt;   médias  &lt;/strong&gt;  : nouveau sous-métier de journalisme : les  &lt;strong&gt;   data-journalistes  &lt;/strong&gt;  &lt;ul&gt;   &lt;li&gt;    &lt;a href="http://www.lemonde.fr/data-visualisation/" target="_blank"&gt;     data-visualisation    &lt;/a&gt;   &lt;/li&gt;   &lt;li&gt;    &lt;a href="http://fr.wikipedia.org/wiki/Journalisme_de_données" target="_blank"&gt;     journalisme de données    &lt;/a&gt;   &lt;/li&gt;  &lt;/ul&gt; &lt;/li&gt; &lt;li&gt;  Dans la  &lt;strong&gt;   santé  &lt;/strong&gt;  : (imagerie, dossier numérique du patient, ...)  &lt;ul&gt;   &lt;li&gt;    &lt;a href="https://interstices.info/jcms/c_21525/simulation-de-loperation-de-la-cataracte" target="_blank"&gt;     simulation    &lt;/a&gt;   &lt;/li&gt;  &lt;/ul&gt; &lt;/li&gt; &lt;li&gt;  En  &lt;strong&gt;   histoire, sociologie, linguistique  &lt;/strong&gt;  :  &lt;em&gt;   fouille de données  &lt;/em&gt;  &lt;ul&gt;   &lt;li&gt;    &lt;a href="http://www.youtube.com/watch?feature=player_embedded&amp;amp;v=tp4y-_VoXdA" target="_blank"&gt;     fouille de données    &lt;/a&gt;   &lt;/li&gt;  &lt;/ul&gt; &lt;/li&gt; &lt;li&gt;  En  &lt;strong&gt;   art et culture  &lt;/strong&gt;  :  &lt;ul&gt;   &lt;li&gt;    &lt;a href="http://www.lefresnoy.net/fr/Le-Fresnoy/presentation" target="_blank"&gt;     Le Fresnoy    &lt;/a&gt;   &lt;/li&gt;  &lt;/ul&gt; &lt;/li&gt; &lt;li&gt;  Dans l'  &lt;strong&gt;   enseignement  &lt;/strong&gt;  : (outils numérique d'accompagnement scolaire, MOOC,...):  &lt;ul&gt;   &lt;li&gt;    &lt;a href="https://www.france-universite-numerique-mooc.fr/cours/" target="_blank"&gt;     FUN    &lt;/a&gt;   &lt;/li&gt;  &lt;/ul&gt; &lt;/li&gt; &lt;li&gt;  En fouille archéologique :  une réalisation prestigieuse réalisée à Lille3 :  &lt;ul&gt;   &lt;li&gt;    &lt;a href="http://bsa.biblio.univ-lille3.fr/blog/2013/09/exposition-le-vase-qui-parle-au-palais-des-beaux-arts-de-lille/" target="_blank"&gt;     vase qui parle    &lt;/a&gt;   &lt;/li&gt;  &lt;/ul&gt; &lt;/li&gt;&lt;/ul&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+    </section>
+  </assessment>
+</questestinterop>

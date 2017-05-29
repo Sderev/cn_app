@@ -1,0 +1,52 @@
+<problem display_name="L'ICANN et la CNIL" max_attempts=""><legend><p>Internet n'est pas un monde totalement libre et sans loi comme on pourrait être tenté de le croire. De grands acteurs internationaux et nationaux participent de la régulation d'internet. Nous vous proposons ici d'en découvrir deux.</p>
+<p>En utilisant les ressources suivantes (et d'autres) :</p>
+<pre><code>- [http://fr.wikipedia.org/wiki/Domain_Name_System](http://fr.wikipedia.org/wiki/Domain_Name_System)
+- [http://fr.wikipedia.org/wiki/Internet_Corporation_for_Assigned_Names_and_Numbers](http://fr.wikipedia.org/wiki/Internet_Corporation_for_Assigned_Names_and_Numbers)
+- [http://www.cnil.fr/](http://www.cnil.fr/)
+- [http://www.cnil.fr/fileadmin/documents/La_CNIL/publications/CNIL_RA2012_web.pdf](http://www.cnil.fr/fileadmin/documents/La_CNIL/publications/CNIL_RA2012_web.pdf)
+</code></pre>
+<p>cherchez les réponses aux questions suivantes :</p>
+<p><strong>domaines de premier niveau</strong></p>
+<ul>
+<li>Qu'est un domaine de premier niveau ?</li>
+<li>Donnez quelques exemples.</li>
+<li>Qui les gère ?</li>
+<li>Qu'en pensez-vous ?</li>
+</ul>
+<p><strong>la CNIL</strong></p>
+<ul>
+<li>Quel est le rôle de la CNIL ?</li>
+<li>Avec combien d'employés remplit-elle ses missions ?</li>
+<li>Qu'en pensez-vous ?</li>
+</ul> </legend><script type="loncapa/python">
+import re
+def checkAnswerEssay(expect, ans):
+    response = re.search('', ans)
+    if response:
+        return 1
+    else:
+        return 0
+            </script><span id="37e6bffc-51a7-4725-83be-8fab1793afb2"></span><script type="text/javascript">
+    /* The object here is to replace the single line input with a textarea */
+    (function() {
+    var elem = $("#37e6bffc-51a7-4725-83be-8fab1793afb2")
+        .closest("div.problem")
+        .find(":text");
+    /* There's CSS in the LMS that controls the height, so we have to override here */
+    var textarea = $('<textarea style="height:150px" rows="20" cols="70"/>');
+    console.log(elem);
+    console.log(textarea);
+    //This is just a way to do an iterator in JS
+    for (attrib in {'id':null, 'name':null}) {
+        textarea.attr(attrib, elem.attr(attrib));
+    }
+    /* copy over the submitted value */
+    textarea.val(elem.val())
+    elem.replaceWith(textarea);
+
+    })();
+            </script><customresponse cfn="checkAnswerEssay"><textline size="40" correct_answer="" label="Problem Text"/></customresponse><solution><div class="detailed-solution"><p><strong>Domaines de premier niveau</strong></p>
+<p>Les domaines de premier niveau sont les plus élevés dans la hiérarchie des noms de domaines. Ce sont notamment les domaines identifiants un pays ( <code>.fr, .de, .uk</code>...) ou les domaines <code>.org</code> pour les organisations et <code>.com</code> pour les sites à caractère commercial. Chacun de ces domaines est géré par une organisation propre, mais c'est un organisme unique, <em>l'ICANN</em>, qui délègue cette gestion aux autres organismes.</p>
+<p><strong>La CNIL</strong></p>
+<p>La CNIL (<em>Commission Nationale de l'Informatique et des Libertés</em>) est l'instance française chargée de veiller au respect des libertés et de la vie privée sur internet. À ce titre, elle régule notamment l'usage des données personnelles et traces que tout un chacun laisse lorsqu'il utilise internet.<br />
+Au 20 juillet 2013, la CNIL était composée de 17 membres et 174 agents.</p> </div></solution></problem>

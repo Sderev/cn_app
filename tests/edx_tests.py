@@ -268,13 +268,13 @@ What is the color of the white horse of Henri IV ?
                 self.assertEqual(choicegroup.tag,"choicegroup")
                 #TRUE
                 self.assertEqual(choicegroup[0].tag,"choice")
-                self.assertEqual(choicegroup[0].text,"Vrai")
+                self.assertTrue(choicegroup[0].text in "Vrai True")
                 self.assertEqual(choicegroup[0].attrib.get("correct"),"true")
                 self.assertEqual(choicegroup[0][0].tag,"choicehint")
                 self.assertEqual(choicegroup[0][0].text,"Exact !")
                 #FALSE
                 self.assertEqual(choicegroup[1].tag,"choice")
-                self.assertEqual(choicegroup[1].text,"Faux")
+                self.assertTrue(choicegroup[1].text in "Faux False")
                 self.assertEqual(choicegroup[1].attrib.get("correct"),"false")
                 self.assertEqual(choicegroup[1][0].tag,"choicehint")
                 self.assertEqual(choicegroup[1][0].text,"Non...")
@@ -297,13 +297,13 @@ What is the color of the white horse of Henri IV ?
                 self.assertEqual(choicegroup.tag,"choicegroup")
                 #TRUE
                 self.assertEqual(choicegroup[0].tag,"choice")
-                self.assertEqual(choicegroup[0].text,"Vrai")
+                self.assertTrue(choicegroup[0].text in "Vrai True")
                 self.assertEqual(choicegroup[0].attrib.get("correct"),"false")
                 self.assertEqual(choicegroup[0][0].tag,"choicehint")
                 self.assertEqual(choicegroup[0][0].text,"Pas bon...")
                 #FALSE
                 self.assertEqual(choicegroup[1].tag,"choice")
-                self.assertEqual(choicegroup[1].text,"Faux")
+                self.assertTrue(choicegroup[1].text in "Faux False")
                 self.assertEqual(choicegroup[1].attrib.get("correct"),"true")
                 self.assertEqual(choicegroup[1][0].tag,"choicehint")
                 self.assertEqual(choicegroup[1][0].text,"C'est ça!")

@@ -21,6 +21,23 @@ import yattag
 
 TEST_GIFT_DIR = "./testGIFT/"
 
+"""
+    Test File for Project Esc@pad : pygiftparser module
+    ==============================
+
+    Here is a test file to test the project Esc@pad : pygiftparser module
+    This file test :
+        - The parsing of a Gift activity into a python object (questiontext, answers, feedback,etc...)
+        - Transformation of a Gift activity into HTML
+
+    How to use this file ?
+    ---------------------
+    In your terminal, use the command :
+        >> $ python parsergift_test.py
+
+
+"""
+
 
 class GiftParsingHTMLTestCase(unittest.TestCase):
 
@@ -141,7 +158,7 @@ tout doit être représenté sous forme de nombres être manipulé par un ordina
         out.write (d.getvalue())
         out.close()
 
-        print("[GiftParsingHTMLTestCase]-- check_smultiple_answer OK --")
+        print("[GiftParsingHTMLTestCase]-- check_multiple_answer OK --")
 
 
     def TestSimpleText(self):
@@ -209,7 +226,7 @@ Voici quelques exemples que nous vous proposons, n'hésitez pas à proposer d'au
         out.write (d.getvalue())
         out.close()
 
-        print("[GiftParsingHTMLTestCase]-- check_text OK --")
+        print("[GiftParsingHTMLTestCase]-- check_text1 OK --")
 
     def TestSimpleText2(self):
         io_gift = StringIO("""
@@ -268,7 +285,7 @@ Les **lentilles pour la vue** ?
                 if (j == 1):
                         self.assertEqual(div['class'][0], u'global_feedback')
 
-        print("[GiftParsingHTMLTestCase]-- check_text OK --")
+        print("[GiftParsingHTMLTestCase]-- check_text2 OK --")
 
 
         out =  open(TEST_GIFT_DIR+"texte2.html", "w")
@@ -333,6 +350,9 @@ blabla {} with tail
 
         out =  open(TEST_GIFT_DIR+"areaAnswer.html", "w")
 
+        print("[GiftParsingHTMLTestCase]-- check_answer_area OK --")
+
+
         #FERMETURE ET ECRITURE DU FICHIER
         out.write (d.getvalue())
         out.close()
@@ -367,9 +387,9 @@ When was Ulysses S. Grant born? {#
 }
         """)
 
-
         questions = pygift.parseFile(io_num)
         io_num.close()
+
 
         for q in questions:
             with d.tag('h2'):
@@ -380,6 +400,9 @@ When was Ulysses S. Grant born? {#
             q.toHTML(d,False)
 
         out =  open(TEST_GIFT_DIR+"numerical.html", "w")
+
+        print("[GiftParsingHTMLTestCase]-- check_numerical OK --")
+
 
         #FERMETURE ET ECRITURE DU FICHIER
         out.write (d.getvalue())
@@ -419,9 +442,14 @@ Match the following countries with their corresponding capitals. {
 
         out =  open(TEST_GIFT_DIR+"match.html", "w")
 
+        print("[GiftParsingHTMLTestCase]-- check_match OK --")
+
+
         #FERMETURE ET ECRITURE DU FICHIER
         out.write (d.getvalue())
         out.close()
+
+# FIXME : Manque le True/False !
 
 
     def runTest(self):
@@ -504,22 +532,27 @@ bleble
 #2:1
 #### MEGA COMMENT
 }""")
-        io_num3 = ("""1 OU 2 OU 3?{
-#1..3
+        io_num3 = ("""
+What is the value of pi (to 3 decimal places)? {#3.141..3.142}.
 }""")
-        question1 = pygift.Question('','','')
-        num1 = question1._parseNumericText(io_num1)
         #NUM1
-        self.assertIsInstance(num1,pygift.NumericAnswer)
+        question1 = pygift.Question('','','')
+        question1.parse(io_num1)
+        self.assertTrue(question1.numeric)
+        self.assertIsInstance(question1.answers,pygift.NumericAnswerSet)
+        self.assertIsInstance(question1.answers.answers[0],pygift.NumericAnswer)
+        self.assertEqual(question1.answers.answers[0].tolerance,0)
         #NUM2
         question2 = pygift.Question('','','')
-        num2 = question2._parseNumericText(io_num2)
-        self.assertIsInstance(num2,pygift.NumericAnswer)
-        #NUM3
-        #FIXME:problème ici
-        # question3 = pygift.Question('','','')
-        # num3 = question3._parseNumericText(io_num3)
-        # self.assertIsInstance(num3,pygift.NumericAnswerMinMax)
+        question2.parse(io_num2)
+        self.assertTrue(question2.numeric)
+        self.assertIsInstance(question2.answers,pygift.NumericAnswerSet)
+        self.assertIsInstance(question2.answers.answers[0],pygift.NumericAnswer)
+        self.assertEqual(question2.answers.answers[0].tolerance,1)
+        # #NUM3
+        question3 = pygift.Question('','','')
+        question3.parse(io_num1)
+        self.assertIsInstance(num3,pygift.NumericAnswerMinMax)
 
         def runTest(self):
             try :

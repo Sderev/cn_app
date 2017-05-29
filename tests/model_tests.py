@@ -20,15 +20,12 @@ logger.setLevel(40)
 from src import model,utils
 
 """
-    Test File for Project Esc@pad
+    Test File for Project Esc@pad : Model.py
     ==============================
 
-    Here is a test file to test the project Esc@pad.
+    Here is a test file to test the project Esc@pad : model.py.
     This file test :
-        - Parsing of source files to construct a course model (cf model.Module) with module_test.md ( the file to file) and test.config.json() (the serialized control object)
-        - ( #TODO à remplir)
-        -
-        -
+        - The parsing of a markdown course into a python object (Header,sections,subsections,activities,etc..)
 
     How to use this file ?
     ---------------------
@@ -97,10 +94,9 @@ CHICKEN: Cot Cot
 
 
         self.assertIsNotNone(sample_header.chicken)
-        #FIXME : Réussir à capturer le warning avec logging
         print("[FctParserTestCase]-- wrong_case_header OK --")
 
-    def test_sections(self): #FIXME : Need to begin with a # and not (## or ###)
+    def test_sections(self):
         """
         """
         #Title parsed
@@ -151,13 +147,11 @@ Blablabla
         sample_subsections = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         del sample_object
 
-#        print(sample_subsections)
 
         # ASSERT NUMBERS
         self.assertEqual(len(sample_subsections.sections[0].subsections), 4, "Not the same number of subsections in check_subsections")
         self.assertEqual(len(sample_subsections.sections[1].subsections), 0, "Not the same number of subsections in check_subsections")
         self.assertEqual(len(sample_subsections.sections[2].subsections), 1, "Not the same number of subsections in check_subsections")
-# FIXME : Si pas de titre de nv 1, pas de titre nv2 !
 
 
         #ASSERTSame
@@ -195,9 +189,9 @@ Blabla
 
         print("[FctParserTestCase]-- check_subsubsections OK --")
 
-    def test_cours(self): # à refaire
+    def test_cours(self):
         """
-        Test for parsing course
+        Test for parsing Cours format
         """
         io_cours = StringIO("""
 # Title 0
@@ -296,7 +290,7 @@ Par contre moi oui !
 
     def testSubsections(self):
         """
-        Test for SubSections
+        Test for SubSections methods
         """
         model.Subsection.num = 1
         sc = mock.MagicMock(num='2')

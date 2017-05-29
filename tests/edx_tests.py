@@ -144,6 +144,9 @@ class EDXArchiveTestCase(unittest.TestCase):
         print("[EDXArchiveTestCase]-- check_CNVideo OK --")
 
     def testProblem(self):
+        """
+        Test transformation of question in format Gift to question in format EDX XML
+        """
         io_ourQuestions = StringIO("""
 ::MULTIANSWER::
 What two people are entombed in Grant's tomb? {

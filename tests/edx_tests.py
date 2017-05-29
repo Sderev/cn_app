@@ -94,6 +94,7 @@ class EDXArchiveTestCase(unittest.TestCase):
             # Check if sequential have only one vertical tag
             self.assertEquals(len(vert),1,"Lenght vertical n°"+str(i)+" > 1")
             fm = vert.attrib.get("format")
+            #FIXME : ajout d'assert pour l'emplacement des AnyActivity
             if fm == "Activite":
                 cpt_act += 1
             elif fm == "Activite Avancee":
@@ -152,10 +153,15 @@ What two people are entombed in Grant's tomb? {
 ~%-100%Grant's father
 }
 
-::TRUEFALSE::
+::TRUEFALSE1::
 Vrai ou Faux?
 {T #Non...#Exact !
 ####MEGA COMMENT
+}
+
+::TRUEFALSE2::
+Faux ou Vrai?
+{F #Pas bon...#C'est ça!
 }
 
 ::SINGLEANSWER::
@@ -208,13 +214,14 @@ What is the color of the white horse of Henri IV ?
         #QUESTIONS
         multi = questions[0]
         trfl = questions[1]
-        sglans = questions[2]
-        essay = questions[3]
-        numericalWOT = questions[4]
-        numericalWT = questions[5]
-        numericalMINMAX = questions[6]
-        match = questions[7]
-        short = questions[8]
+        trfl2 = questions[2]
+        sglans = questions[3]
+        essay = questions[4]
+        numericalWOT = questions[5]
+        numericalWT = questions[6]
+        numericalMINMAX = questions[7]
+        match = questions[8]
+        short = questions[9]
 
         #MULTIANSWER
         rootm = etree.fromstring(multi.toEDX())
@@ -247,16 +254,16 @@ What is the color of the white horse of Henri IV ?
                 self.assertEqual(child.tag,"solution")
                 self.assertEqual(child[0].attrib.get("class"),"detailed-solution")
 
-        #TRUEFALSE
+        # TRUEFALSE
         roottf = etree.fromstring(trfl.toEDX())
-        self.assertEqual(roottf.tag,"problem", "for TRUEFALSE, problem tag was not created")
-        self.assertEqual(roottf.attrib.get("display_name"),"TRUEFALSE","for TRUEFALSE, title was not assigned")
-        self.assertEqual(roottf.attrib.get("max_attempts"),"1","for TRUEFALSE, max_attempts was not assigned")
+        self.assertEqual(roottf.tag,"problem", "for TRUEFALSE1, problem tag was not created")
+        self.assertEqual(roottf.attrib.get("display_name"),"TRUEFALSE1","for TRUEFALSE1, title was not assigned")
+        self.assertEqual(roottf.attrib.get("max_attempts"),"1","for TRUEFALSE1, max_attempts was not assigned")
         for i,child in enumerate(roottf):
             if i == 0:
-                self.assertEqual(child.tag,"legend", "for TRUEFALSE, legend tag was not created")
+                self.assertEqual(child.tag,"legend", "for TRUEFALSE1, legend tag was not created")
             if i == 1:
-                self.assertEqual(child.tag,"multiplechoiceresponse", "for TRUEFALSE, multiplechoiceresponse tag was not created")
+                self.assertEqual(child.tag,"multiplechoiceresponse", "for TRUEFALSE1, multiplechoiceresponse tag was not created")
                 choicegroup = child[0]
                 self.assertEqual(choicegroup.tag,"choicegroup")
                 #TRUE
@@ -276,10 +283,35 @@ What is the color of the white horse of Henri IV ?
                 self.assertEqual(child[0].attrib.get("class"),"detailed-solution")
                 self.assertEqual(child[0][0].text,"MEGA COMMENT")
 
+        #TRUEFALSE2
+        roottf2 = etree.fromstring(trfl2.toEDX())
+        self.assertEqual(roottf2.tag,"problem", "for TRUEFALSE2, problem tag was not created")
+        self.assertEqual(roottf2.attrib.get("display_name"),"TRUEFALSE2","for TRUEFALSE2, title was not assigned")
+        self.assertEqual(roottf2.attrib.get("max_attempts"),"1","for TRUEFALSE2, max_attempts was not assigned")
+        for i,child in enumerate(roottf2):
+            if i == 0:
+                self.assertEqual(child.tag,"legend", "for TRUEFALSE2, legend tag was not created")
+            if i == 1:
+                self.assertEqual(child.tag,"multiplechoiceresponse", "for TRUEFALSE2, multiplechoiceresponse tag was not created")
+                choicegroup = child[0]
+                self.assertEqual(choicegroup.tag,"choicegroup")
+                #TRUE
+                self.assertEqual(choicegroup[0].tag,"choice")
+                self.assertEqual(choicegroup[0].text,"Vrai")
+                self.assertEqual(choicegroup[0].attrib.get("correct"),"false")
+                self.assertEqual(choicegroup[0][0].tag,"choicehint")
+                self.assertEqual(choicegroup[0][0].text,"Pas bon...")
+                #FALSE
+                self.assertEqual(choicegroup[1].tag,"choice")
+                self.assertEqual(choicegroup[1].text,"Faux")
+                self.assertEqual(choicegroup[1].attrib.get("correct"),"true")
+                self.assertEqual(choicegroup[1][0].tag,"choicehint")
+                self.assertEqual(choicegroup[1][0].text,"C'est ça!")
+
         #SINGLEANSWER
         roots = etree.fromstring(sglans.toEDX())
         self.assertEqual(roots.tag,"problem", "for SINGLEANSWER, problem tag was not created")
-        self.assertEqual(roots.attrib.get("display_name"),"SINGLEANSWER","for TRUEFALSE, title was not assigned")
+        self.assertEqual(roots.attrib.get("display_name"),"SINGLEANSWER","for SINGLEANSWER, title was not assigned")
         self.assertEqual(roots.attrib.get("max_attempts"),"1","for SINGLEANSWER, max_attempts was not assigned")
         for i,child in enumerate(roots):
             if i == 0:

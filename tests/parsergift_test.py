@@ -440,38 +440,86 @@ Match the following countries with their corresponding capitals. {
 
 class GiftParserTestCase(unittest.TestCase):
 
-        def TestParseHead(self) :
-            """
-            """
-            io_head1 = ("""::Macumba::
+    def TestParseHead(self) :
+        """
+        """
+        io_head1 = ("""::Macumba::
 [markdown]
 blabla
 \n
 bleble
 {}""")
-            io_head2 = ("""[html]
+        io_head2 = ("""[html]
 Macumba
 blabla
 \n
 bleble
 {}""")
-            #HEAD 1
-            question = pygift.Question('','','')
-            question._parseHead(io_head1)
-            self.assertEqual(question.title,"Macumba")
-            self.assertEqual(question.text,"blabla\n\n\nbleble\n{}")
-            self.assertEqual(question.markup,"markdown")
+        #HEAD 1
+        question = pygift.Question('','','')
+        question._parseHead(io_head1)
+        self.assertEqual(question.title,"Macumba")
+        self.assertEqual(question.text,"blabla\n\n\nbleble\n{}")
+        self.assertEqual(question.markup,"markdown")
 
-            #HEAD 2
-            question2 = pygift.Question('','','')
-            question2._parseHead(io_head2)
-            self.assertEqual(question2.title,"Quizz")
-            self.assertEqual(question2.text,"Macumba\nblabla\n\n\nbleble\n{}")
-            self.assertEqual(question2.markup,"html")
+        #HEAD 2
+        question2 = pygift.Question('','','')
+        question2._parseHead(io_head2)
+        self.assertEqual(question2.title,"Quizz")
+        self.assertEqual(question2.text,"Macumba\nblabla\n\n\nbleble\n{}")
+        self.assertEqual(question2.markup,"html")
 
+        del question,question2
 
+#     def testMultiChoiceAnswer(self):
+#         """
+#         """
+#         io_mult1("""::MULTC1::
+# Qui repose dans la Grant's tomb ? {=Grant ~Personne ~Napoléon ~Churchill ~Mère Teresa}
+# """)
+#         io_mult2("""::MULTC2::
+# // Question : 1 Nom : Grant's tomb
+# ::Grant's tomb::Qui repose dans la Grant's tomb à New-York ? {
+# =Grant
+# ~Personne
+# #C'était vrai pendant 12 ans, mais la dépouille de Grant a été enterrée dans cette tombe en 1897.
+# ~Napoléon
+# #Il a été enterré en France.
+# ~Churchill
+# #Il a été enterré en Angleterre.
+# ~Mère Teresa
+# #Elle a été enterrée en Inde.
+# }
+# """)
 
-
+    def testParseNumericText(self):
+        """
+        """
+        io_num1 = ("""
+1 OU 2 OU 3?{
+#2
+}""")
+        io_num2 = ("""
+1 OU 2 OU 3?{
+#2:1
+#### MEGA COMMENT
+}""")
+        io_num3 = ("""1 OU 2 OU 3?{
+#1..3
+}""")
+        question1 = pygift.Question('','','')
+        num1 = question1._parseNumericText(io_num1)
+        #NUM1
+        self.assertIsInstance(num1,pygift.NumericAnswer)
+        #NUM2
+        question2 = pygift.Question('','','')
+        num2 = question2._parseNumericText(io_num2)
+        self.assertIsInstance(num2,pygift.NumericAnswer)
+        #NUM3
+        #FIXME:problème ici
+        # question3 = pygift.Question('','','')
+        # num3 = question3._parseNumericText(io_num3)
+        # self.assertIsInstance(num3,pygift.NumericAnswerMinMax)
 
         def runTest(self):
             try :

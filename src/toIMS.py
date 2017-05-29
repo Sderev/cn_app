@@ -90,9 +90,8 @@ def set_qti_metadata(questions):
     meta.asis("<!--  Metadata  -->")
     metadata = DEFAULT_QTI_META
     max_attempts = '1'
-    for q in questions :
-        if q.answers.max_att == 'unlimited':
-            max_attempts = 'unlimited'
+    if questions[0].answers.max_att == '':
+        max_attempts = 'unlimited'
     metadata['cc_maxattempts'] = max_attempts
     with tag('qtimetadata'):
         for key, value in metadata.iteritems():
@@ -104,7 +103,7 @@ def set_qti_metadata(questions):
 
     return indent(meta.getvalue())
 
-def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
+def create_ims_test(questions, test_id, test_title):
     """
     Supported types : ESSAY, MULTICHOICE, MULTIANSWER, TRUEFALSE, DESCRIPTION
 
@@ -112,10 +111,6 @@ def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
     # create magic yattag triple
     doc, tag, text = Doc().tagtext()
     doc.asis(HEADER_TEST+'\n')
-    # if 'ESSAY' in questions[0].type:
-    #     max_attempts = 'unlimited'
-    # else:
-    #     max_attempts = 1
     with tag('assessment', ident=test_id, title=test_title):
         doc.asis(set_qti_metadata(questions))
         #<!-- Titre de l'excercice  -->
@@ -149,26 +144,7 @@ def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
                                 txt = utils.cntohtml(question.text)
                                 text(utils.add_target_blank(txt))
                         # réponses possibles
-                        # if 'ESSAY' in question.type:
-                        #     with tag('response_str', rcardinality='Single', ident='response_'+str(question.id)):
-                        #         doc.stag('render_fib', rows=5, prompt='Box', fibtype="String")
                         question.answers.possiblesAnswersIMS(doc,tag,text)
-                        # elif question.type in (('MULTICHOICE', 'MULTIANSWER', 'TRUEFALSE')):
-                        #     if question.type == 'MULTIANSWER':
-                        #         rcardinality = 'Multiple'
-                        #     else:
-                        #         rcardinality = 'Single'
-                        #     # rcardinality optional, but a priori 'Single' form MChoice, 'Multiple' for Manswer;
-                        #     with tag('response_lid', rcardinality=rcardinality, ident='response_'+str(question.id)):
-                        #         with tag('render_choice', shuffle='No'):
-                        #             for id_a, answer in enumerate(question.answers):
-                        #                 with tag('response_label', ident='answer_'+str(question.id)+'_'+str(id_a)):
-                        #                     with tag('material'):
-                        #                         with tag('mattext', texttype="text/html"):
-                        #                             text(answer['answer_text'])
-                        question.answers.cardinaliteIMS(doc,tag,text)
-                        # else: # FIXME add support for NUMERIC, MATCHING, etc
-                        #     pass
                     # Response Processing
                     with tag('resprocessing'):
                         # outcomes: FIXME: allways the same ?
@@ -182,52 +158,6 @@ def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
                                 doc.stag('displayfeedback', feedbacktype="Response", linkrefid='general_fb')
                         ## lister les autres interactions/conditions
                         question.answers.listInteractionsIMS(doc,tag,text)
-                        # if question.type in (('MULTICHOICE','TRUEFALSE')):
-                        #     for id_a, answer in enumerate(question.answers):
-                        #         score = 0
-                        #         if answer['is_right']:
-                        #             title = 'Correct'
-                        #             score = 100
-                        #         else:
-                        #             title = ''
-                        #             score = answer['credit']
-                        #         with tag('respcondition', title=title):
-                        #             with tag('conditionvar'):
-                        #                 with tag('varequal', respident='response_'+str(question.id)): # respoident is id of response_lid element
-                        #                     text('answer_'+str(question.id)+'_'+str(id_a))
-                        #             with tag('setvar', varname='SCORE', action='Set'):
-                        #                 text(score)
-                        #             doc.stag('displayfeedback', feedbacktype='Response', linkrefid='feedb_'+str(id_a))
-                        # elif question.type == 'MULTIANSWER':
-                        #     # Correct combination
-                        #     with tag('respcondition', title="Correct", kontinue='No'):
-                        #         with tag('conditionvar'):
-                        #             with tag('and'):
-                        #                 for id_a, answer in enumerate(question.answers):
-                        #                     score = 0
-                        #                     try:
-                        #                         score = float(answer['credit'])
-                        #                     except:
-                        #                         pass
-                        #                     if score <= 0:
-                        #                         with tag('not'):
-                        #                             with tag('varequal', case='Yes', respident='response_'+str(question.id)): # respoident is id of response_lid element
-                        #                                 text('answer_'+str(question.id)+'_'+str(id_a))
-                        #                     else:
-                        #                         with tag('varequal', case='Yes', respident='response_'+str(question.id)): # respoident is id of response_lid element
-                        #                             text('answer_'+str(question.id)+'_'+str(id_a))
-                        #         with tag('setvar', varname='SCORE', action='Set'):
-                        #             text('100')
-                        #         doc.stag('displayfeedback', feedbacktype='Response', linkrefid='general_fb')
-                        #     # default processing in any case
-                        #     for id_a, answer in enumerate(question.answers):
-                        #         with tag('respcondition', kontinue='No'):
-                        #             with tag('conditionvar'):
-                        #                 with tag('varequal', respident='response_'+str(question.id), case="Yes"):
-                        #                     text('answer_'+str(question.id)+'_'+str(id_a))
-                        #             doc.stag('displayfeedback', feedbacktype='Response', linkrefid='feedb_'+str(id_a))
-                        # else:
-                        #     pass
                     # liste les feedbacks
                     ## feedback general
                     if question.generalFeedback != '':
@@ -239,13 +169,6 @@ def create_ims_test(questions, test_id, test_title, max_attempts = "1"):
                                         text(utils.add_target_blank(fb))
                     ## autres feedbacks
                     question.answers.toIMSFB(doc,tag,text)
-                    # for id_a, answer in enumerate(question.answers.answers):
-                    #     with tag('itemfeedback', ident='feedb_'+str(id_a)):
-                    #         with tag('flow_mat'):
-                    #             with tag('material'):
-                    #                 with tag('mattext', texttype='text/html'):
-                    #                     text(answer.feedback)
-                    ## FIXME add wrong and correct feedbacks for TRUEFALSE
     doc.asis('</questestinterop>\n')
     doc_value = indent(doc.getvalue().replace('\n', '')) #pre-escaping new lines because of a bug in moodle that turn them in <br>
     doc_value = doc_value.replace('kontinue', 'continue')

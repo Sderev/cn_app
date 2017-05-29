@@ -550,7 +550,9 @@ What is the value of pi (to 3 decimal places)? {#3.141..3.142}.
         self.assertIsInstance(question2.answers.answers[0],pygift.NumericAnswer)
         self.assertEqual(question2.answers.answers[0].tolerance,1)
         # #NUM3
-        # question3 = pygift.Question('','','')
+        question3 = pygift.Question('','','')
+        question3.parse(io_num3)
+        self.assertTrue(question3.numeric)
         # question3.parse(io_num1)
         # self.assertIsInstance(num3,pygift.NumericAnswerMinMax)
 

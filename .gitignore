@@ -14,3 +14,7 @@ apache_conf
 documentation/_*
 documentation/conf.py
 sample.config.json
+tests/Test.imscc.zip
+tests/testEDX
+tests/testGIFT
+tests/IMS

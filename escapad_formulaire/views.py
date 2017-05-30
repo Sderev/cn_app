@@ -45,8 +45,6 @@ import random
 import re
 from cn_app.settings import ETHERPAD_URL
 from cn_app.settings import API_KEY
-
-
 #################################
 #                               #
 #        SIMPLE FORMS VIEWS     #
@@ -335,7 +333,7 @@ def apercu_module(request,id_export):
             home_html += "\n\n<!-- Subsection "+sub.num+" -->\n"
             home_html += "\n\n<h2>"+sub.num+". "+sub.title+" </h2>\n"
             #home_html += markdown.markdown(sub.src, MARKDOWN_EXT)
-            home_html += sub.toHTML()
+            home_html += sub.toHTML(True)
 
     return render(request, 'escapad_formulaire/apercu.html', {
         'res': home_html

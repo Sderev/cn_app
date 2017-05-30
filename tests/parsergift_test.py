@@ -499,28 +499,63 @@ bleble
 
         del question,question2
 
-#     def testMultiChoiceAnswer(self):
-#         """
-#         """
-#         io_mult1("""::MULTC1::
-# Qui repose dans la Grant's tomb ? {=Grant ~Personne ~Napoléon ~Churchill ~Mère Teresa}
-# """)
-#         io_mult2("""::MULTC2::
-# // Question : 1 Nom : Grant's tomb
-# ::Grant's tomb::Qui repose dans la Grant's tomb à New-York ? {
-# =Grant
-# ~Personne
-# #C'était vrai pendant 12 ans, mais la dépouille de Grant a été enterrée dans cette tombe en 1897.
-# ~Napoléon
-# #Il a été enterré en France.
-# ~Churchill
-# #Il a été enterré en Angleterre.
-# ~Mère Teresa
-# #Elle a été enterrée en Inde.
-# }
-# """)
+    def testSelectSet(self):
+        """
+        """
+        io_mult1 = ("""
+Qui repose dans la Grant's tomb ? {=Grant ~Personne ~Napoléon ~Churchill ~Mère Teresa}
+""")
+        io_mult2 = ("""
+// Question : 1 Nom : Grant's tomb
+::Grant's tomb::Qui repose dans la Grant's tomb à New-York ? {
+=Grant
+~Personne
+#C'était vrai pendant 12 ans, mais la dépouille de Grant a été enterrée dans cette tombe en 1897.
+~Napoléon
+#Il a été enterré en France.
+~Churchill
+#Il a été enterré en Angleterre.
+~Mère Teresa
+#Elle a été enterrée en Inde.
+}
+""")
+        #mult1
+        question1 = pygift.Question('','','')
+        question1.parse(io_mult1)
+        self.assertIsInstance(question1.answers, pygift.SelectSet)
+        for (i,a) in enumerate(question1.answers.answers) :
+            self.assertIsInstance(a,pygift.AnswerInList)
+            if i == 0:
+                self.assertTrue('Grant' in a.answer)
+                self.assertEqual(a.fraction, 100)
+            else :
+                self.assertEqual(a.fraction, 0)
+            if i == 1: self.assertTrue('Personne' in a.answer)
+            if i == 2: self.assertTrue('Napoléon' in a.answer)
+            if i == 3: self.assertTrue('Churchill' in a.answer)
+            if i == 4: self.assertTrue('Mère Teresa' in a.answer)
+        del question1
 
-    def testParseNumericText(self):
+        #mult2
+        question2 = pygift.Question('','','')
+        question2.parse(io_mult2)
+        self.assertIsInstance(question2.answers, pygift.SelectSet)
+        for (i,a) in enumerate(question2.answers.answers) :
+            self.assertIsInstance(a,pygift.AnswerInList)
+            if i == 0:
+                self.assertTrue('Grant' in a.answer)
+                self.assertEqual(a.fraction, 100)
+            else :
+                self.assertEqual(a.fraction, 0)
+            if i == 1:
+                self.assertTrue('Personne' in a.answer)
+                self.assertTrue("C'était vrai pendant 12 ans, mais la dépouille de Grant a été enterrée dans cette tombe en 1897." in a.feedback)
+            if i == 2: self.assertTrue('Napoléon' in a.answer)
+            if i == 3: self.assertTrue('Churchill' in a.answer)
+            if i == 4: self.assertTrue('Mère Teresa' in a.answer)
+
+
+    def testParseNumeric(self):
         """
         """
         io_num1 = ("""
@@ -533,28 +568,38 @@ bleble
 #### MEGA COMMENT
 }""")
         io_num3 = ("""
-What is the value of pi (to 3 decimal places)? {#3.141..3.142}.
+1 OU 2 OU 3?{
+#1..3
 }""")
+        # FIXME : Ne pas passer par la méthode parse mais par _parseNumericAnswers / _parseNumericText
         #NUM1
         question1 = pygift.Question('','','')
         question1.parse(io_num1)
         self.assertTrue(question1.numeric)
         self.assertIsInstance(question1.answers,pygift.NumericAnswerSet)
         self.assertIsInstance(question1.answers.answers[0],pygift.NumericAnswer)
+        self.assertEqual(question1.answers.answers[0].value,2)
         self.assertEqual(question1.answers.answers[0].tolerance,0)
+        del question1
         #NUM2
         question2 = pygift.Question('','','')
         question2.parse(io_num2)
         self.assertTrue(question2.numeric)
         self.assertIsInstance(question2.answers,pygift.NumericAnswerSet)
         self.assertIsInstance(question2.answers.answers[0],pygift.NumericAnswer)
+        self.assertEqual(question2.answers.answers[0].value,2)
         self.assertEqual(question2.answers.answers[0].tolerance,1)
+        del question2
         # #NUM3
         question3 = pygift.Question('','','')
         question3.parse(io_num3)
         self.assertTrue(question3.numeric)
-        # question3.parse(io_num1)
-        # self.assertIsInstance(num3,pygift.NumericAnswerMinMax)
+        self.assertIsInstance(question3.answers,pygift.NumericAnswerSet)
+        self.assertIsInstance(question3.answers.answers[0],pygift.NumericAnswerMinMax)
+        self.assertEqual(question3.answers.answers[0].mini,str(1))
+        self.assertEqual(question3.answers.answers[0].maxi,str(3))
+        del question3
+
 
         def runTest(self):
             try :
@@ -562,6 +607,8 @@ What is the value of pi (to 3 decimal places)? {#3.141..3.142}.
             except :
                 pass
             self.TestParseHead()
+            self.testParseNumeric()
+            self.testSelectSet()
 
 
 # Main

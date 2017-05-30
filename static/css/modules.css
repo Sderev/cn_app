@@ -333,7 +333,7 @@ span.sec-title{
 }
 
 .question li > p {
-	display: inline-grid;
+	display: inline;
 }
 
 .right_answer {

@@ -4,7 +4,6 @@ var url_export="/export/txt";
 
 var list_url=[];
 var nb_module=1;
-var apercu_visible=true;
 
 // Send an url in the iframe which generate the preview
 function convertir()
@@ -142,21 +141,5 @@ function create_mod_eth(etherpad_url){
   modules.appendChild(new_module);
 
   give_link_to_iframe(etherpad_url,"framemod"+nb_module, "id_module_"+nb_module, 10, true);
-
-}
-
-function afficher_apercu(){
-	var frameHome=document.getElementById("framehome");
-	var frameTest=document.getElementById("frametest");
-	if(apercu_visible) {
-		apercu_visible=false;
-		frameHome.setAttribute("width","90%");
-		frameTest.setAttribute("width","0%");
-	}
-	else {
-		apercu_visible=true;
-		frameHome.setAttribute("width","45%");
-		frameTest.setAttribute("width","45%");
-	}
 
 }

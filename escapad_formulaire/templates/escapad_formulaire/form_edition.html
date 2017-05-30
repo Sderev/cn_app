@@ -2,6 +2,7 @@
 
 {% block titre %}Formulaire{% endblock %}
 
+
 {% block script %}
 <script type="text/javascript" src="/static/js/form_eth_dom.js"></script>
 <script type="text/javascript">
@@ -15,7 +16,7 @@
 {% endblock %}
 
 {% block onload %}
-  onload="addlistener()"
+  onload="addlistener(); setValue();"
 {% endblock %}
 
 {% block content %}
@@ -26,23 +27,20 @@
 
         <fieldset id="home">
           <legend>Ecriture du cours</legend>
+          <input type="button" value="Afficher/Masquer l'aperçu" onclick="afficher_apercu()">
+          <input type="checkbox" id="feedback" value="feedback" onclick="setValue()">
+          Afficher le feedback
+          <br>
+          <iframe id="framehome" name="framehome" src="{{ full_url }}" width="45%" height="500px"></iframe>
+          <iframe id="frametest" name="frametest" src="" width="45%" height="500px"></iframe>
 
-          <iframe id="framehome" name="framehome" src="{{ full_url }}" width=600 height=400></iframe>
-          <iframe id="frametest" name="frametest" src="/apercu_module/{{url}}" width=900 height=400></iframe>
-
-          <br/>
-          {% if is_home %}
-            <button id="buttonTest" onclick="convertir_home('{{url}}')">Convertir</button>
-          {% else %}
-            <button id="buttonTest" onclick="convertir_module('{{url}}')">Convertir</button>
-          {% endif %}
           <input type="hidden" id="id_home_data" name="home_data" value="{{ full_url }}/export/txt">
 
+          <br>
+          <a href='/cours/{{id_cours}}'><button>Retourner au cours </button></a>
         </fieldset>
 
 
-
-    <a href='/cours/{{id_cours}}'><button>Retourner au cours </button></a>
 
 
 

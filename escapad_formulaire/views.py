@@ -136,75 +136,6 @@ def form_upload_light(request):
     })
 
 
-
-# View dealing with etherpad instances
-# This view was used for testing the etherpad viability
-# Nothing is stored in models, the view creates dynamically etherpad instances when the user wants to add a module
-def form_upload_eth(request):
-    sauvegarde = False
-
-    form = UploadFormEth(request.POST or None, request.FILES or None)
-    formMod = ModuleFormEth(request.POST or None, request.FILES or None)
-
-    if form.is_valid() and formMod.is_valid():
-
-        repoDir=settings.BASE_DIR
-    	outDir=settings.BASE_DIR
-    	baseUrl=settings.BASE_DIR
-
-        titleData=form.cleaned_data["nom_cours"]
-        logoData=form.cleaned_data["logo"]
-
-        # Get the text from the etherpad instance
-        # We need to create a hidden input storing the plain text exporting url.
-        # The url looks like this: http://<etherpad-url>/p/<pad-url>/export/txt
-        homeDataTmp=request.POST.get("home_data")
-        response = urllib2.urlopen(homeDataTmp)
-        homeData = StringIO.StringIO(response.read())
-
-        modulesData=[]
-        mediasData=[]
-        mediasType=[]
-        nbModule=request.POST.get("nb_module")
-
-        #Go through each module to get the md and media data
-        for i in range(1, int(nbModule)+1):
-            nomModule="module_"+str(i)
-
-            #Get the text from the etherpad instance (see above for explanation)
-            moduleDataTmp=request.POST.get(nomModule)
-            response = urllib2.urlopen(moduleDataTmp)
-            moduleData= StringIO.StringIO(response.read())
-
-            nomMedia="media_"+str(i)
-            mediaData=request.POST.get(nomMedia)
-
-            modulesData.append(moduleData)
-            mediasData.append(mediaData)
-
-            #Specify if the media is empty or not (tar.gz or empty)
-            if mediaData:
-                mediasType.append('application/octet-stream')
-            else:
-                mediasType.append('None')
-
-        zip=cn.generateArchive(modulesData,mediasData,mediasType,homeData,titleData,logoData,repoDir,outDir,baseUrl)
-
-        sauvegarde = True
-
-        response= HttpResponse(zip)
-        response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = "attachment; filename=\"site.zip\""
-        return response
-
-    return render(request, 'escapad_formulaire/formeth.html', {
-        'ETHERPAD_URL' : ETHERPAD_URL,
-        'form': form,
-        'formMod': formMod,
-        'sauvegarde': sauvegarde
-    })
-
-
 # View allowing the user to reupload a course with the export.tar.gz provided when generating a course
 def form_reupload(request):
 
@@ -317,9 +248,11 @@ def form_reupload(request):
 
 # View showing the preview of a module using the culture-numerique css
 # require the pad id
-def apercu_module(request,id_export):
+def apercu_module(request,id_export,feedback):
     url=ETHERPAD_URL+"p/"+id_export+"/export/txt"
     response = urllib2.urlopen(url)
+
+    feedback = feedback!="0"
 
     moduleData= StringIO.StringIO(response.read())
     MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
@@ -335,7 +268,7 @@ def apercu_module(request,id_export):
             home_html += "\n\n<!-- Subsection "+sub.num+" -->\n"
             home_html += "\n\n<h2>"+sub.num+". "+sub.title+" </h2>\n"
             #home_html += markdown.markdown(sub.src, MARKDOWN_EXT)
-            home_html += sub.toHTML()
+            home_html += sub.toHTML(feedback)
 
     return render(request, 'escapad_formulaire/apercu.html', {
         'res': home_html
@@ -516,6 +449,7 @@ def cours_edition(request, id_cours ,url):
         name=module.nom_module
         #url_media = module.url_media
         is_home = False
+
     # url starting with home: check if it is equal to the course url_home
     elif re.match(r"^home",url):
         name="home"

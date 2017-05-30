@@ -10,8 +10,7 @@ urlpatterns = [
 
     url(r'^form_upload/$', escapad_formulaire.views.form_upload, name='form_upload'),
     url(r'^form_upload_light/$', escapad_formulaire.views.form_upload_light, name='form_upload_light'),
-    url(r'^form_upload_eth/$', escapad_formulaire.views.form_upload_eth, name='form_upload_eth'),
-    url(r'^apercu_module/(?P<id_export>[-a-zA-Z\d]+)$', escapad_formulaire.views.apercu_module, name='apercu_module'),
+    url(r'^apercu_module/(?P<id_export>[-a-zA-Z\d]+)/(?P<feedback>[0-9])$', escapad_formulaire.views.apercu_module, name='apercu_module'),
     url(r'^apercu_home/(?P<id_export>[-a-zA-Z\d]+)$', escapad_formulaire.views.apercu_home, name='apercu_home'),
     url(r'^connexion/$', escapad_formulaire.views.connexion, name='connexion'),
     url(r'^deconnexion/$', escapad_formulaire.views.deconnexion, name='deconnexion'),

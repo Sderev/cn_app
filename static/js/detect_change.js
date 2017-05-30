@@ -10,17 +10,18 @@
   function setValue(){
     can_update=true;
     waiting=false;
-    update_preview();
+    feedback=document.getElementById("feedback").checked;
+    console.log(feedback);
+    update_preview(feedback);
   }
 
   // update the iframe
-  function update_preview(){
-    console.log(is_home);
+  function update_preview(feedback){
     if (is_home){
-      convertir_home(url);
+      convertir_home(url,feedback);
     }
     else{
-      convertir_module(url);
+      convertir_module(url,feedback);
     }
   }
 
@@ -44,4 +45,5 @@
    } else {
        window.addEventListener('message', receiver, false);
    }
+
   }

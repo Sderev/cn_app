@@ -5,6 +5,7 @@ from . import views
 import escapad,escapad_formulaire
 import escapad_formulaire.views as escapad_form_view
 from django.contrib.auth import views as auth_views
+from django.contrib import admin
 
 urlpatterns = [
 

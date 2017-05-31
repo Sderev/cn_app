@@ -18,8 +18,8 @@
         <td>{{ cours.nom_cours }}</td>
         <td>{{ cours.nb_module }} Module(s) </td>
         <td>{{ cours.profil_set.all.count }} Contributeur(s) </td>
-        <td><a href='/cours/{{cours.id_cours}}'>Voir le cours</a></td>
-        <td><a href='/cours/{{cours.id_cours}}/delete'>Supprimer le cours</a></td>
+        <td><a href="{% url 'cours' cours.id_cours %}">Voir le cours</a></td>
+        <td><a href="{% url 'delete_course' cours.id_cours %}">Supprimer le cours</a></td>
 
       </tr>
     {% endfor %}

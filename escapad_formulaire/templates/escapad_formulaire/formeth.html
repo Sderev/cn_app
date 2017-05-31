@@ -17,7 +17,7 @@ give_link_to_iframe('{{ETHERPAD_URL}}','framemod1','id_module_1', 10, true);"
 
     <h2>Veuillez entrer les informations pour créer le cours</h2>
 
-    <form action="{% url "form_upload_eth" %}" method="post"  enctype="multipart/form-data">
+    <form action="{% url 'form_upload_eth' %}" method="post"  enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset id="home">
           <legend>Informations générales</legend>

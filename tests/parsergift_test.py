@@ -499,7 +499,7 @@ bleble
 
         del question,question2
 
-    def testSelectSet(self):
+    def testParseSelectSet(self):
         """
         """
         io_mult1 = ("""
@@ -550,9 +550,183 @@ Qui repose dans la Grant's tomb ? {=Grant ~Personne ~Napoléon ~Churchill ~Mère
             if i == 1:
                 self.assertTrue('Personne' in a.answer)
                 self.assertTrue("C'était vrai pendant 12 ans, mais la dépouille de Grant a été enterrée dans cette tombe en 1897." in a.feedback)
-            if i == 2: self.assertTrue('Napoléon' in a.answer)
-            if i == 3: self.assertTrue('Churchill' in a.answer)
-            if i == 4: self.assertTrue('Mère Teresa' in a.answer)
+            if i == 2:
+                self.assertTrue('Napoléon' in a.answer)
+                self.assertTrue("Il a été enterré en France." in a.feedback)
+            if i == 3:
+                self.assertTrue('Churchill' in a.answer)
+                self.assertTrue("Il a été enterré en Angleterre." in a.feedback)
+            if i == 4:
+                self.assertTrue('Mère Teresa' in a.answer)
+                self.assertTrue('Elle a été enterrée en Inde.' in a.feedback)
+
+    def testParseMatchingSet(self):
+        """
+        """
+        io_match1 = ("""
+Appariez les pays suivants avec les capitales correspondantes. {
+   =Canada -> Ottawa
+   =Italie -> Rome
+   =Japon -> Tokyo
+   =Inde -> New Delhi
+}""")
+        question1 = pygift.Question('','','')
+        question1.parse(io_match1)
+        self.assertIsInstance(question1.answers, pygift.MatchingSet)
+        self.assertEqual([' Ottawa', ' Rome', ' Tokyo', ' New Delhi'], question1.answers.possibleAnswers)
+        for (i,a) in enumerate(question1.answers.answers) :
+            if i == 0 :
+                self.assertTrue('Canada' in a.question)
+                self.assertTrue('Ottawa' in a.answer)
+            if i == 1 :
+                self.assertTrue('Italie' in a.question)
+                self.assertTrue('Rome' in a.answer)
+            if i == 2:
+                self.assertTrue('Japon' in a.question)
+                self.assertTrue('Tokyo' in a.answer)
+            if i == 3:
+                self.assertTrue('Inde' in a.question)
+                self.assertTrue('New Delhi' in a.answer)
+
+        del question1
+
+    def testParseShortSet(self):
+        """
+        """
+        io_short1 = ("""
+second part of text of Q2
+My Question{
+=2 =Q2 =Question2
+} other part
+        """)
+        question1 = pygift.Question('','','')
+        question1.parse(io_short1)
+        self.assertIsInstance(question1.answers, pygift.ShortSet)
+        for (i,a) in enumerate(question1.answers.answers):
+            if i == 0:
+                self.assertTrue('2' in a.answer)
+            if i == 1:
+                self.assertTrue('Q2' in a.answer)
+            if i == 2:
+                self.assertTrue('Question2' in a.answer)
+
+        del question1
+
+    def testParseMultiChoiceSet(self):
+        """
+        """
+        io_choice1 = ("""
+Parmi ces personnes, nommez-en deux qui sont enterrées dans la Grant's tomb. {
+   ~%-100%Personne
+   ~%50%Grant
+   ~%50%L'épouse de Grant
+   ~%-100%Le père de Grant
+}        """)
+
+        io_choice2 = ("""
+question {
+~%33.33333%Bonne réponse
+~%33.33333%Bonne réponse
+~%33.33333%Bonne réponse
+~%0%Mauvaise réponse
+~%0%Mauvaise réponse
+}
+        """)
+
+        #CHOICE1
+        question1 = pygift.Question('','','')
+        question1.parse(io_choice1)
+        self.assertIsInstance(question1.answers, pygift.MultipleChoicesSet)
+        for (i,a) in enumerate(question1.answers.answers):
+            if i == 0:
+                self.assertTrue('Personne' in a.answer)
+                self.assertEqual(-100,float(a.fraction))
+            if i == 1:
+                self.assertTrue('Grant' in a.answer)
+                self.assertEqual(50,float(a.fraction))
+            if i == 2:
+                self.assertTrue("L'épouse de Grant" in a.answer)
+                self.assertEqual(50,float(a.fraction))
+            if i == 3:
+                self.assertTrue('Le père de Grant' in a.answer)
+                self.assertEqual(-100,float(a.fraction))
+        del question1
+
+        #CHOICE2
+        question2 = pygift.Question('','','')
+        question2.parse(io_choice2)
+        self.assertIsInstance(question2.answers, pygift.MultipleChoicesSet)
+        for (i,a) in enumerate(question2.answers.answers):
+            if i == 0:
+                self.assertTrue('Bonne réponse' in a.answer)
+                self.assertEqual(33.33333,float(a.fraction))
+            if i == 1:
+                self.assertTrue('Bonne réponse' in a.answer)
+                self.assertEqual(33.33333,float(a.fraction))
+            if i == 2:
+                self.assertTrue('Bonne réponse' in a.answer)
+                self.assertEqual(33.33333,float(a.fraction))
+            if i == 3:
+                self.assertTrue('Mauvaise réponse' in a.answer)
+                self.assertEqual(0,float(a.fraction))
+            if i == 4:
+                self.assertTrue('Mauvaise réponse' in a.answer)
+                self.assertEqual(0,float(a.fraction))
+        del question2
+
+    def testParseTrueFalse(self):
+        """
+        """
+        io_tf1 = ("""
+Grant a été enterré dans une tombe à New-York.{T #Faux #Vrai}
+        """)
+
+        io_tf2 = ("""
+Le soleil se lève à l'Ouest.{FALSE}
+        """)
+
+        #TF1
+        question1 = pygift.Question('','','')
+        question1.parse(io_tf1)
+        self.assertIsInstance(question1.answers, pygift.TrueFalseSet)
+        self.assertTrue(question1.answers.answer)
+        self.assertTrue('Faux' in question1.answers.feedbackWrong)
+        self.assertTrue('Vrai' in question1.answers.feedbackCorrect)
+        del question1
+
+        #TF2
+        question2 = pygift.Question('','','')
+        question2.parse(io_tf2)
+        self.assertIsInstance(question2.answers, pygift.TrueFalseSet)
+        self.assertFalse(question2.answers.answer)
+        del question2
+
+    def testParseDescription(self):
+        """
+        """
+        io_descrip = ("""
+Blablablablabla
+        """)
+
+        #DESCRIP
+        question1 = pygift.Question('','','')
+        question1.parse(io_descrip)
+        self.assertIsInstance(question1.answers, pygift.Description)
+        del question1
+
+    def testParseEssay(self):
+        """
+        """
+        io_essay =("""
+Blablablablabla
+{}
+        """)
+
+        #ESSAY
+        question1 = pygift.Question('','','')
+        question1.parse(io_essay)
+        self.assertIsInstance(question1.answers, pygift.Essay)
+        del question1
 
 
     def testParseNumeric(self):
@@ -608,7 +782,8 @@ Qui repose dans la Grant's tomb ? {=Grant ~Personne ~Napoléon ~Churchill ~Mère
                 pass
             self.TestParseHead()
             self.testParseNumeric()
-            self.testSelectSet()
+            self.testParseSelectSet()
+            self.testParseMatchingSet()
 
 
 # Main

@@ -108,7 +108,6 @@ def set_qti_metadata(questions):
 
 def create_ims_test(questions, test_id, test_title):
     """
-    Supported types : ESSAY, MULTICHOICE, MULTIANSWER, TRUEFALSE, DESCRIPTION
 
     """
     # create magic yattag triple

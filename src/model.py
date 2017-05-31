@@ -120,8 +120,6 @@ class Subsection:
         """ returns the instance src attribute (i.e the bit of source code corresponding to this subsection) modified so that relative media
             links are turned absolute with the base_url and the module name
         """
-        #FIXME : Parser le src en repérant les liens href en les encodant
-
         self.src = re.sub('\]\(\s*(\.\/)*\s*media/', ']('+self.section.base_url+'/'+self.section.module+'/media/', self.src)
         #print(self.src)
 

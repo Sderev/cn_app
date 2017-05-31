@@ -15,3 +15,6 @@ script :
   - python parsergift_test.py
   - python model_tests.py
   - python ims_test.py
+
+after-success:
+  - coveralls

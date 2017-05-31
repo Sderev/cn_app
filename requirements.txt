@@ -10,7 +10,9 @@ flask
 requests
 beautifulsoup
 beautifulsoup4
+# test
 mock
+python-coveralls
 coverage
 # used only to generate doc with Sphinx+recommonmark
 Sphinx

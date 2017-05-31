@@ -3,7 +3,7 @@
 ## TRAVIS Build
 [![Build Status](https://travis-ci.org/CelestineSauvage/cn_app.svg?branch=parserGiftTest)](https://travis-ci.org/CelestineSauvage/cn_app)
 
-#COVERALLS Build
+## COVERALLS Build
 [![Coverage Status](https://coveralls.io/repos/github/CelestineSauvage/cn_app/badge.svg?branch=parserGiftTest)](https://coveralls.io/github/CelestineSauvage/cn_app?branch=parserGiftTest)
 
 ## what it is

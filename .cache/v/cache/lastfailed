@@ -1,6 +1,0 @@
-{
-  "tests/edx_test.py": true, 
-  "tests/ims_test.py": true, 
-  "tests/model_test.py": true, 
-  "tests/parsergift_test.py": true
-}

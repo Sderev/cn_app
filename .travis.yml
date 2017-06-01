@@ -16,5 +16,5 @@ script :
   - python ims_test.py
   - coverage run model_tests.py
 
-after-success:
+after_success:
   - coveralls

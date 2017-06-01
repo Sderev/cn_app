@@ -8,12 +8,14 @@ html
 MarkdownSuperscript
 flask
 requests
-beautifulsoup
-beautifulsoup4
+
 # test
 mock
+beautifulsoup
+beautifulsoup4
 python-coveralls
 coverage
+
 # used only to generate doc with Sphinx+recommonmark
 Sphinx
 sphinx-rtd-theme

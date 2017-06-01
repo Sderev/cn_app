@@ -13,8 +13,8 @@ script :
   - cd tests
   - python edx_tests.py
   - python parsergift_test.py
-  - python model_tests.py
   - python ims_test.py
+  - coverage run model_tests.py
 
 after-success:
   - coveralls

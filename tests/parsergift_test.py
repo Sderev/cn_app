@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 
 from StringIO import StringIO
 import unittest
+import coveralls
 
 # Ignore Warning
 import logging

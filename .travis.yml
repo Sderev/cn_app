@@ -1,20 +1,24 @@
 language : python
 
 python :
-  - 2.7
+  - "2.6"
+  - "2.7"
 
 before_script :
   - virtualenv ../cnappenv
   - source ../cnappenv/bin/activate
   - pip install -r requirements.txt
   - pip install -e git://github.com/CelestineSauvage/pygiftparser#egg=pygiftparser
+  - git clone https://github.com/z4r/python-coveralls-example.git
+  - cd python-coveralls-example
+  - git checkout -qf 17b8119796516195527dcb4f454a2ebd41d60244
+  - py.test example/tests.py --cov=example
+  - cd -
 
 script :
   - cd tests
-  - python edx_tests.py
-  - python parsergift_test.py
-  - python ims_test.py
-  - coverage run model_tests.py
+  - pytest
+  - pytest ../coveralls/tests.py --doctest-modules --pep8 coveralls -v --cov coveralls --cov-report term-missing
 
 after_success:
   - coveralls

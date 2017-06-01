@@ -193,7 +193,7 @@ Blabla
         """
         Test for parsing Cours format
         """
-        io_cours = StringIO("""
+        io_cours = StringIO(u"""
 # Title 0
 Ce texte va être placé tout seul dans un cours
 ## Cours 0
@@ -224,8 +224,6 @@ Par contre moi oui !
         sample_object = model.Module(io_cours, "culnu", "http://culnu.fr")
         sample_cours = json.loads(sample_object.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         del sample_object
-
-        # print(sample_cours.sections[0].subsections[3])
 
 
         self.assertEqual(sample_cours.sections[0].subsections[0].title, "Cours")
@@ -310,33 +308,33 @@ Par contre moi oui !
         """
         Test For reStartActivityMatch, goodActivity
         """
-        io_activite = StringIO("""```activite
+        io_activite = StringIO(u"""```activite
 Je suis une activité
 ```
 """)
-        io_compr = StringIO("""```comprehension
+        io_compr = StringIO(u"""```comprehension
 Je suis une comprehension
 ```
 """)
-        io_actav = StringIO("""```activite-avancee
+        io_actav = StringIO(u"""```activite-avancee
 Je suis une Activité Avancée {
 = Oui
 }
 ```
 """)
-        io_rdt = StringIO("""```riendutout
+        io_rdt = StringIO(u"""```riendutout
 Je suis Rien du tout
 ```
         """)
 
-        io_anyact = StringIO("""
+        io_anyact = StringIO(u"""
 Je suis une AnyActivity {
 = Oui
 }
 """)
         section = mock.MagicMock(num='1') # create Mock Object with as attribute section.num = 1
 
-        #ANYACTIVTY
+        # ANYACTIVTY
         inAct = model.AnyActivity(section,io_anyact)
         self.assertEqual(inAct.src.replace('\n',''), "Je suis une AnyActivity {= Oui}")
         self.assertEqual(inAct.lastLine,"")

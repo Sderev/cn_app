@@ -14,7 +14,7 @@ script :
   - python edx_tests.py
   - python parsergift_test.py
   - python ims_test.py
-  - coverage run model_tests.py
+  - coverage run model_tests.py test
 
 after-success:
   - coveralls

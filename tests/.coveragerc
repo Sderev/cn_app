@@ -2,7 +2,7 @@
 [run]
 branch = True
 
-omit = ../../cnappenv/lib/*
+omit = ../../cnappenv/lib/*,../src/cnExportLight.py,../src/fromGIFT.py
 source = ../src/,../../cnappenv/src
 
 [report]

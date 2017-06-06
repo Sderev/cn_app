@@ -16,6 +16,8 @@ from jinja2 import Template, Environment, FileSystemLoader
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 
+import coveralls
+
 # Ignore Warning
 import logging
 logger = logging.getLogger()

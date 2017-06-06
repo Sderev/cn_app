@@ -5,10 +5,11 @@ before_script :
   - source ../cnappenv/bin/activate
   - pip install -r requirements.txt
   - pip install -e git://github.com/CelestineSauvage/pygiftparser#egg=pygiftparser
-  - cd tests
-  - pytest all_test.py --cov=src --cov=pygiftparser
+
 
 script :
+  - cd tests
+  - pytest all_test.py --cov=src --cov=pygiftparser
   - pytest
 
 after_success:

@@ -8,7 +8,11 @@ Source used :
 """
 
 import os
-from threading import Thread
+import sys
+sys.path.append('..')
+from pygiftparser import parser as pygift
+import src
+
 
 os.system('python parsergift_test.py')
 os.system('python model_test.py')

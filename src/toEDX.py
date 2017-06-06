@@ -23,6 +23,9 @@ import re
 import StringIO
 from tarfile import TarFile
 
+from pygiftparser import parser as pygift
+
+
 
 MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
 BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
@@ -40,6 +43,12 @@ EDX_GRADER_MAP = {
     'Comprehension':'Comprehension',
     'webcontent': None,
 }
+
+#GIFT EDX
+
+class AnswerSet(pygift.AnswerSet):
+    def __init(self,question):
+        pygift.AnswerSet.__init__(self,question)
 
 def loadJinjaEnv():
     jenv = Environment(loader=FileSystemLoader(EDX_TEMPLATES_PATH))

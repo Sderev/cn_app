@@ -21,7 +21,7 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(40)
 
-from src import model, toEDX
+from src import model, toEDX, fromGift
 
 TEST_EDX_DIR = "./testEDX"
 
@@ -213,7 +213,7 @@ Capital {
 What is the color of the white horse of Henri IV ?
 { = blanc = white }
         """)
-        questions = pygift.parseFile(io_ourQuestions)
+        questions = fromGift.parseFile(io_ourQuestions)
         #QUESTIONS
         multi = questions[0]
         trfl = questions[1]

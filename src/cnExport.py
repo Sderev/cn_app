@@ -42,7 +42,7 @@ def processModule(args, repoDir, outDir, module):
         m = model.Module(md_file, module, args.baseUrl)
 
     m.toHTML(args.feedback) # only generate html for all subsections
-    
+
     # write html, XML, and JSon files
     utils.write_file(m.toGift(), moduleOutDir, '', module+'.questions_bank.gift.txt')
     utils.write_file(m.toVideoList(), moduleOutDir, '', module+'.video_iframe_list.txt')

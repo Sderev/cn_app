@@ -19,11 +19,10 @@ from jinja2 import Template, Environment, FileSystemLoader
 
 import utils
 import model
+import fromGift
 import re
 import StringIO
 from tarfile import TarFile
-
-from pygiftparser import parser as pygift
 
 
 
@@ -43,12 +42,6 @@ EDX_GRADER_MAP = {
     'Comprehension':'Comprehension',
     'webcontent': None,
 }
-
-#GIFT EDX
-
-class AnswerSet(pygift.AnswerSet):
-    def __init(self,question):
-        pygift.AnswerSet.__init__(self,question)
 
 def loadJinjaEnv():
     jenv = Environment(loader=FileSystemLoader(EDX_TEMPLATES_PATH))

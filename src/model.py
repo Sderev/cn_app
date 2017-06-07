@@ -26,11 +26,11 @@ from inspect import isclass
 
 from slugify import slugify
 
-from pygiftparser import parser as pygift
 # from fromGIFT import extract_questions, process_questions
 import toIMS
 import toEDX
 import utils
+import fromGift
 
 
 MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
@@ -218,7 +218,7 @@ class AnyActivity(Subsection):
         self.src = ''
         self.parse(f)
         self.absolutizeMediaLinks()
-        self.questions = pygift.parseFile(iter(self.src.splitlines(True))) #need to transform String in File pointer with iter function
+        self.questions = fromGift.parseFile(iter(self.src.splitlines(True))) #need to transform String in File pointer with iter function
 
 
     def parse(self,f):
@@ -343,7 +343,7 @@ class Section:
         :type body: String
         """
         self.subsections.append(Cours(self,src=text))
-        logging.warning (DEFAULT_PLACEMENT_BODY + "%s", text) # placement automatique du contenu de body dans une sous-section cours
+        # logging.warning (DEFAULT_PLACEMENT_BODY + "%s", text) # placement automatique du contenu de body dans une sous-section cours
 
 
     def parse(self, f): #FIXME : Beaucoup de if/else, changer les conditions & regrouper tout

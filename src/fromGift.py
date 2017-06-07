@@ -179,6 +179,9 @@ class Question(pygift.Question):
 class AnswerSet(pygift.AnswerSet):
     def __init(self,question):
         pygift.AnswerSet.__init__(self,question)
+        self.question = question
+        self.valid = True
+        self.cc_profile = 'ESSAY' # need in toIMS.py
         self.max_att = '1'
 
 #IMS

@@ -4,7 +4,6 @@
 from io import open
 import json
 import mock
-from pygiftparser import parser as pygift
 
 from lxml import etree
 import shutil

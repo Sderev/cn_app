@@ -177,10 +177,8 @@ class Question(pygift.Question):
 ######################################
 
 class AnswerSet(pygift.AnswerSet):
-    def __init(self,question):
+    def __init__(self,question):
         pygift.AnswerSet.__init__(self,question)
-        self.question = question
-        self.valid = True
         self.cc_profile = 'ESSAY' # need in toIMS.py
         self.max_att = '1'
 
@@ -361,6 +359,7 @@ class MatchingSet(pygift.MatchingSet, AnswerSet):
     def __init__(self,question,answers):
         pygift.MatchingSet.__init__(self, question, answers)
         AnswerSet.__init__(self, question)
+        self.cc_profile = 'ESSAY' # need in toIMS.py
 
     def ownEDX(self,doc):
         for a in self.answers:

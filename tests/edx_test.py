@@ -3,7 +3,6 @@
 
 from io import open
 import json
-from pygiftparser import parser as pygift
 
 from lxml import etree
 import shutil

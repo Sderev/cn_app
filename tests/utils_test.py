@@ -40,7 +40,7 @@ class UtilsTestCase(unittest.TestCase):
         self.assertTrue('<p>Unsupported video provider ({0})</p>'.format(hst3) in ec3)
 
     def test_get_video_src(video_link):
-        
+        pass
 
 # Main
 if __name__ == '__main__':

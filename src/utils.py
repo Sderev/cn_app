@@ -23,7 +23,7 @@ FOLDERS = ['Comprehension', 'Activite', 'ActiviteAvancee', 'webcontent']
 STATIC_FOLDERS = ['static/js', 'static/img', 'static/svg', 'static/css', 'static/fonts']
 VERBOSITY = False
 DEFAULT_VIDEO_THUMB_URL = 'https://i.vimeocdn.com/video/536038298_640.jpg'
-
+VIDEO_THUMB_API_URL = 'http://vimeo.com/api/v2/video/'
 
 def fetch_vimeo_thumb(video_link):
     """ fetch video thumbnail for vimeo videos """

@@ -41,7 +41,7 @@ TEST_GIFT_DIR = "./testGIFT/"
 
 class GiftParsingHTMLTestCase(unittest.TestCase):
 
-    def TestUnChoix(self):
+    def testUnChoix(self):
         io_gift = StringIO("""
 ::Pourquoi représenter avec des nombres ?::
 Pourquoi faut-il <strong>représenter</strong> les textes, images, sons,
@@ -104,7 +104,7 @@ tout doit être représenté sous forme de nombres être manipulé par un ordina
         print("[GiftParsingHTMLTestCase]-- check_single_answer OK --")
 
 
-    def TestMultiple(self):
+    def testMultiple(self):
         io_gift = StringIO("""
 ::Parmi ces personnes, nommez-en deux qui sont enterrées dans la Grant's tomb. ::{
    ~%-100%Personne # NOMMEZ EN DEUX
@@ -161,7 +161,7 @@ tout doit être représenté sous forme de nombres être manipulé par un ordina
         print("[GiftParsingHTMLTestCase]-- check_multiple_answer OK --")
 
 
-    def TestSimpleText(self):
+    def testSimpleText(self):
         io_gift = StringIO("""
 ::Le numérique concerne tout le monde::
 **Quels étudiants sont concernés par le numérique ?**
@@ -228,7 +228,7 @@ Voici quelques exemples que nous vous proposons, n'hésitez pas à proposer d'au
 
         print("[GiftParsingHTMLTestCase]-- check_text1 OK --")
 
-    def TestSimpleText2(self):
+    def testSimpleText2(self):
         io_gift = StringIO("""
 ::Le numérique au quotidien::Les microprocesseurs, les ordinateurs ont envahi notre quotidien. Pour chacun des domaines suivants, cherchez des exemples où le numérique a permis des évolutions notables :
 - Domotique
@@ -292,7 +292,7 @@ Les **lentilles pour la vue** ?
         out.write (d.getvalue())
         out.close()
 
-    def TestAnswerArea(self):
+    def testAnswerArea(self):
         #INITIALISATION
         d = yattag.Doc()
         d.asis('<!DOCTYPE html>')
@@ -357,7 +357,7 @@ blabla {} with tail
         out.write (d.getvalue())
         out.close()
 
-    def TestNumerical(self):
+    def testNumerical(self):
 
         d = yattag.Doc()
         d.asis('<!DOCTYPE html>')
@@ -408,7 +408,7 @@ When was Ulysses S. Grant born? {#
         out.write (d.getvalue())
         out.close()
 
-    def TestMatch(self):
+    def testMatch(self):
 
         d = yattag.Doc()
         d.asis('<!DOCTYPE html>')
@@ -451,24 +451,9 @@ Match the following countries with their corresponding capitals. {
 
 # FIXME : Manque le True/False !
 
-
-    def runTest(self):
-        try :
-            os.makedirs(TEST_GIFT_DIR)
-        except :
-            pass
-        self.TestUnChoix()
-        self.TestMultiple()
-        self.TestSimpleText()
-        self.TestSimpleText2()
-        self.TestMatch()
-        self.TestAnswerArea()
-        self.TestNumerical()
-        self.TestMatch()
-
 class GiftParserTestCase(unittest.TestCase):
 
-    def TestParseHead(self) :
+    def testParseHead(self) :
         """
         """
         io_head1 = ("""::Macumba::
@@ -534,6 +519,11 @@ Qui repose dans la Grant's tomb ? {=Grant ~Personne ~Napoléon ~Churchill ~Mère
             if i == 2: self.assertTrue('Napoléon' in a.answer)
             if i == 3: self.assertTrue('Churchill' in a.answer)
             if i == 4: self.assertTrue('Mère Teresa' in a.answer)
+
+        ##TEST MY PRINT !! ##
+        question1.myprint()
+        print('\n')
+
         del question1
 
         #mult2
@@ -559,7 +549,11 @@ Qui repose dans la Grant's tomb ? {=Grant ~Personne ~Napoléon ~Churchill ~Mère
             if i == 4:
                 self.assertTrue('Mère Teresa' in a.answer)
                 self.assertTrue('Elle a été enterrée en Inde.' in a.feedback)
+        ##TEST MY PRINT !! ##
+        question2.myprint()
+        print('\n')
 
+        del question2
     def testParseMatchingSet(self):
         """
         """
@@ -588,6 +582,10 @@ Appariez les pays suivants avec les capitales correspondantes. {
                 self.assertTrue('Inde' in a.question)
                 self.assertTrue('New Delhi' in a.answer)
 
+        ##TEST MY PRINT !! ##
+        question1.myprint()
+        print('\n')
+
         del question1
 
     def testParseShortSet(self):
@@ -609,6 +607,10 @@ My Question{
                 self.assertTrue('Q2' in a.answer)
             if i == 2:
                 self.assertTrue('Question2' in a.answer)
+
+        ##TEST MY PRINT !! ##
+        question1.myprint()
+        print('\n')
 
         del question1
 
@@ -650,6 +652,10 @@ question {
             if i == 3:
                 self.assertTrue('Le père de Grant' in a.answer)
                 self.assertEqual(-100,float(a.fraction))
+
+        ##TEST MY PRINT !! ##
+        question1.myprint()
+        print('\n')
         del question1
 
         #CHOICE2
@@ -672,6 +678,11 @@ question {
             if i == 4:
                 self.assertTrue('Mauvaise réponse' in a.answer)
                 self.assertEqual(0,float(a.fraction))
+
+        ##TEST MY PRINT !! ##
+        question2.myprint()
+        print('\n')
+
         del question2
 
     def testParseTrueFalse(self):
@@ -692,6 +703,10 @@ Le soleil se lève à l'Ouest.{FALSE}
         self.assertTrue(question1.answers.answer)
         self.assertTrue('Faux' in question1.answers.feedbackWrong)
         self.assertTrue('Vrai' in question1.answers.feedbackCorrect)
+
+        ##TEST MY PRINT !! ##
+        question1.myprint()
+        print('\n')
         del question1
 
         #TF2
@@ -699,6 +714,10 @@ Le soleil se lève à l'Ouest.{FALSE}
         question2.parse(io_tf2)
         self.assertIsInstance(question2.answers, pygift.TrueFalseSet)
         self.assertFalse(question2.answers.answer)
+
+        ##TEST MY PRINT !! ##
+        question2.myprint()
+        print('\n')
         del question2
 
     def testParseDescription(self):
@@ -712,6 +731,11 @@ Blablablablabla
         question1 = pygift.Question('','','')
         question1.parse(io_descrip)
         self.assertIsInstance(question1.answers, pygift.Description)
+
+        ##TEST MY PRINT !! ##
+        question1.myprint()
+        print('\n')
+
         del question1
 
     def testParseEssay(self):
@@ -726,7 +750,12 @@ Blablablablabla
         question1 = pygift.Question('','','')
         question1.parse(io_essay)
         self.assertIsInstance(question1.answers, pygift.Essay)
+
+        ##TEST MY PRINT !! ##
+        question1.myprint()
+        print('\n')
         del question1
+
 
 
     def testParseNumeric(self):
@@ -744,6 +773,11 @@ Blablablablabla
         io_num3 = ("""
 1 OU 2 OU 3?{
 #1..3
+}""")
+
+        io_num4 = ("""
+1 OU 2 OU 3?{
+#
 }""")
         # FIXME : Ne pas passer par la méthode parse mais par _parseNumericAnswers / _parseNumericText
         #NUM1
@@ -774,18 +808,23 @@ Blablablablabla
         self.assertEqual(question3.answers.answers[0].maxi,str(3))
         del question3
 
+        question4 = pygift.Question('','','')
+        question4.parse(io_num4)
+        self.assertTrue(question4.numeric)
+        self.assertFalse(question4.valid)
 
-        def runTest(self):
-            try :
-                os.makedirs(TEST_GIFT_DIR)
-            except :
-                pass
-            self.TestParseHead()
-            self.testParseNumeric()
-            self.testParseSelectSet()
-            self.testParseMatchingSet()
+    def testParseError(self):
+        q = pygift.Question('','','')
+        q._parseAnswer('blazqopk')
+        self.assertFalse(q.valid)
+        q.myprint()
+        self.assertEqual('',q.toHTML())
 
 
 # Main
 if __name__ == '__main__':
+    try :
+        os.makedirs(TEST_GIFT_DIR)
+    except :
+        pass
     unittest.main(verbosity=1)

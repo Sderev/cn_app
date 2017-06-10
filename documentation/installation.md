@@ -171,3 +171,45 @@ L'idée ici est d'ajouter un site à la config Apache. Pour ceci créer un fichi
         </Directory>
 
 ```
+
+### Configuration Apache avancée (développement)
+
+Pour les développeurs, plusieurs instances d'escapad pourraient être nécessaires (version prod, version test). Dans ce cas, il faut éviter que les variables d'environnement se propagent d'une instance à une autre.  On peut régler ce problème dans `wgsi` et en ajustant `site.setting.py`. Par exemple, imaginons une instance tournant à l'URL `test` 
+
+- Dans `site.setting.py`
+
+```
+STATIC_URL = "/test/static/"
+DATA_URL = 'http://localhost/test/cnapp_data/'
+
+```
+
+- Dans le fichier de configuration d'apache :
+
+```
+# URL et chemin des repo-data
+Alias /test/data /path/to/test/instance/data/repo-data
+
+<Directory /path/to/test/instance/data/repo-data>
+   Require all granted
+</Directory>
+
+# URL et chemin pour les fichiers static de Django
+Alias /test/static /path/to/test/instance/cn_app/collectedstatics
+
+<Directory /path/to/test/instance/cn_app/collectedstatics>
+   Require all granted
+</Directory>
+
+# CHemin et PythonPath pour l'appli web escapad
+
+WSGIDaemonProcess test python-path=/path/to/test/instance/cn_app:/path/to/test/instance/lib/python2.7/site-packages
+WSGIScriptAlias /test /path/to/test/instance/cn_app/cn_app/wsgi.py process-group=test
+<Directory /path/to/test/instance/cn_app/cn_app>
+   <Files wsgi.py>
+       Require all granted
+   </Files>
+</Directory>
+```
+
+De la même façon on peut ajouter une seconde instance avec bien-sûr des chemins et des URLs différents.

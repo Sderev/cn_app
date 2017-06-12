@@ -649,6 +649,6 @@ apres activite
     print (m.toJson())
 
     module_folder = "tmp"
-    utils.createDirs(module_folder)
+    # utils.createDirs(module_folder)
 
     m.toXMLMoodle(module_folder)

@@ -94,7 +94,7 @@ def add_target_blank(html_src):
         anchor['target'] = "_blank"
     return soup.prettify()
 
-
+# FIXME: it is usefull ?
 def iframize_video_anchors(htmlsrc, anchor_class):
     """ given a piece of html code, scan for video anchors
         filtered by given class and add corresponding video iframe code before each anchor
@@ -143,13 +143,13 @@ def write_file(src, current_dir, target_folder, name):
     return filename
 
 
-def stitch_files(files, filename):
-    """ concatenate "files" and save it as "filename" """
-    with open(filename, "w", encoding='utf-8') as outfile:
-        for f in files:
-            with open(f, "r", encoding='utf-8') as infile:
-                outfile.write(infile.read())
-    return outfile
+# def stitch_files(files, filename):
+#     """ concatenate "files" and save it as "filename" """
+#     with open(filename, "w", encoding='utf-8') as outfile:
+#         for f in files:
+#             with open(f, "r", encoding='utf-8') as infile:
+#                 outfile.write(infile.read())
+#     return outfile
 
 
 def createDirs(outDir, folders):

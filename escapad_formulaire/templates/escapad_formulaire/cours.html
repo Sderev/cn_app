@@ -33,12 +33,12 @@
         </tr>
         <tr>
           <td>Home : </td>
-          <td><a href='/cours/{{cours.id_cours}}/{{cours.url_home}}'>Voir le home</a></td>
+          <td><a href="{% url 'cours_edition' cours.id_cours cours.url_home %}">Voir le home</a></td>
           {% for module in cours.module_set.all %}
           <tr>
             <td>Module : {{ module.nom_module }} </td>
-            <td><a href='/cours/{{cours.id_cours}}/{{module.url}}'>Voir le module</a></td>
-            <td><a href='/cours/{{cours.id_cours}}/{{module.url}}/delete'>Supprimer</a></td>
+            <td><a href="{% url 'cours_edition' cours.id_cours module.url %}">Voir le module</a></td>
+            <td><a href="{% url 'delete_module' cours.id_cours module.url %}">Supprimer</a></td>
           </tr>
 
           {% endfor %}
@@ -50,7 +50,7 @@
     </fieldset>
 
     <!-- Form for creating a new module -->
-    <form action='/cours/{{cours.id_cours}}' method="post" enctype="multipart/form-data">
+    <form action="{% url 'cours' cours.id_cours %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset id="home">
           <legend>Créer un nouveau module</legend>
@@ -64,7 +64,7 @@
 
 
     <!-- Form for sharing the course to other users -->
-    <form action='/cours/{{cours.id_cours}}' method="post"  enctype="multipart/form-data">
+    <form action="{% url 'cours' cours.id_cours %}" method="post"  enctype="multipart/form-data">
       {% csrf_token %}
       <fieldset id="partage">
         <legend>Partager le cours</legend>
@@ -78,7 +78,7 @@
     </form>
 
     <!-- Form for generating the course into an archive -->
-    <form action='/cours/{{cours.id_cours}}' method="post"  enctype="multipart/form-data">
+    <form action="{% url 'cours' cours.id_cours %}" method="post"  enctype="multipart/form-data">
       {% csrf_token %}
 
       <fieldset id="home">
@@ -91,7 +91,7 @@
 
     <br>
 
-    <a href='/cours'><button>Retour à mes cours</button></a>
+    <a href="{% url 'mes_cours' %}"><button>Retour à mes cours</button></a>
 
   {% else %}
   <p> Vous n'êtes pas censé avoir accès à cette page, veuillez vous connecter !</p>

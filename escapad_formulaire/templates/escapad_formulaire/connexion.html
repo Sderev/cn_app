@@ -16,9 +16,9 @@
       <input type="submit" value="Se connecter" />
   </form>
 
-  <p> Pas de compte ? <a href="/inscription/"><button>Inscription</button></a> </p>
-  <p> Changer mot de passe ? <a href="/change_password/"><button>Changer le mot de passe</button></a> </p>
-  <p> Mot de passe oublié ? <a href="/password_reset/"><button>Réinitialiser le mot de passe</button></a> </p>
+  <p> Pas de compte ? <a href="{% url 'inscription' %}"><button>Inscription</button></a> </p>
+  <p> Changer mot de passe ? <a href="{% url 'change_password' %}"><button>Changer le mot de passe</button></a> </p>
+  <p> Mot de passe oublié ? <a href="{% url 'password_reset' %}"><button>Réinitialiser le mot de passe</button></a> </p>
 
   {% endif %}
 

@@ -31,15 +31,18 @@ class SearchUser(forms.Form):
 #    url_media = forms.CharField(max_length=100)
 
 class UploadForm(forms.Form):
+    feedback = forms.BooleanField(required=False);
     nom_cours = forms.CharField(max_length=100)
     logo = forms.ImageField(required=False)
     home = forms.FileField()
+
 
 class ModuleForm(forms.Form):
     module_1 = forms.FileField()
     media_1 = forms.FileField(required=False)
 
 class UploadFormLight(forms.Form):
+    feedback = forms.BooleanField(required=False);
     archive=forms.FileField()
 
     def clean_archive(self): # check if the archive is a tar.gz archive
@@ -55,6 +58,7 @@ class UploadFormEth(forms.Form):
 
 # Used for creating a course in a course view
 class GenerateCourseForm(forms.Form):
+    feedback = forms.BooleanField(required=False);
     logo = forms.ImageField(required=False)
     medias = forms.FileField(required=False)
 

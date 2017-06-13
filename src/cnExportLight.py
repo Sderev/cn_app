@@ -40,12 +40,12 @@ LOGFILE = 'logs/cnExport.log'
 #################
 
 #module="moduleX"
-def processModuleLight(moduleName, moduleData):
+def processModuleLight(moduleName, moduleData,feedback):
 
     #moduleDir=repoDir+'/'+moduleName
 
     m = model.Module(moduleData, moduleName, '')
-    m.toHTML(True) # only generate html for all subsections
+    m.toHTML(feedback) # only generate html for all subsections
 
     return m
 
@@ -249,21 +249,18 @@ def buildSiteLight(course_obj, modulesData, mediasData, mediasNom, homeData, tit
     return inMemoryOutputFile
 
 # Generate an archive from a complete form, contains InMemoryUploadedFile
-def generateArchive(modulesData, mediasData, mediasNom, homeData, titleData, logoData, xmlCourse=""):
+def generateArchive(modulesData, mediasData, mediasNom, homeData, titleData, logoData, feedback, xmlCourse=""):
     modules=[]
     i=1
     for moduleData in modulesData:
         #The only way I could find to encode InMemoryUploadedFile into utf-8 (avoid warning)
         #moduleData = TextIOWrapper(moduleData.file, encoding='utf-8')
-        m=processModuleLight("module"+str(i),moduleData)
+        m=processModuleLight("module"+str(i),moduleData,feedback)
         modules.append(m)
         moduleData.seek(0)
         i=i+1
     c=processRepositoryLight(modules)
 
-    #mediasDataObj,mediasNom=extractMediaArchive(mediasData, mediaTypes)
-
-    #outputFile=buildSiteLight(c,repoDir,outDir,mediasData,homeData,titleData, logoData)
     outputFile=buildSiteLight(c, modulesData, mediasData,mediasNom,homeData,titleData, logoData, xmlCourse)
 
     return outputFile
@@ -336,7 +333,7 @@ def StringIOFromTarFile(tarFile,nomFichier):
 
 
 # Generate the archive with an entire archive which followed the repository model established before
-def generateArchiveLight(archiveData):
+def generateArchiveLight(archiveData, feedback):
 
     tarArchiveIO = StringIO.StringIO()
     tarArchiveIO.write(archiveData.read())
@@ -412,7 +409,7 @@ def generateArchiveLight(archiveData):
         for moduleData in modulesData:
             #The only way I could find to encode InMemoryUploadedFile into utf-8 (avoid warning)
             # moduleData = TextIOWrapper(moduleData.read(), encoding='utf-8')
-            m=processModuleLight("module"+str(i),moduleData)
+            m=processModuleLight("module"+str(i),moduleData, feedback)
             modules.append(m)
             i=i+1
         c=processRepositoryLight(modules)

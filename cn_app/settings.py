@@ -24,17 +24,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-# Mail server Configuration
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mail@gmail.com'
-EMAIL_HOST_PASSWORD = 'mdp'
-EMAIL_PORT = 587
-
-# Etherpad Configuration
-ETHERPAD_URL = 'http://localhost:9001/'
-API_KEY = '9e214e187b30fb2a24d171030a72d96a3ef496348e2b1a9dabf7e0dd87d96bb7'
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -65,7 +54,7 @@ ROOT_URLCONF = 'cn_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['cn_app/templates/','templates/','escapad/templates/','escapad_formulaire/templates/'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),'cn_app/templates/','templates/','escapad/templates/','escapad_formulaire/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

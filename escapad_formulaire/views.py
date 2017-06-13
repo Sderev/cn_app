@@ -66,7 +66,7 @@ def form_upload(request):
         homeData=form.cleaned_data["home"]
         titleData=form.cleaned_data["nom_cours"]
         logoData=form.cleaned_data["logo"]
-        feedback=form.cleaned_date["feedback"]
+        feedback=form.cleaned_data["feedback"]
 
         modulesData=[]
         mediasData=[]

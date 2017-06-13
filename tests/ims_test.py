@@ -21,6 +21,8 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(40)
 
+from pygiftparser import parser as pygift
+
 from src import model, toIMS, fromGift
 
 TEST_IMS_DIR = "./IMS"
@@ -147,7 +149,7 @@ Blablablabla {
 }
         """)
 
-        questions = fromGift.parseFile(io_ourQuestions)
+        questions = pygift.parseFile(io_ourQuestions)
         #QUESTIONS
         multi = questions[0]
         trfl = questions[1]

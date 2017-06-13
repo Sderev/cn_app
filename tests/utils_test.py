@@ -86,16 +86,16 @@ class UtilsTestCase(unittest.TestCase):
         #EXCEPT
         # TODO
 
-    def test_createDirs(self):
-        folders = ['d1', 'd2', 'd3']
-
-    def test_fetchMarkdownFile(self):
-        self.assertTrue('./coursTest/module1/module_test.md' in utils.fetchMarkdownFile('./coursTest/module1'))
-        self.assertFalse(utils.fetchMarkdownFile('./'))
-
-    def test_prepareDestination(self):
-
-        utils.prepareDestination('BASE_PATH','testUtils')
+    # def test_createDirs(self):
+    #     folders = ['d1', 'd2', 'd3']
+    #
+    # def test_fetchMarkdownFile(self):
+    #     self.assertTrue('./coursTest/module1/module_test.md' in utils.fetchMarkdownFile('./coursTest/module1'))
+    #     self.assertFalse(utils.fetchMarkdownFile('./'))
+    #
+    # def test_prepareDestination(self):
+    #
+    #     utils.prepareDestination('BASE_PATH','testUtils')
 
 # Main
 if __name__ == '__main__':

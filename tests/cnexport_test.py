@@ -21,14 +21,14 @@ def setUp():
 #         m = model.Module(sample_file, "tests", "http://culturenumerique.univ-lille3.fr")
 
 
-class CnExportTestCase(unittest.TestCase):
+# class CnExportTestCase(unittest.TestCase):
 
-    def test_writeHtml(self):
-        html = u"<p>Text</p>"
-        m = 'module'
-        cnExport.writeHtml(m, TEST_CNEXPORT_DIR, html)
-        self.assertTrue(os.path.isdir(TEST_CNEXPORT_DIR))
-        self.assertTrue(os.path.exists(TEST_CNEXPORT_DIR+'/'+m+'.html'))
+    # def test_writeHtml(self):
+    #     html = u"<p>Text</p>"
+    #     m = 'module'
+    #     cnExport.writeHtml(m, TEST_CNEXPORT_DIR, html)
+    #     self.assertTrue(os.path.isdir(TEST_CNEXPORT_DIR))
+    #     self.assertTrue(os.path.exists(TEST_CNEXPORT_DIR+'/'+m+'.html'))
 
     # def test_processModule(self):
 

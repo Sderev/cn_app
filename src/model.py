@@ -26,7 +26,8 @@ from inspect import isclass
 
 from slugify import slugify
 
-# from fromGIFT import extract_questions, process_questions
+from pygiftparser import parser as pygift
+
 import toIMS
 import toEDX
 import utils
@@ -218,7 +219,7 @@ class AnyActivity(Subsection):
         self.src = ''
         self.parse(f)
         self.absolutizeMediaLinks()
-        self.questions = fromGift.parseFile(iter(self.src.splitlines(True))) #need to transform String in File pointer with iter function
+        self.questions = pygift.parseFile(iter(self.src.splitlines(True))) #need to transform String in File pointer with iter function
 
 
     def parse(self,f):

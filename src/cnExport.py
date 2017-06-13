@@ -23,6 +23,8 @@ TEMPLATES_PATH = os.path.join(BASE_PATH, 'templates' )
 LOGFILE = 'logs/cnExport.log'
 
 def writeHtml(module, outModuleDir, html):
+    """
+    """
     module_file_name = os.path.join(outModuleDir, module)+'.html'
     moduleHtml = open(module_file_name, 'w', encoding='utf-8')
     moduleHtml.write(html)

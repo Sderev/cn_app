@@ -117,10 +117,10 @@ def iframize_video_anchors(htmlsrc, anchor_class):
     return output.replace('class_', 'class')
 
 
-def totimestamp(dt, epoch=datetime(1970,1,1)):
-    td = dt - epoch
-    # return td.total_seconds()
-    return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
+# def totimestamp(dt, epoch=datetime(1970,1,1)):
+#     td = dt - epoch
+#     # return td.total_seconds()
+#     return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
 
 
 #FIXME: make it simpler with no current_dir param, but only target_folder

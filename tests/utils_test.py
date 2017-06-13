@@ -17,6 +17,8 @@ logger.setLevel(40)
 
 from src import utils
 
+BASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
+
 def connection_error():
     raise requests.exceptions.ConnectionError
 
@@ -72,6 +74,7 @@ class UtilsTestCase(unittest.TestCase):
         src = "My Text"
         folder = "Test_Write_File"
         name = "New_File"
+        #NO EXCEPT
         rt = utils.write_file(src, current, folder, name)
         self.assertTrue('Test_Write_File/New_File' in rt)
         self.assertTrue(os.path.isdir('./'+folder))
@@ -80,10 +83,19 @@ class UtilsTestCase(unittest.TestCase):
             shutil.rmtree('./'+folder, ignore_errors=True)
         except Exception:
             pass
+        #EXCEPT
+        # TODO
 
     def test_createDirs(self):
         folders = ['d1', 'd2', 'd3']
 
+    def test_fetchMarkdownFile(self):
+        self.assertTrue('./coursTest/module1/module_test.md' in utils.fetchMarkdownFile('./coursTest/module1'))
+        self.assertFalse(utils.fetchMarkdownFile('./'))
+
+    def test_prepareDestination(self):
+
+        utils.prepareDestination('BASE_PATH','testUtils')
 
 # Main
 if __name__ == '__main__':

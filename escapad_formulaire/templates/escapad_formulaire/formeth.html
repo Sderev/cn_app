@@ -10,7 +10,7 @@ give_link_to_iframe('{{ETHERPAD_URL}}','framemod1','id_module_1', 10, true);"
 
 {% block script %}
 <script type="text/javascript" src="/static/js/form_dom.js"></script>
-<script type="text/javascript" src="/static/js/form_eth_dom.js"></script>
+<script type="text/javascript" src="/static/js/etherpad_process.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -23,7 +23,7 @@ give_link_to_iframe('{{ETHERPAD_URL}}','framemod1','id_module_1', 10, true);"
           <legend>Informations générales</legend>
           {{ form.as_p}}
           <iframe id="framehome" name="framehome" src="" width=600 height=400></iframe>
-          <iframe id="frametest" name="frametest" src="/apercu_module/test" width=900 height=400></iframe>
+          <iframe id="frametest" name="frametest" src="/apercu_module/test" width=600 height=400></iframe>
 
           <br/>
           <button id="buttonTest" onclick="convertir()">Convertir</button>

@@ -66,6 +66,7 @@ def form_upload(request):
         homeData=form.cleaned_data["home"]
         titleData=form.cleaned_data["nom_cours"]
         logoData=form.cleaned_data["logo"]
+        feedback=form.cleaned_date["feedback"]
 
         modulesData=[]
         mediasData=[]
@@ -91,7 +92,7 @@ def form_upload(request):
 
         mediasDataObj,mediasNom=cn.extractMediaArchive(mediasData, mediasType)
 
-        zip=cn.generateArchive(modulesData,mediasDataObj,mediasNom,homeData,titleData,logoData)
+        zip=cn.generateArchive(modulesData, mediasDataObj, mediasNom, homeData, titleData, logoData, feedback)
 
         sauvegarde = True
 
@@ -114,12 +115,13 @@ def form_upload_light(request):
     form = UploadFormLight(request.POST or None, request.FILES or None)
 
     if form.is_valid() :
-        repoDir=settings.BASE_DIR
-        outDir=settings.BASE_DIR
-        baseUrl=settings.BASE_DIR
+        repoDir = settings.BASE_DIR
+        outDir = settings.BASE_DIR
+        baseUrl = settings.BASE_DIR
 
-        archiveData=form.cleaned_data["archive"]
-        zip,erreurs=cn.generateArchiveLight(archiveData)
+        archiveData = form.cleaned_data["archive"]
+        feedback = form.cleaned_data["feedback"]
+        zip,erreurs=cn.generateArchiveLight(archiveData, feedback)
 
         sauvegarde = True
 
@@ -382,7 +384,9 @@ def cours(request, id_cours):
         titleData=cours.nom_cours
         logoData=form_generate.cleaned_data["logo"]
         medias=form_generate.cleaned_data["medias"]
+        feedback=form_generate.cleaned_data["feedback"]
 
+        #url to export the pad into markdown file
         url_home=ETHERPAD_URL+'p/'+cours.url_home+'/export/txt'
 
 
@@ -406,7 +410,7 @@ def cours(request, id_cours):
         mediasData, mediasNom=cn.getMediasDataFromArchive(medias, len(cours.module_set.all()))
 
         xmlCourse=cn.writeXMLCourse(cours)
-        zip=cn.generateArchive(modulesData,mediasData,mediasNom,homeData,titleData,logoData, xmlCourse)
+        zip=cn.generateArchive(modulesData,mediasData,mediasNom,homeData,titleData,logoData, feedback, xmlCourse)
 
         response= HttpResponse(zip)
         response['Content-Type'] = 'application/octet-stream'

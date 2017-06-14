@@ -13,6 +13,11 @@ import re
 
 logger = logging.getLogger(__name__)
 
+isTarFile = r'.*\.tar\.gz$'
+isZipFile = r'.*\.zip$'
+
+
+
 class CreateNew(forms.Form):
     nom = forms.CharField(max_length=100)
 
@@ -47,8 +52,8 @@ class UploadFormLight(forms.Form):
 
     def clean_archive(self): # check if the archive is a tar.gz archive
         archiveName=self.cleaned_data['archive'].name
-        if not re.match(r'.*\.tar\.gz$',archiveName):
-            raise forms.ValidationError("Veuillez utiliser une archive tar.gz !")
+        if not re.match(isTarFile,archiveName) and not re.match(isZipFile,archiveName):
+            raise forms.ValidationError("Veuillez utiliser une archive tar.gz ou zip!")
             return
         return self.cleaned_data['archive']
 
@@ -65,8 +70,8 @@ class GenerateCourseForm(forms.Form):
     def clean_medias(self):  # check if the archive is a tar.gz archive
         if self.cleaned_data['medias']:
             archiveName=self.cleaned_data['medias'].name
-            if not re.match(r'.*\.tar\.gz$',archiveName):
-                raise forms.ValidationError("Veuillez utiliser une archive tar.gz !")
+            if not re.match(isTarFile,archiveName) and not re.match(isZipFile,archiveName):
+                raise forms.ValidationError("Veuillez utiliser une archive tar.gz ou zip !")
                 return
             return self.cleaned_data['medias']
 

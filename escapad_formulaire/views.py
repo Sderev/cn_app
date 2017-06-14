@@ -53,9 +53,15 @@ from cn_app.settings import API_KEY
 #                               #
 #################################
 
-# View creating archive using a simple form with inputs only (no etherpad)
-# Each module is composed of a markdown file, and a media folder
+
 def form_upload(request):
+    """
+    View creating archive using a simple form with inputs only (no etherpad).
+    Each module is composed of a markdown file, and a media folder.
+    1. Get each markdown file and media data from the forms.
+    2. Extract the medias into StringIO lists
+    3. Generate the course archive
+    """
     sauvegarde = False
 
     form = UploadForm(request.POST or None, request.FILES or None)
@@ -80,13 +86,19 @@ def form_upload(request):
             moduleData=request.FILES.get(nomModule)
             mediaData=request.FILES.get(nomMedia)
 
+
             modulesData.append(moduleData)
             mediasData.append(mediaData)
 
-            # Specify if the media is empty or not (tar.gz or empty)
-            #TODO No zip supported for now (Improve?)
             if mediaData:
-                mediasType.append('application/octet-stream')
+                mediaName=request.FILES.get(nomMedia).name
+                # Specify if the media is empty or not (tar.gz or empty)
+                if re.match(r"^.*\.tar\.gz",mediaName):
+                    mediasType.append("application/tar.gz")
+                elif re.match(r"^.*\.zip",mediaName):
+                    mediasType.append("application/zip")
+                else:
+                    mediasType.append('None')
             else:
                 mediasType.append('None')
 
@@ -107,9 +119,12 @@ def form_upload(request):
         'sauvegarde': sauvegarde
     })
 
-# View requesting an archive already made by the user
-# Generate directly the website
+
 def form_upload_light(request):
+    """
+        View requesting an archive already made by the user
+        Generate directly the website by calling generateArchiveLight
+    """
     sauvegarde = False
     erreurs =[]
     form = UploadFormLight(request.POST or None, request.FILES or None)
@@ -120,8 +135,17 @@ def form_upload_light(request):
         baseUrl = settings.BASE_DIR
 
         archiveData = form.cleaned_data["archive"]
+        archiveName = form.cleaned_data["archive"].name
         feedback = form.cleaned_data["feedback"]
-        zip,erreurs=cn.generateArchiveLight(archiveData, feedback)
+
+        archiveType = "None"
+        if re.match(r"^.*\.tar\.gz",archiveName):
+            archiveType = "application/octet-stream"
+        elif re.match(r"^.*\.zip",archiveName):
+            archiveType = "application/zip"
+
+
+        zip,erreurs=cn.generateArchiveLight(archiveData, archiveType, feedback)
 
         sauvegarde = True
 
@@ -138,8 +162,17 @@ def form_upload_light(request):
     })
 
 
-# View allowing the user to reupload a course with the export.tar.gz provided when generating a course
+
 def form_reupload(request):
+    """
+        View allowing the user to reupload a course with the export.tar.gz provided when generating a course
+        1. Open the export.tar.gz archive
+        2. Get course infos from infos.xml and create a Course object (generate home_url)
+        3. Add the home content to a new pad
+        4. For each module: Generate with module_url, put it into a Module object, and add the module to the course
+        5. For each module: Add the module content to a new pad
+        6. Link the course to the current user, and redirect to his home page.
+    """
 
     if not request.user.is_authenticated:
         return redirect(connexion)
@@ -189,15 +222,16 @@ def form_reupload(request):
                     # Generate home
                     homeFile= tar.extractfile("home.md")
                     content=homeFile.read()
+                    # Prepare the string to be sent via curl to etherpad
                     content=content.replace('\"','\\\"')
                     content=content.replace('`','\\`')
-
+                    # Ask etherpad to create a new pad with the string
                     os.system("curl -X POST -H 'X-PAD-ID:"+ url_home+"' " +ETHERPAD_URL+"post")
                     os.system("curl -X POST --data \""+content+"\" -H 'X-PAD-ID:"+ url_home +"' " +ETHERPAD_URL+"post")
                 except KeyError:
                     erreurs.append("Erreur de structure: Impossible de trouver home.md !");
 
-                # Generate each media
+                # Generate each module
                 cpt=1
                 modules_obj=[]
                 for nomMod in zip(tree.xpath("/cours/module/nomModule")):
@@ -209,9 +243,10 @@ def form_reupload(request):
                         modules_obj.append(module_obj)
 
                         content=moduleFile.read()
+                        # Prepare the string to be sent via curl to etherpad
                         content=content.replace('\"','\\\"')
                         content=content.replace('`','\\`')
-
+                        # Ask etherpad to create a new pad with the string
                         os.system("curl -X POST -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
                         os.system("curl -X POST --data \""+content+"\" -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
                     except KeyError:
@@ -248,9 +283,18 @@ def form_reupload(request):
 ######################################
 
 
-# View showing the preview of a module using the culture-numerique css
-# require the pad id
+
 def apercu_module(request,id_export,feedback):
+    """
+        View showing the preview of a module using the culture-numerique css
+        1. Get the content of the pad with urllib2
+        2. Generate the module with the content
+        3. parse the module in a variable
+        4. render the HTML with the variable
+
+        :param id_export: pad id
+        :param feedback: do we want a feedback on the preview?
+    """
     url=ETHERPAD_URL+"p/"+id_export+"/export/txt"
     response = urllib2.urlopen(url)
 
@@ -259,8 +303,6 @@ def apercu_module(request,id_export,feedback):
     moduleData= StringIO.StringIO(response.read())
     MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
     module = model.Module(moduleData, "module", "base")
-    #m.toHTML(True)
-    #home_html=m.toCourseHTMLVisualisation()
 
     home_html = ''
     for sec in (module.sections):
@@ -269,7 +311,6 @@ def apercu_module(request,id_export,feedback):
         for sub in (sec.subsections):
             home_html += "\n\n<!-- Subsection "+sub.num+" -->\n"
             home_html += "\n\n<h2>"+sub.num+". "+sub.title+" </h2>\n"
-            #home_html += markdown.markdown(sub.src, MARKDOWN_EXT)
             home_html += sub.toHTML(feedback)
 
     return render(request, 'escapad_formulaire/apercu.html', {
@@ -279,6 +320,14 @@ def apercu_module(request,id_export,feedback):
 # View showing the preview of a home page using the culture-numerique css
 # require the pad id
 def apercu_home(request,id_export):
+    """
+        View showing the preview of a home page using the culture-numerique css
+        1. Get the content of the pad with urllib2
+        2. Simply parse the content in a variable (with the native python method markdown)
+        3. Render the HTML with the variable
+
+        :param id_export: pad id
+    """
     url=ETHERPAD_URL+"p/"+id_export+"/export/txt"
 
     response = urllib2.urlopen(url)
@@ -302,10 +351,11 @@ def apercu_home(request,id_export):
 def id_generator(size=6, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-# View resuming the user's courses
-# The user can either access an existing course, or create a new one
 def mes_cours(request):
-
+    """
+        View resuming the user's courses
+        The user can either access an existing course, or create a new one
+    """
     if not request.user.is_authenticated:
         return redirect(connexion)
 
@@ -335,10 +385,20 @@ def mes_cours(request):
 
 
 
-
-# View showing the information of a course
 def cours(request, id_cours):
+    """
+        View showing the information of a course.
+        Possible actions:
+        1. Create a new module
+        2. Adding a user to the course
+        3. Generating the course
+            For each module belonging to the course object, we call urlib2 to get the content.
+            Then put this content into a StringIO.
+            We write the xml course file.
+            Then we generate the course
 
+        :param id_cours: id du cours
+    """
 
     if not request.user.is_authenticated:
         return redirect(connexion)
@@ -389,7 +449,6 @@ def cours(request, id_cours):
         #url to export the pad into markdown file
         url_home=ETHERPAD_URL+'p/'+cours.url_home+'/export/txt'
 
-
         # Get the text from the etherpad instance
         # We need to create a hidden input storing the plain text exporting url.
         # The url looks like this: http://<etherpad-url>/p/<pad-url>/export/txt
@@ -398,7 +457,16 @@ def cours(request, id_cours):
 
         modulesData=[]
         mediasData=[]
-        mediasType=[]
+        archiveType="None"
+        if medias:
+            mediasName=form_generate.cleaned_data["medias"].name
+            if re.match(r"^.*\.tar\.gz",mediasName):
+                archiveType="application/tar.gz"
+            elif re.match(r"^.*\.zip",mediasName):
+                archiveType="application/zip"
+
+
+
 
         #for each modules from the course
         for module in cours.module_set.all():
@@ -407,7 +475,7 @@ def cours(request, id_cours):
             response = urllib2.urlopen(url_module)
             moduleData = StringIO.StringIO(response.read())
             modulesData.append(moduleData)
-        mediasData, mediasNom=cn.getMediasDataFromArchive(medias, len(cours.module_set.all()))
+        mediasData, mediasNom=cn.getMediasDataFromArchive(medias, archiveType, len(cours.module_set.all()))
 
         xmlCourse=cn.writeXMLCourse(cours)
         zip=cn.generateArchive(modulesData,mediasData,mediasNom,homeData,titleData,logoData, feedback, xmlCourse)
@@ -428,8 +496,16 @@ def cours(request, id_cours):
 
     })
 
-# View form for creating the home file
+
 def cours_edition(request, id_cours ,url):
+    """
+        View to edit a module/home.
+        Security check: if there's a problem in the course_id or url_id,
+        we redirect the user to its home page.
+
+        :param id_cours: id du cours
+        :param url: url du module
+    """
 
     if not request.user.is_authenticated:
         return redirect(connexion)
@@ -474,9 +550,15 @@ def cours_edition(request, id_cours ,url):
         'is_home': is_home
     })
 
-# Delete a module from a course
-# Irreversible task
+
 def delete_module(request, id_cours, url):
+    """
+        Delete a module from a course. Irreversible task.
+        (This is here we need the API_KEY, it is required to delete a pad from an url)
+
+        :param id_cours: course id
+        :param url: url of the module/home
+    """
     if not request.user.is_authenticated:
         return redirect(connexion)
 
@@ -505,10 +587,15 @@ def delete_module(request, id_cours, url):
     return redirect(cours,id_cours=id_cours)
 
 
-# Delete a course, then redirect the user to its course list page
-# Note: If a course is shared by several user, the course will not be deleted,
-# we will just remove the ManyToManyField relation between the user and the course
 def delete_course(request, id_cours):
+    """
+        Delete a course, then redirect the user to its course list page
+        Note: If a course is shared by several user, the course will not be deleted,
+        we will just remove the ManyToManyField relation between the user and the course
+
+        :param id_cours: course_id
+
+    """
     if not request.user.is_authenticated:
         return redirect(connexion)
 
@@ -543,9 +630,10 @@ def delete_course(request, id_cours):
 #################################
 
 
-
-# Connexion View
 def connexion(request):
+    """
+        Connexion View
+    """
     error = False
     if request.method == "POST":
         form = ConnexionForm(request.POST)
@@ -562,9 +650,12 @@ def connexion(request):
 
     return render(request, 'escapad_formulaire/connexion.html', locals())
 
-# View for creating a new user on the user side
-# The form create a user (Django native class), and associate him to a profile, which will contain the user's projects
+
 def inscription(request):
+    """
+        View for creating a new user on the user side
+        The form create a user (Django native class), and associate him to a profile, which will contain the user's projects
+    """
     error = False
     if request.method == "POST":
         form = CreateUserForm(request.POST)
@@ -578,7 +669,10 @@ def inscription(request):
 
     return render(request, 'escapad_formulaire/inscription.html', locals())
 
-# Disconnecting view
+
 def deconnexion(request):
+    """
+        Disconnecting view
+    """
     logout(request)
     return redirect(reverse(connexion))

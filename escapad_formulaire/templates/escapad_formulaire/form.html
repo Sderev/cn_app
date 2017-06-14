@@ -3,7 +3,9 @@
 {% block titre %}Formulaire{% endblock %}
 
 {% block script %}
-<script type="text/javascript" src="/static/js/form_dom.js"></script>
+
+{%  load static %}
+<script type="text/javascript" src="{% static 'js/form_dom.js' %}"></script>
 {% endblock %}
 
 {% block content %}

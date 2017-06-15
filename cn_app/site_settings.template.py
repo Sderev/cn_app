@@ -28,6 +28,9 @@ DATABASES = {
 #     }
 # }
 
+# In a production environment, make sure to give a
+# filename writable by web server
+LOGDIR = '/tmp/'
 
 # URL for static and data resources
 STATIC_URL = "/static/"
@@ -48,8 +51,6 @@ GENERATED_SITES_URL = os.path.join(DATA_URL, 'sites')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'agoodsecretkey'
 
-# In a production environment, make sure to give a
-# filename writable by web server
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -60,7 +61,7 @@ LOGGING = {
         'apps_handler': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'debug.log', 
+            'filename':  os.path.join(LOGDIR, 'debug.log'),
         },
     },
     'loggers': {
@@ -74,4 +75,3 @@ LOGGING = {
         },
     },
 }
-

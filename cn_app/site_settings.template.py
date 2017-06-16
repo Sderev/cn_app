@@ -15,6 +15,8 @@ DATABASES = {
 }
 
 # Mail server Configuration
+# Used for the course editing application
+# When a user forgot his password and want to reinitialize it.
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'mail@gmail.com'
@@ -23,6 +25,7 @@ EMAIL_PORT = 587
 
 # Etherpad Configuration
 ETHERPAD_URL = 'http://localhost:9001/'
+# Get the APIKEY.txt file in your etherpad instance, copy the content and paste it here
 API_KEY = 'b9b73b5cd84b2320233d699ed17d863517d469f3cc023a49433269627cbdc98d'
 
 # Example with PostGreSQL

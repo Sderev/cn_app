@@ -16,6 +16,21 @@ DATABASES = {
     }
 }
 
+
+# Mail server Configuration
+# Used for the course editing application
+# When a user forgot his password and want to reinitialize it.
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'mail@gmail.com'
+EMAIL_HOST_PASSWORD = 'mdp'
+EMAIL_PORT = 587
+
+# Etherpad Configuration
+ETHERPAD_URL = 'http://localhost:9001/'
+# Get the APIKEY.txt file in your etherpad instance, copy the content and paste it here
+API_KEY = 'content of APIKEY.txt'
+
 # Example with PostGreSQL
 # DATABASES = {
 #     'default': {
@@ -30,7 +45,7 @@ DATABASES = {
 
 # In a production environment, make sure to give a
 # filename writable by web server
-LOGDIR = '/tmp/'
+LOGFILE = '/tmp/debug.log'
 
 # URL for static and data resources
 STATIC_URL = "/static/"
@@ -61,7 +76,7 @@ LOGGING = {
         'apps_handler': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename':  os.path.join(LOGDIR, 'debug.log'),
+            'filename':  LOGFILE,
         },
     },
     'loggers': {

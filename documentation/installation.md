@@ -20,6 +20,7 @@ Ensuite, les librairies nécessaires sont installées via `pip` en utilisant le 
 
 ```
 $ pip install -r requirements.txt
+$ pip install -e git://github.com/CelestineSauvage/pygiftparser#egg=pygiftparser
 ```
 
 L'installation de toutes ces librairies reposent parfois sur des paquets "systèmes". Pour une distribution linux basée sur Debian, assurez-vous que les paquets suivants sont installés:
@@ -31,6 +32,126 @@ L'installation de toutes ces librairies reposent parfois sur des paquets "systè
 - python-dev
 - zlib1g-dev
 
+## Installation de l'instance etherpad
+
+Dans le dossier source contenant l’application django, cloner tout d’abord l’instance suivante d’etherpad. On a modifié l’etherpad d’origine pour qu’il puisse envoyer des appels aux fenêtres parents quand une instance est contenue dans une iframe.
+
+### Étapes d’installation
+
+1. Cloner l’etherpad depuis l'adresse suivante: https://github.com/lmagniez/etherpad-lite.git
+    ```
+    $ git clone https://github.com/lmagniez/etherpad-lite.git
+    ```
+
+2. Installer nodes.js
+    Télécharger `node-install.sh` sur [ce lien](https://github.com/taaem/nodejs-linux-installer/releases) est l’exécuter :
+    Plus d’informations sur l’installation: [Installation nodeJS](https://github.com/nodejs/node/wiki/Installation)
+
+3. Installer abiword pour pouvoir faire fonctionner etherpad
+(Si abiword a un dossier d'installation différent : changer dans settings.json ("abiword" : "/usr/bin/abiword",))
+    ```
+    $ sudo apt-get install abiword
+    $ sudo apt-get install curl
+    ```
+    
+4. Executer etherpad pour la première fois, puis quitter celui-ci une fois initialisé.
+    ```
+    $ cd etherpad-lite
+    $ bin/run.sh
+    ```
+    Puis quitter l'instance après le chargement de l'instance.
+    ```
+    $ CTRL + C
+    ```
+    
+5. Ajout des différents modules dans l’instance etherpad :
+    Dans le dossier node_module, cloner l’ensemble des dépôts suivants, ils représentent les différents plugins de l’application.
+    ```
+    $ cd node_modules
+    $ git clone https://github.com/lmagniez/ep_disable_format_buttons
+    $ git clone https://github.com/lmagniez/ep_markdownify
+    $ git clone https://github.com/lmagniez/ep_giftify.git
+    $ git clone https://github.com/johnmclear/ep_post_data
+    $ git clone https://github.com/lmagniez/ep_default-pad-text.git
+    $ git clone https://github.com/lmagniez/strftime
+    ```
+    Redémarrer l'instance pour appliquer les changements de plugins.
+    ```
+    $ cd ..
+    $ bin/run.sh
+    ```
+    
+7. Configuration de mysql-server:
+    Si mysql-server n'est pas installé, effectuer la commande suivante :
+    ```
+    $ sudo apt-get install mysql-server
+    ```
+    Suivre les instructions, et configurer mysql-server avec un mdp super-utilisateur.
+    Dans etherpad-lite/settings.json, passer en commentaire le code suivant comme ceci :
+    ```
+    //"dbType" : "dirty",
+      //the database specific settings
+    //  "dbSettings" : {
+    //                   "filename" : "var/dirty.db"
+    //                 },
+    ```
+    Et décommenter le code suivant comme ceci :
+    ```
+      /* An Example of MySQL Configuration */
+      "dbType" : "mysql",
+      "dbSettings" : {
+          "user"    : "root",
+    	"host"    : "localhost",
+    	"password": "MonPassword",
+    	"database": "store",
+    	"charset" : "utf8mb4"
+      },
+    ```
+    Veuillez rentrer le mot de passe précédemment du super utilisateur pour pouvoir faire fonctionner la base de données etherpad.
+    
+    Ensuite, il va falloir créer la base de donnée qui va stocker les différents pads. Pour cela :
+    ```
+    $ mysql -u root -p
+    <Entrer votre mot de passe root>
+    > Create database store
+    > quit
+    ```
+    On va ensuite mettre à jour les différentes relations dans etherpad en effectuant :
+    ```
+    $ ./bin/installDeps.sh
+    ```
+    Puis on redémarre l’application et on la laisse tourner
+    ```
+    $ ./bin/run.sh 
+    ```
+
+### Description des plugins installés
+
+- **ep_post_data** : Utilise curl pour modifier le contenu du pad (utilisé pour l’import).
+	curl -X POST --data '<DATA>' -H 'X-PAD-ID:<ID-PAD>' <URL-ETHERPAD>
+	Modifie le contenu de ID-PAD en DATA
+	Attention! Ne fonctionne que si le pad existe déjà, sinon ne fait que le créer.
+- **strftime** : Nécessaire pour faire fonctionner ep_post_data.
+
+- **ep_disable_format_buttons** : Supprime les boutons inutiles, pas d'édition html. (Modification d’un plugin existant).
+
+- **ep_markdownify** : colorise et met en forme la syntaxe markdown.
+	Modification des expressions régulières dans index.js
+	Modification du css dans mardownify.css
+- **ep_giftify** : colorise et met en forme la syntaxe gift.
+	Modification des expressions régulières dans index.js
+	Modification du css dans giftify.css
+
+- **ep_default-pad-text** : création de pad avec pattern.
+	Si on a un url répondant à une expression régulière donnée, on va adapter le contenu en 	fonction de ce qui a été indiqué dans le fichier de configuration.
+	**Modification des pads par défaut** : Modifier dans **settings.json** dans "**ep_defaultPadText**"
+
+    
+    
+    
+    
+    
+        
 
 ## Exécution du script en local
 

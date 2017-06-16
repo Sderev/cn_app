@@ -20,6 +20,7 @@ Ensuite, les librairies nécessaires sont installées via `pip` en utilisant le 
 
 ```
 $ pip install -r requirements.txt
+$ pip install -e git://github.com/CelestineSauvage/pygiftparser#egg=pygiftparser
 ```
 
 L'installation de toutes ces librairies reposent parfois sur des packets "systèmes". Pour une distribution linux basé sur Debian, assurez-vous que les paquets suivants sont installés:

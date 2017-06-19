@@ -1,35 +1,24 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import datetime
-import json
-import mimetypes
 import logging
 import os
-import shlex
-import StringIO
-import subprocess
-import sys
-import zipfile
 
 import shutil
 
-import forms
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
 from .models import Repository
 from .utils import run_shell_command
 logger = logging.getLogger(__name__)
 
-from src import model
-from src import utils
-import markdown
 
 class BuildView(View):
     """
@@ -46,7 +35,8 @@ class BuildView(View):
         repo_path = os.path.join(settings.REPOS_DIR, slug)
         build_path = os.path.join(settings.GENERATED_SITES_DIR, slug)
         base_url = os.path.join(settings.GENERATED_SITES_URL, slug)
-        logger.warn("%s | Post to buidl view ! repo_path = %s | Base URL = %s" % (timezone.now(), repo_path, base_url))
+        logger.warn("%s | Post to build view! repo_path = %s | Base URL = %s" %
+                    (timezone.now(), repo_path, base_url))
 
         repo_object = Repository.objects.all().filter(slug=slug)[0]
         try:
@@ -56,7 +46,8 @@ class BuildView(View):
                     "reason": "repo not existing, or not synced"}
 
         # 2. git pull origin [branch:'master']
-        git_cmds = [("git checkout %s " %  repo_object.default_branch), ("git pull origin %s" % repo_object.default_branch)]
+        git_cmds = [("git checkout %s " % repo_object.default_branch),
+                    ("git pull origin %s" % repo_object.default_branch)]
         for git_cmd in git_cmds:
             success, output = run_shell_command(git_cmd)
             if not(success):

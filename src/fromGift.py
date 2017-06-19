@@ -55,7 +55,12 @@ pygift.AnswerSet.toIMSFB = astoIMSFB
 
 #EDX
 def astoEDX(self):
-    assert (self.question)
+    """
+    transform object answer in XML problem for EDX
+
+    :return: The doc value of XML text problem
+    :rtype: String
+    """
     doc = yattag.Doc()
     with doc.tag("problem", display_name=self.question.title, max_attempts=self.max_att):
         with doc.tag("legend"):
@@ -91,8 +96,7 @@ pygift.Essay.max_att = ''
 
 def escriptEDX(self,doc):
     with doc.tag("script", type="loncapa/python"):
-        doc.text("""
-import re
+        doc.text("""import re
 def checkAnswerEssay(expect, ans):
     response = re.search('', ans)
     if response:

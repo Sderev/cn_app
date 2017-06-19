@@ -22,8 +22,8 @@ import yattag
 TEST_GIFT_DIR = "./testGIFT/"
 
 """
-    Test File for Project Esc@pad : pygiftparser module
-    ==============================
+    Test File for pygiftparser module
+    =================================
 
     Here is a test file to test the project Esc@pad : pygiftparser module
     This file test :
@@ -34,6 +34,8 @@ TEST_GIFT_DIR = "./testGIFT/"
     ---------------------
     In your terminal, use the command :
         >> $ python parsergift_test.py
+        or
+        >> $ pytest parsergift_test.py
 
 
 """

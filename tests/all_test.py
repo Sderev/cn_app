@@ -7,7 +7,11 @@ Source used :
     http://agiletesting.blogspot.com/2005/01/python-unit-testing-part-1-unittest.html
 """
 
-import os
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
+import src
+from tests import *
+from pygiftparser import parser as pygift
 from threading import Thread
 
 os.system('python parsergift_test.py')

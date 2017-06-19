@@ -1,5 +1,5 @@
 
-// must have url and is_home defined previously
+// must have url and is_home, base_url defined previously (likely in form_edition.html)
 // this script add a listener to the window and launch the preview update whenever an event is thrown at it.
 // The event comes from etherpad whenever a change is made into the pad. (thrown from collab_client.js -> handleMessageFromServer)
 
@@ -11,18 +11,17 @@
     can_update=true;
     waiting=false;
     feedback=document.getElementById("feedback").checked;
-    console.log(feedback);
-    update_preview(feedback);
+    update_preview(base_url,feedback);
   }
 
   // update the iframe
   // call convertir_module and convertir_home in etherpad_process.js
-  function update_preview(feedback){
+  function update_preview(url_base,feedback){
     if (is_home){
-      convertir_home(url,feedback);
+      convertir_home(url_base,url_module,feedback);
     }
     else{
-      convertir_module(url,feedback);
+      convertir_module(url_base,url_module,feedback);
     }
   }
 

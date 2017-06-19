@@ -46,7 +46,6 @@ import re
 from cn_app.settings import ETHERPAD_URL
 from cn_app.settings import API_KEY
 
-
 #################################
 #                               #
 #        SIMPLE FORMS VIEWS     #

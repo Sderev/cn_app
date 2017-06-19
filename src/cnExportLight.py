@@ -647,8 +647,6 @@ def generateArchiveLight(archiveData, archiveType, feedback):
 
             zipfile.close()
 
-        ######
-    print ">>>>>>>>-*-*-*-*---------------------------"
     modules=[]
     i=1
     for moduleData in modulesData:

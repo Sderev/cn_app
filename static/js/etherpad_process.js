@@ -7,19 +7,19 @@ var nb_module=1;
 var apercu_visible=true;
 
 // Send an url in the iframe which generate the preview
-function convertir_home(url)
+function convertir_home(url_base,home_url)
 {
-  var url='/apercu_home/'+url;
+  var url=url_base+'apercu_home/'+home_url;
   var frame=document.getElementById("frametest");
 
   frame.setAttribute("src",url);
 }
 
-function convertir_module(url,feedback)
+function convertir_module(url_base,module_url,feedback)
 {
 	if (feedback) feedback="1"
 	else feedback="0"
-  var url='/apercu_module/'+url+'/'+feedback;
+  var url=url_base+'apercu_module/'+module_url+'/'+feedback;
   var frame=document.getElementById("frametest");
 
   frame.setAttribute("src",url);

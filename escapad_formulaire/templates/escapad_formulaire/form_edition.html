@@ -7,9 +7,9 @@
 {%  load static %}
 <script type="text/javascript" src="{% static 'js/etherpad_process.js' %}"></script>
 <script type="text/javascript">
-  var is_home= "{{ is_home }}" == 'True';
-  console.log(is_home);
-  var url="{{url}}";
+  var is_home = "{{ is_home }}" == 'True'
+  var base_url = "{% url 'home' %}"
+  var url_module="{{ url }}";
 </script>
 <script type="text/javascript" src="{% static 'js/detect_change.js' %}"></script>
 
@@ -25,6 +25,7 @@
     <h2>Modification du module : {{ name }}</h2>
 
     {{url}}
+    {% url "home" %}
 
         <fieldset id="home">
           <legend>Ecriture du cours</legend>
@@ -34,8 +35,6 @@
           <br>
           <iframe id="framehome" name="framehome" src="{{ full_url }}" width="45%" height="500px"></iframe>
           <iframe id="frametest" name="frametest" src="" width="45%" height="500px"></iframe>
-
-          <input type="hidden" id="id_home_data" name="home_data" value="{{ full_url }}/export/txt">
 
           <br>
           <a href="{% url 'cours' id_cours %}"><button>Retourner au cours </button></a>

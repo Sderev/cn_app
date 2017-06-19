@@ -10,7 +10,6 @@ import requests
 import markdown
 
 from bs4 import BeautifulSoup
-from datetime import datetime
 from io import open
 from urlparse import urlparse
 from slugify import slugify
@@ -20,23 +19,26 @@ import logging
 MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
 
 FOLDERS = ['Comprehension', 'Activite', 'ActiviteAvancee', 'webcontent']
-STATIC_FOLDERS = ['static/js', 'static/img', 'static/svg', 'static/css', 'static/fonts']
+STATIC_FOLDERS = ['static/js', 'static/img', 'static/svg',
+                  'static/css', 'static/fonts']
 VERBOSITY = False
 DEFAULT_VIDEO_THUMB_URL = 'https://i.vimeocdn.com/video/536038298_640.jpg'
 VIDEO_THUMB_API_URL = 'http://vimeo.com/api/v2/video/'
+
 
 def fetch_vimeo_thumb(video_link):
     """ fetch video thumbnail for vimeo videos """
     # get video id
     video_id = video_link.rsplit('/', 1)[1]
-    logging.info ("== video ID = %s" % video_id)
+    logging.info("== video ID = %s" % video_id)
     try:
-        response = requests.request('GET', VIDEO_THUMB_API_URL+video_id+'.json')
+        response = requests.request('GET',
+                                    VIDEO_THUMB_API_URL+video_id+'.json')
         data = response.json()[0]
         image_link = data['thumbnail_large']
         image_link = image_link.replace('wepb', 'jpg')
     except Exception:
-        logging.exception (" ----------------  error while fetching video %s" % (video_link))
+        logging.exception(" ----------------  error while fetching video %s" % (video_link))
         image_link = DEFAULT_VIDEO_THUMB_URL
     return image_link
 
@@ -48,10 +50,12 @@ def get_embed_code_for_url(url):
     hostname = url and urlparse(url).hostname
     # VIMEO case
     if hostname == "vimeo.com":
-        # For vimeo videos, one can use OEmbed API, but it slows down the code enormously (from <1s to 4s+ for rendering one module)
+        # For vimeo videos, one can use OEmbed API, but it slows down
+        # the code enormously (from <1s to 4s+ for rendering one module)
             # params = { 'url': url, 'format':'json', 'api':False }
             # try:
-            #     r = requests.get('https://vimeo.com/api/oembed.json', params=params)
+            #     r = requests.get('https://vimeo.com/api/oembed.json',
+            #                      params=params)
             #     r.raise_for_status()
             # except Exception as e:
             #     return hostname, '<p>Error getting video from provider ({error})</p>'.format(error=e)
@@ -71,7 +75,7 @@ def get_embed_code_for_url(url):
     # not supported
     else:
         # FIXME : Ajouter un warning ici
-        return hostname, '<p>Unsupported video provider ({0})</p>'.format(hostname)
+        return hostname,'<p>Unsupported video provider ({0})</p>'.format(hostname)
 
 
 def get_video_src(video_link):
@@ -94,10 +98,12 @@ def add_target_blank(html_src):
         anchor['target'] = "_blank"
     return soup.prettify()
 
+
 # FIXME: it is usefull ?
 def iframize_video_anchors(htmlsrc, anchor_class):
     """ given a piece of html code, scan for video anchors
-        filtered by given class and add corresponding video iframe code before each anchor
+        filtered by given class and add corresponding video
+        iframe code before each anchor
         nb. uses get_embed_code_for_url()
     """
     if anchor_class not in htmlsrc:
@@ -123,7 +129,7 @@ def iframize_video_anchors(htmlsrc, anchor_class):
 #     return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
 
 
-#FIXME: make it simpler with no current_dir param, but only target_folder
+# FIXME: make it simpler with no current_dir param, but only target_folder
 def write_file(src, current_dir, target_folder, name):
     """
     given a "src" source string, write a file with "name" located in
@@ -169,23 +175,22 @@ def copyMediaDir(repoDir, moduleOutDir, module):
     """ Copy the media subdir if necessary to the dest """
     mediaDir = os.path.join(repoDir, module, "media")
     if os.path.isdir(mediaDir):
-        try :
-            shutil.copytree(mediaDir, os.path.join(moduleOutDir,'media'))
+        try:
+            shutil.copytree(mediaDir, os.path.join(moduleOutDir, 'media'))
         except OSError:
-            logging.warn("%s already exists. Going to delete it",mediaDir)
-            shutil.rmtree(os.path.join(moduleOutDir,'media'))
-            shutil.copytree(mediaDir, os.path.join(moduleOutDir,'media'))
+            logging.warn("%s already exists. Going to delete it", mediaDir)
+            shutil.rmtree(os.path.join(moduleOutDir, 'media'))
+            shutil.copytree(mediaDir, os.path.join(moduleOutDir, 'media'))
 
 
-def create_empty_file(filedir, filename):
-    """ Given a file dir path and name, create it anew """
-    filepath = os.path.join(filedir, filename)
-    if not os.path.exists(filedir):
-        os.makedirs(filedir)
+def create_empty_file_if_needed(filepath):
+    """  Create an empty file filepath if it does not exist. """
     if os.path.isfile(filepath):
-        os.remove(filepath)
+        return
+    basedir = os.path.dirname(filepath)
+    if not os.path.exists(basedir):
+        os.makedirs(basedir)
     open(filepath, 'a').close()
-    return filepath
 
 
 def prepareDestination(BASE_PATH, outDir):
@@ -194,19 +199,19 @@ def prepareDestination(BASE_PATH, outDir):
     if os.path.exists(outDir):
         shutil.rmtree(outDir)
     if not os.path.isdir(outDir):
-       if not os.path.exists(outDir):
-           os.makedirs(outDir)
-       else:
-           print ("Cannot create %s " % (outDir))
-           sys.exit(0)
+        if not os.path.exists(outDir):
+            os.makedirs(outDir)
+        else:
+            print("Cannot create %s " % (outDir))
+            sys.exit(0)
     for d in STATIC_FOLDERS:
         """ build absolute path independant of current working dir """
         source = os.path.join(BASE_PATH, d)
         dest = os.path.join(outDir, d)
-        try :
+        try:
             shutil.copytree(source, dest)
         except OSError:
-            logging.warn("%s already exists, going to overwrite it",d)
+            logging.warn("%s already exists, going to overwrite it", d)
             shutil.rmtree(dest)
             shutil.copytree(source, dest)
 
@@ -222,13 +227,14 @@ def fetchMarkdownFile(moduleDir):
         logging.error(" No MarkDown file found, MarkDown file should end with '.md'")
         return False
     else:
-        logging.info ("found MarkDown file : %s" % filein)
+        logging.info("found MarkDown file : %s" % filein)
 
     return filein
 
 
 def cnslugify(value):
-    """ Meant to be used as a tag in Jinja2 template, return the input string "value" turned into slugified version """
+    """ Meant to be used as a tag in Jinja2 template,
+    return the input string "value" turned into slugified version """
     return slugify(value)
 
 

@@ -45,22 +45,27 @@ API_KEY = 'content of APIKEY.txt'
 
 # In a production environment, make sure to give a
 # filename writable by web server
-LOGFILE = '/tmp/debug.log'
+LOGFILE = '/tmp/escapad-debug.log'
 
 # URL for static and data resources
+# static resources
 STATIC_URL = "/static/"
+# Base URL for generated websites
 DATA_URL = "http://example.com/cnapp_data/"
 
+# DATA_DIR: base directory where
+# - git repositories are cloned (DATA_DIR/repositories)
+# - associated websites are created (DATA_DIR/sites) 
 # For a prod env, give absolute paths to folders writable by web server user
 DATA_DIR = '/path/to/repo-data'
 # For a dev env, DATA_DIR may be inside src folder
 # DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 #                         'repo-data')
-
-
 REPOS_DIR = os.path.join(DATA_DIR, 'repositories')
 GENERATED_SITES_DIR = os.path.join(DATA_DIR, 'sites')
+
 GENERATED_SITES_URL = os.path.join(DATA_URL, 'sites')
+
 
 
 # SECURITY WARNING: keep the secret key used in production secret!

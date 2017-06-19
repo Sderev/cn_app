@@ -380,7 +380,14 @@ server{
         autoindex on;
         alias /path/to/cn_app/collectedstatics/;
     }
-    
+	# documentation
+    location /escapad-formulaire/static/documentation/ {
+        # First attempt to serve request as file, then
+        # as directory, then fall back to displaying a 404.
+        autoindex on;
+        alias /path/to/cn_app/collectedstatics/documentation/html/;
+    }
+
 
 }
 # we're in the http context here

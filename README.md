@@ -1,10 +1,10 @@
 # About cn_app
 
 ## TRAVIS Build
-[![Build Status](https://travis-ci.org/CelestineSauvage/cn_app.svg?branch=formulaire)](https://travis-ci.org/CelestineSauvage/cn_app)
+[![Build Status](https://travis-ci.org/CultureNumerique/cn_app.svg?branch=develop)](https://travis-ci.org/CultureNumerique/cn_app)
 
 ## COVERALLS Build
-[![Coverage Status](https://coveralls.io/repos/github/CelestineSauvage/cn_app/badge.svg?branch=parserGiftTest)](https://coveralls.io/github/CelestineSauvage/cn_app?branch=parserGiftTest)
+[![Coverage Status](https://coveralls.io/repos/github/CultureNumerique/cn_app/badge.svg?branch=develop)](https://coveralls.io/github/CultureNumerique/cn_app?branch=develop)
 
 ## what it is
 application providing services to parse a escapad formated files

@@ -17,10 +17,12 @@ Le code d'Escapad est décomposé comme suit:
 
 Cette partie du code réside dans les dossiers:
 
-- pygiftparser (module installé dans le virtualenv depuis Git avec un pip):
-	responsable du découpage et du parsing des questions rédigées en GIFT dans les sous-section de type Activité; gère également l'export web des questions.
+- pygiftparser (module installé dans le virtualenv depuis Git):
+
+	responsable du découpage et du parsing des questions rédigées en GIFT dans les sous-section de type Activité; gère également l'export web des questions. Source du package : https://github.com/mtommasi/pygiftparser
 
 - src:
+
     - cnExport.py : c'est le script de départ; il amorce le parsing et contrôle les différents exports directemenr (Web) ou via  toEDX.py ou toIMS.py.
     - model.py : contient le modèle; le parsing est amorcé par la création d'un objet Module défini dans ce modèle
     - fromGIFT.py : module qui surchage les classes de :mod:`pygiftparser` en ajoutant la transformation des objets GIFT en XML pour EDX et IMS-CC.
@@ -94,7 +96,7 @@ Paquages de test
 - `Pytest <https://pypi.python.org/pypi/pytest>`_
 - `Coverage <https://coverage.readthedocs.io/en/coverage-4.4.1/#quick-start>`_  permet de voir le taux de couverture des tests :
 
-	- ``$ coverage run [nom_du_module_test]``
+	- ``$ coverage run [nom_du_module_test].py``
 Pour avoir un aperçu graphique :
 
 	- ``$ coverage html``

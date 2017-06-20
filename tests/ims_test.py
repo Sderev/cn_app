@@ -38,7 +38,7 @@ def setUp():
         m_json = json.loads(m.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         if os.path.isdir(TEST_IMS_DIR):
             shutil.rmtree(TEST_IMS_DIR)
-        m.ims_archive_path = toIMS.generateImsArchive(m, "Test", "./")
+        m.ims_a rchive_path = toIMS.generateImsArchive(m, "Test", "./")
         sample_file.close()
         del m_json,sample_file
 

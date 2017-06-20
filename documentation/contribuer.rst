@@ -191,8 +191,8 @@ Si vous voulez ajouter un fichier de tests, veiller à bien lancer son exécutio
 En effet, coverage utilise ce fichier pour vérifier le taux de couverture des lignes exécutées. 
 
 
-# Pistes d'améliorations de l'application
------------------------------------------
+Pistes d'améliorations de l'application
+---------------------------------------
 
 Il réside encore certains problèmes sur l'application Esc@pad. Nous
 souhaitons notamment permettre à l'utilisateur de disposer d'archive
@@ -215,7 +215,7 @@ Insérer des médias dans une archive edx
        <img alt="katakana" src="/static/kata.png"/>
 
 Insérer des médias dans une archive imscc
------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Dans le dossier IMS, créer un dossier static et insérer ses images.
 2. Dans imsmanifest.xml:

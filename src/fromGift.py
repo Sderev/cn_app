@@ -9,6 +9,23 @@ from pygiftparser import parser as pygift
 
 _ = pygift.i18n.language.gettext
 
+def mdToHtml(text,doc=None):
+    """
+    Transform txt in markdown to html
+    """
+    if not (text.isspace()):
+        # text = re.sub(r'\\n','\n',text)
+        html_text = markdown.markdown(text, MARKDOWN_EXT, output_format='xhtml')
+        text = re.sub(r'\\n','\n',text)
+        if doc :
+            doc.asis(html_text)
+            doc.text(' ')
+            return
+        else :
+            return html_text
+
+pygift.mdToHtml = mdToHtml
+
 
 ######################################
 ##           Question               ##

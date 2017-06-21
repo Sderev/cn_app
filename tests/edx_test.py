@@ -477,13 +477,6 @@ What is the color of the white horse of Henri IV ?
 
         print("[EDXArchiveTestCase]-- check_problem_to_edx OK --")
 
-    def runTest(self):
-        self.testCreationDossierEdx()
-        self.testNbWebContent()
-        self.testNbProblems()
-        self.testCntCours()
-        self.testCNVideo()
-        self.testProblem()
 
 
 # Main

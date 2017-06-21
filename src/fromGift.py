@@ -4,10 +4,29 @@
 import yattag
 import logging
 import re
+import markdown
 import random
 from pygiftparser import parser as pygift
 
 _ = pygift.i18n.language.gettext
+
+MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
+
+
+def mdToHtml(text,doc=None):
+    """
+    Transform txt in markdown to html
+    """
+    if not (text.isspace()):
+        # text = re.sub(r'\\n','\n',text)
+        html_text = markdown.markdown(text, MARKDOWN_EXT, output_format='xhtml')
+        text = re.sub(r'\\n','\n',text)
+        if doc :
+            doc.asis(html_text)
+            doc.text(' ')
+            return
+        else :
+            return html_text
 
 
 ######################################
@@ -64,14 +83,14 @@ def astoEDX(self):
     doc = yattag.Doc()
     with doc.tag("problem", display_name=self.question.title, max_attempts=self.max_att):
         with doc.tag("legend"):
-            pygift.mdToHtml(self.question.text,doc)
+            mdToHtml(self.question.text,doc)
         self.scriptEDX(doc)
         self.ownEDX(doc)
         # FIXME : Ajouter un warning ici si rien n'est renvoyé
         if (len(self.question.generalFeedback) > 1):
             with doc.tag("solution"):
                 with doc.tag("div", klass="detailed-solution"):
-                    pygift.mdToHtml(self.question.generalFeedback,doc)
+                    mdToHtml(self.question.generalFeedback,doc)
     return doc.getvalue()
 
 pygift.AnswerSet.toEDX = astoEDX

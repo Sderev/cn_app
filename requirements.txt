@@ -25,4 +25,4 @@ Sphinx
 sphinx-rtd-theme
 recommonmark
 
-git+:https//github.com/mtommasi/pygiftparser#egg=pygiftparser
+git+https://github.com/mtommasi/pygiftparser#egg=pygiftparser

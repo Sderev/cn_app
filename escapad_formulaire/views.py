@@ -93,7 +93,7 @@ def form_upload(request):
                 mediaName=request.FILES.get(nomMedia).name
                 # Specify if the media is empty or not (tar.gz or empty)
                 if re.match(r"^.*\.tar\.gz",mediaName):
-                    mediasType.append("application/tar.gz")
+                    mediasType.append("application/octet-stream")
                 elif re.match(r"^.*\.zip",mediaName):
                     mediasType.append("application/zip")
                 else:
@@ -399,16 +399,18 @@ def cours(request, id_cours):
         :param id_cours: id du cours
     """
 
+    # if the user is authenticated
     if not request.user.is_authenticated:
         return redirect(connexion)
-
-    if not request.user.profil.cours.get(id_cours=id_cours):
-        return redirect(mes_cours)
 
     try:
         cours = Cours.objects.get(id_cours=id_cours)
         request.user.profil.cours.get(id_cours=id_cours)
     except Cours.DoesNotExist:
+        return redirect(mes_cours)
+
+    # if the course doesn't belong to the user
+    if not request.user.profil.cours.get(id_cours=id_cours):
         return redirect(mes_cours)
 
 
@@ -460,7 +462,7 @@ def cours(request, id_cours):
         if medias:
             mediasName=form_generate.cleaned_data["medias"].name
             if re.match(r"^.*\.tar\.gz",mediasName):
-                archiveType="application/tar.gz"
+                archiveType="application/octet-stream"
             elif re.match(r"^.*\.zip",mediasName):
                 archiveType="application/zip"
 

@@ -17,9 +17,10 @@ from pprint import pprint
 from yattag import indent
 from yattag import Doc
 
+from pygiftparser import parser as pygift
 import model
 import utils
-from pygiftparser import parser as pygift
+import fromGift
 
 import StringIO
 import re

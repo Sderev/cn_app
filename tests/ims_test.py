@@ -1,5 +1,6 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
+#!/usr/bin/python
+# coding: utf8
+
 
 from io import open
 import json
@@ -161,15 +162,85 @@ Blablablabla {
         # print(ims)
 
         #TRANSFORM TO IMS
-        # imsmulti = toIMS.create_ims_test([multi],'1','multi')
-        # imstrfl = toIMS.create_ims_test([trfl],'2','trfl')
-        # imstrfl2 = toIMS.create_ims_test([trfl2],'3','trfl2')
-        # imssglans = toIMS.create_ims_test([sglans],'4','sglans')
-        # imsessay = toIMS.create_ims_test([essay],'5','essay')
+        imsmulti = toIMS.create_ims_test([multi],'1','multi')
+        imstrfl = toIMS.create_ims_test([trfl],'2','trfl')
+        imstrfl2 = toIMS.create_ims_test([trfl2],'3','trfl2')
+        imssglans = toIMS.create_ims_test([sglans],'4','sglans')
+        imsessay = toIMS.create_ims_test([essay],'5','essay')
 
         #MULTI
-        # etree.fromstring(ims)
-
+        self.assertTrue('<?xml version="1.0" encoding="UTF-8"?>'.strip() in imsmulti.strip())
+        self.assertTrue("""<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.imsglobal.org/xsd/ims_qtiasiv1p2 http://www.imsglobal.org/profile/cc/ccv1p1/ccv1p1_qtiasiv1p2p1_v1p0.xsd">""".strip() in imsmulti.strip())
+        self.assertTrue("""<qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>qmd_scoretype</fieldlabel>
+        <fieldentry>Percentage</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_hintspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_feedbackpermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_profile</fieldlabel>
+        <fieldentry>cc.exam.v0p1</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>cc_maxattempts</fieldlabel>
+        <fieldentry>1</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_assessmenttype</fieldlabel>
+        <fieldentry>Examination</fieldentry>
+      </qtimetadatafield>
+      <qtimetadatafield>
+        <fieldlabel>qmd_solutionspermitted</fieldlabel>
+        <fieldentry>Yes</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>""".strip() in imsmulti.strip())
+        self.assertTrue("""<rubric>
+      <material label="Summary">
+        <mattext texttype="text/html"></mattext>
+      </material>
+    </rubric>""".strip() in imsmulti.strip())
+        self.assertTrue("""<section ident="section_1_test_1">
+      <item ident="q_0" title="MULTIANSWER">""".strip() in imsmulti.strip())
+        self.assertTrue("""<itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.multiple_response.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank multi</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>""".strip() in imsmulti.strip())
+        self.assertTrue("""<presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; What two people are entombed in Grant's tomb?&lt;/p&gt;</mattext>
+          </material>""".strip() in imsmulti.strip())
+        self.assertTrue("""<material>
+                  <mattext texttype="text/html">&lt;p&gt;No one&lt;/p&gt;</mattext>
+                </material>""".strip() in imsmulti.strip())
+        self.assertTrue("""<material>
+                  <mattext texttype="text/html">&lt;p&gt;Grant&lt;/p&gt;</mattext>
+                </material>""".strip() in imsmulti.strip())
+        self.assertTrue("""<material>
+                  <mattext texttype="text/html">&lt;p&gt;Grant's wife&lt;/p&gt;</mattext>
+                </material>""".strip() in imsmulti.strip())
+        self.assertTrue("""<material>
+                  <mattext texttype="text/html">&lt;p&gt;Grant's father&lt;/p&gt;</mattext>
+                </material>
+              </response_label>
+            </render_choice>
+          </response_lid>
+        </presentation>""".strip() in imsmulti.strip())
+        
 # Main
 if __name__ == '__main__':
     setUp()

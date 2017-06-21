@@ -63,7 +63,7 @@ class UploadFormEth(forms.Form):
 
 # Used for creating a course in a course view
 class GenerateCourseForm(forms.Form):
-    feedback = forms.BooleanField(required=False);
+    feedback = forms.BooleanField(required=False)
     logo = forms.ImageField(required=False)
     medias = forms.FileField(required=False)
 

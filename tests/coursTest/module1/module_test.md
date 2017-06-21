@@ -78,8 +78,7 @@ information quelle qu'elle soit.</p>#<p>Oui !</p>
 ####<p>La numérisation est l'opération qui consiste à représenter sous forme de nombres une information, quelle qu'elle soit.</p> }
 
 ::Où sont les processeurs ?::
-[html]<p>Parmi ces objets, quels sont ceux équipés de
-processeur(s) \:</p>{ ~%20%<p>tablettes</p>
+[html]<p>Parmi ces objets, quels sont ceux équipés de processeur(s) \:</p>{ ~%20%<p>tablettes</p>
 ~%20%<p>smartphones</p> ~%20%<p>box ADSL</p>
 ~%20%<p>lecteur mp3</p> ~%20%<p>ordinateur</p>
 ~<p>aucun</p>#<p>Tous !</p> ####<p>Tous

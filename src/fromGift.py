@@ -334,6 +334,7 @@ def shortsownEDX(self,doc):
 pygift.ShortSet.ownEDX = shortsownEDX
 
 
+
 #############
 ##SelectSet##
 #############
@@ -353,6 +354,11 @@ def ssownEDX(self,doc):
                         doc.asis("<choicehint>"+a.feedback+"</choicehint>")
 
 pygift.SelectSet.ownEDX = ssownEDX
+
+# def sspossiblesAnswersIMS(self,doc,tag,text):
+#     cspossiblesAnswersIMS(self,doc,tag,text)
+
+pygift.SelectSet.possiblesAnswersIMS = cspossiblesAnswersIMS
 
 
 #########################

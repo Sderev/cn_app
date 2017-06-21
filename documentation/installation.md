@@ -71,8 +71,8 @@ Dans le dossier source contenant l’application django, cloner tout d’abord l
     $ git clone https://github.com/lmagniez/ep_disable_format_buttons
     $ git clone https://github.com/lmagniez/ep_markdownify
     $ git clone https://github.com/lmagniez/ep_giftify.git
-    $ git clone https://github.com/johnmclear/ep_post_data
-    $ git clone https://github.com/lmagniez/ep_default-pad-text.git
+    $ git clone https://github.com/lmagniez/ep_post_data
+    $ git clone https://github.com/lmagniez/ep_defaultPadText
     $ git clone https://github.com/lmagniez/strftime
     ```
     Redémarrer l'instance pour appliquer les changements de plugins.

@@ -17,7 +17,7 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(40)
 
-from src import model,utils
+from src import model, utils, fromGift
 
 """
     Test File for Project Esc@pad : Model.py
@@ -98,6 +98,7 @@ CHICKEN: Cot Cot
 
     def test_sections(self):
         """
+        test parsing of sections
         """
         #Title parsed
         io_title = StringIO("""
@@ -129,6 +130,7 @@ Fin
 
     def test_subsections(self):
         """
+        test parsing of subsections
         """
         # PARSE
         io_sub = StringIO("""
@@ -163,6 +165,7 @@ Blablabla
 
     def test_subsubsections(self):
         """
+        test parsing of sub-subsections
         """
         # PARSE
         io_subsub = StringIO("""
@@ -244,6 +247,7 @@ Par contre moi oui !
 
     def testParseVideoLinks(self):
         """
+        test the parsing of video links
         """
         io_video = """# Title 0
 [MaVideo](https://vimeo.com/0123456789){: .cours_video }
@@ -283,6 +287,8 @@ Par contre moi oui !
 
         testvideo = TestVideoIframe()
         testvideo.videoIframeList()
+
+        #TODO : ases
 
 
 

@@ -15,7 +15,6 @@ Contents:
    syntaxe
    tutoriel
    tutoriel_app
-   contribuer_app
    administration
    installation
    contribuer

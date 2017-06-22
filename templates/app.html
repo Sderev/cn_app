@@ -1,4 +1,7 @@
-
+<!--
+Main template giving the structure of the application.
+Most of the template inherits this template.
+-->
 <!DOCTYPE html>
 
 <html lang="fr" >
@@ -18,9 +21,11 @@
     <!-- Icones -->
     <link href="{% static 'css/icons.css' %}" rel="stylesheet">
     <link href="{% static 'css/common.css' %}" rel="stylesheet">
+    <link href="{% static 'css/popup.css' %}" rel="stylesheet">
+
 
     <script type="text/javascript" src="{% static 'js/jquery/jquery.min.js' %}"></script>
-
+    <script type="text/javascript" src="{% static 'js/popup.js' %}"></script>
 
     {% block script %}
     {% endblock %}

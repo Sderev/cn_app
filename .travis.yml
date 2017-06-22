@@ -9,7 +9,7 @@ before_script :
 
 script :
   - cd tests
-  - pytest --cov=src --cov=pygiftparser
+  - pytest --cov=src
 
 after_success:
   - coveralls

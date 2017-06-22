@@ -7,6 +7,24 @@ from pygiftparser import parser as pygift
 
 _ = pygift.i18n.language.gettext
 
+MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
+
+
+def mdToHtml(text,doc=None):
+    """
+    Transform txt in markdown to html
+    """
+    if not (text.isspace()):
+        # text = re.sub(r'\\n','\n',text)
+        html_text = markdown.markdown(text, MARKDOWN_EXT, output_format='xhtml')
+        text = re.sub(r'\\n','\n',text)
+        if doc :
+            doc.asis(html_text)
+            doc.text(' ')
+            return
+        else :
+            return html_text
+
 
 # ######################################
 # ##           Question               ##
@@ -62,7 +80,12 @@ pygift.AnswerSet.toIMSFB = astoIMSFB
 
 # EDX
 def astoEDX(self):
-    assert (self.question)
+    """
+    transform object answer in XML problem for EDX
+
+    :return: The doc value of XML text problem
+    :rtype: String
+    """
     doc = yattag.Doc()
     with doc.tag("problem", display_name=self.question.title,
                  max_attempts=self.max_att):
@@ -103,8 +126,7 @@ pygift.Essay.max_att = ''
 
 def escriptEDX(self, doc):
     with doc.tag("script", type="loncapa/python"):
-        doc.text("""
-import re
+        doc.text("""import re
 def checkAnswerEssay(expect, ans):
     response = re.search('', ans)
     if response:
@@ -393,6 +415,11 @@ def ssownEDX(self, doc):
 
 
 pygift.SelectSet.ownEDX = ssownEDX
+
+# def sspossiblesAnswersIMS(self,doc,tag,text):
+#     cspossiblesAnswersIMS(self,doc,tag,text)
+
+pygift.SelectSet.possiblesAnswersIMS = cspossiblesAnswersIMS
 
 
 # #########################

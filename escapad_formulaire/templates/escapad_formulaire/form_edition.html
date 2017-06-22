@@ -1,3 +1,9 @@
+<!--
+Editing course Template
+Get from the models is_home, base_url, and url_module,
+which are necessary to get the course preview.
+-->
+
 {% extends "app.html" %}
 
 {% block titre %}Formulaire{% endblock %}
@@ -23,9 +29,6 @@
 {% block content %}
 
     <h2>Modification du module : {{ name }}</h2>
-
-    {{url}}
-    {% url "home" %}
 
         <fieldset id="home">
           <legend>Ecriture du cours</legend>

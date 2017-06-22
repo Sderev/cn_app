@@ -1,10 +1,7 @@
-#!/usr/bin/python3
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import yattag
 import logging
-import re
-import markdown
 import random
 from pygiftparser import parser as pygift
 
@@ -29,18 +26,19 @@ def mdToHtml(text,doc=None):
             return html_text
 
 
-######################################
-##           Question               ##
-######################################
+# ######################################
+# ##           Question               ##
+# ######################################
 
 def toEDX(self):
     """
     produces an XML fragment for EDX
     """
-    if not self.valid :
-        logging.warning (pygift.INVALID_FORMAT_QUESTION ) #
+    if not self.valid:
+        logging.warning(pygift.INVALID_FORMAT_QUESTION)
         return ''
     return self.answers.toEDX()
+
 
 pygift.Question.toEDX = toEDX
 
@@ -48,31 +46,39 @@ pygift.Question.toEDX = toEDX
 # ##             Answer               ##
 # ######################################
 
-#############
-##AnswerSet##
-#############
+# #############
+# ##AnswerSet##
+# #############
 pygift.AnswerSet.cc_profile = 'ESSAY'
 pygift.AnswerSet.max_att = '1'
-#IMS
-def aslistInteractionsIMS(self,doc,tag,text):
+
+
+# IMS
+def aslistInteractionsIMS(self, doc, tag, text):
     pass
+
 
 pygift.AnswerSet.listInteractionsIMS = aslistInteractionsIMS
 
-def aspossiblesAnswersIMS(self,doc,tag,text, rcardinality='Single'):
-    with doc.tag('response_str', rcardinality=rcardinality, ident='response_'+str(self.question.id)):
+
+def aspossiblesAnswersIMS(self, doc, tag, text,
+                          rcardinality='Single'):
+    with doc.tag('response_str', rcardinality=rcardinality,
+                 ident='response_'+str(self.question.id)):
         doc.stag('render_fib', rows=5, prompt='Box', fibtype="String")
+
 
 pygift.AnswerSet.possiblesAnswersIMS = aspossiblesAnswersIMS
 
 
-def astoIMSFB(self,doc,tag,text):
+def astoIMSFB(self, doc, tag, text):
     pass
+
 
 pygift.AnswerSet.toIMSFB = astoIMSFB
 
 
-#EDX
+# EDX
 def astoEDX(self):
     """
     transform object answer in XML problem for EDX
@@ -81,39 +87,44 @@ def astoEDX(self):
     :rtype: String
     """
     doc = yattag.Doc()
-    with doc.tag("problem", display_name=self.question.title, max_attempts=self.max_att):
+    with doc.tag("problem", display_name=self.question.title,
+                 max_attempts=self.max_att):
         with doc.tag("legend"):
-            mdToHtml(self.question.text,doc)
+            pygift.mdToHtml(self.question.text, doc)
         self.scriptEDX(doc)
         self.ownEDX(doc)
         # FIXME : Ajouter un warning ici si rien n'est renvoyé
         if (len(self.question.generalFeedback) > 1):
             with doc.tag("solution"):
                 with doc.tag("div", klass="detailed-solution"):
-                    mdToHtml(self.question.generalFeedback,doc)
+                    pygift.mdToHtml(self.question.generalFeedback, doc)
     return doc.getvalue()
+
 
 pygift.AnswerSet.toEDX = astoEDX
 
 
-def asownEDX(self,doc):
+def asownEDX(self, doc):
     pass
+
 
 pygift.AnswerSet.ownEDX = asownEDX
 
 
-def asscriptEDX(self,doc):
+def asscriptEDX(self, doc):
     pass
+
 
 pygift.AnswerSet.scriptEDX = asscriptEDX
 
 
-#########
-##Essay##
-#########
+# #########
+# ##Essay##
+# #########
 pygift.Essay.max_att = ''
 
-def escriptEDX(self,doc):
+
+def escriptEDX(self, doc):
     with doc.tag("script", type="loncapa/python"):
         doc.text("""import re
 def checkAnswerEssay(expect, ans):
@@ -146,99 +157,120 @@ def checkAnswerEssay(expect, ans):
     })();
             """)
 
+
 pygift.Essay.scriptEDX = escriptEDX
 
 
-def eownEDX(self,doc):
+def eownEDX(self, doc):
     with doc.tag("customresponse", cfn="checkAnswerEssay"):
         doc.asis('<textline size="40" correct_answer="" label="Problem Text"/>')
 
+
 pygift.Essay.ownEDX = eownEDX
 
-###############
-##Description##
-###############
+# ###############
+# ##Description##
+# ###############
 pygift.Description.cc_profile = 'DESCRIPTION'
 
-################
-##TrueFalseSet##
-################
+# ################
+# ##TrueFalseSet##
+# ################
 pygift.TrueFalseSet.cc_profile = 'TRUEFALSE'
+
 
 def tfsownEDX(self, doc):
     with doc.tag("multiplechoiceresponse"):
         with doc.tag("choicegroup", type="MultipleChoice"):
-            if self.answer :
+            if self.answer:
                 correct = 'true'
                 wrong = 'false'
-            else :
+            else:
                 correct = 'false'
                 wrong = 'true'
             with doc.tag("choice", correct=correct):
                 doc.text(_('True'))
                 if correct == 'true':
-                    doc.asis("<choicehint>"+self.feedbackCorrect+"</choicehint>")
-                else :
+                    doc.asis("<choicehint>" +
+                             self.feedbackCorrect +
+                             "</choicehint>")
+                else:
                     doc.asis("<choicehint>"+self.feedbackWrong+"</choicehint>")
             with doc.tag("choice", correct=wrong):
                 doc.text(_('False'))
                 if wrong == 'true':
-                    doc.asis("<choicehint>"+self.feedbackCorrect+"</choicehint>")
-                else :
+                    doc.asis("<choicehint>" +
+                             self.feedbackCorrect +
+                             "</choicehint>")
+                else:
                     doc.asis("<choicehint>"+self.feedbackWrong+"</choicehint>")
+
 
 pygift.TrueFalseSet.ownEDX = tfsownEDX
 
 
-def tfspossiblesAnswersIMS(self,doc,tag,text):
-    with tag('response_lid', rcardinality='Single', ident='response_'+str(self.question.id)):
+def tfspossiblesAnswersIMS(self, doc, tag, text):
+    with tag('response_lid', rcardinality='Single',
+             ident='response_'+str(self.question.id)):
         with tag('render_choice', shuffle='No'):
-            with tag('response_label', ident='answer_'+str(self.question.id)+'_'+'0'):
+            with tag('response_label',
+                     ident='answer_'+str(self.question.id)+'_'+'0'):
                 with tag('material'):
                     with tag('mattext', texttype="text/html"):
                         text(_('True'))
-            with tag('response_label', ident='answer_'+str(self.question.id)+'_'+'1'):
+            with tag('response_label',
+                     ident='answer_'+str(self.question.id)+'_'+'1'):
                 with tag('material'):
                     with tag('mattext', texttype="text/html"):
                         text(_('False'))
 
+
 pygift.TrueFalseSet.possiblesAnswersIMS = tfspossiblesAnswersIMS
 
 
-def tfslistInteractionsIMS(self,doc,tag,text):
-        score = 0
-        if self.answer :
-            title1 = 'Correct'
-            score1 = 100
-            title2 = ''
-            score2 = 0
-        else :
-            title1 = ''
-            score1 = 0
-            title2 = 'Correct'
-            score2 = 100
-        with tag('respcondition', title=title1):
-            with tag('conditionvar'):
-                with tag('varequal', respident='response_'+str(self.question.id)): # respoident is id of response_lid element
-                    text('answer_'+str(self.question.id)+'_0')
-            with tag('setvar', varname='SCORE', action='Set'):
-                text(score1)
-            doc.stag('displayfeedback', feedbacktype='Response', linkrefid='feedb_0')
-        with tag('respcondition', title=title2):
-            with tag('conditionvar'):
-                with tag('varequal', respident='response_'+str(self.question.id)): # respoident is id of response_lid element
-                    text('answer_'+str(self.question.id)+'_1')
-            with tag('setvar', varname='SCORE', action='Set'):
-                text(score2)
-            doc.stag('displayfeedback', feedbacktype='Response', linkrefid='feedb_1')
+def tfslistInteractionsIMS(self, doc, tag, text):
+    if self.answer:
+        title1 = 'Correct'
+        score1 = 100
+        title2 = ''
+        score2 = 0
+    else:
+        title1 = ''
+        score1 = 0
+        title2 = 'Correct'
+        score2 = 100
+    with tag('respcondition', title=title1):
+        with tag('conditionvar'):
+            # respident is id of response_lid element
+            with tag('varequal',
+                     respident='response_'+str(self.question.id)):
+                text('answer_'+str(self.question.id)+'_0')
+        with tag('setvar', varname='SCORE', action='Set'):
+            text(score1)
+        doc.stag('displayfeedback',
+                 feedbacktype='Response',
+                 linkrefid='feedb_0')
+    with tag('respcondition', title=title2):
+        with tag('conditionvar'):
+            with tag('varequal',
+                     respident='response_'+str(self.question.id)):
+                text('answer_'+str(self.question.id)+'_1')
+        with tag('setvar', varname='SCORE', action='Set'):
+            text(score2)
+        doc.stag('displayfeedback',
+                 feedbacktype='Response',
+                 linkrefid='feedb_1')
+
 
 pygift.TrueFalseSet.listInteractionsIMS = tfslistInteractionsIMS
 
-####################
-##NumericAnswerSet##
-####################
-def nasownEDX(self,doc):
-    #FIXME : Problème pour le multi answer NUMERIC, ne gère qu'une réponse
+
+# ####################
+# ##NumericAnswerSet##
+# ####################
+def nasownEDX(self, doc):
+    # FIXME : Problème pour le multi answer NUMERIC,
+    # ne gère qu'une réponse
     correctAnswer = []
     for a in self.answers:
         if a.fraction > 0:
@@ -249,14 +281,17 @@ def nasownEDX(self,doc):
     elif len(correctAnswer) == 1:
         correctAnswer[0].ownEDX(doc)
 
+
 pygift.NumericAnswerSet.ownEDX = nasownEDX
 
-###############
-##MatchingSet##
-###############
-pygift.MatchingSet.cc_profile = 'ESSAY' # need in toIMS.py
 
-def msownEDX(self,doc):
+# ###############
+# ##MatchingSet##
+# ###############
+pygift.MatchingSet.cc_profile = 'ESSAY'  # need in toIMS.py
+
+
+def msownEDX(self, doc):
     for a in self.answers:
         with doc.tag('h2'):
             doc.text(a.question+" ")
@@ -266,15 +301,19 @@ def msownEDX(self,doc):
             for a2 in self.possibleAnswers:
                 options += "'"+a2+"'"+','
             options += ')\"'
-            doc.asis("<optioninput label=\""+a.question+"\" options="+options+"  correct=\""+a.answer+"\" ></optioninput>")
+            doc.asis("<optioninput label=\"" + a.question + "\" options=" +
+                     options + "  correct=\"" + a.answer+"\" ></optioninput>")
 
+            
 pygift.MatchingSet.ownEDX = msownEDX
 
-##############
-##ChoicesSet##
-##############
+
+# ##############
+# ##ChoicesSet##
+# ##############
+
 # #IMS
-def cslistInteractionsIMS(self,doc,tag,text):
+def cslistInteractionsIMS(self, doc, tag, text):
     for id_a, answer in enumerate(self.answers):
         score = 0
         if answer.fraction == 100:
@@ -285,73 +324,95 @@ def cslistInteractionsIMS(self,doc,tag,text):
             score = answer.fraction
         with tag('respcondition', title=title):
             with tag('conditionvar'):
-                with tag('varequal', respident='response_'+str(self.question.id)): # respoident is id of response_lid element
+                # respident is id of response_lid element
+                with tag('varequal',
+                         respident='response_' + str(self.question.id)):
                     text('answer_'+str(self.question.id)+'_'+str(id_a))
             with tag('setvar', varname='SCORE', action='Set'):
                 text(score)
-            doc.stag('displayfeedback', feedbacktype='Response', linkrefid='feedb_'+str(id_a))
+            doc.stag('displayfeedback',
+                     feedbacktype='Response',
+                     linkrefid='feedb_'+str(id_a))
+
 
 pygift.ChoicesSet.listInteractionsIMS = cslistInteractionsIMS
 
-def cspossiblesAnswersIMS(self,doc,tag,text,rcardinality='Single'):
-    with tag('response_lid', rcardinality=rcardinality, ident='response_'+str(self.question.id)):
+
+def cspossiblesAnswersIMS(self, doc, tag, text, rcardinality='Single'):
+    with tag('response_lid',
+             rcardinality=rcardinality,
+             ident='response_' + str(self.question.id)):
         with tag('render_choice', shuffle='No'):
             for id_a, answer in enumerate(self.answers):
-                with tag('response_label', ident='answer_'+str(self.question.id)+'_'+str(id_a)):
+                with tag('response_label',
+                         ident='answer_'+str(self.question.id) +
+                         '_'+str(id_a)):
                     with tag('material'):
                         with tag('mattext', texttype="text/html"):
-                            text(pygift.markupRendering(answer.answer,self.question.markup))
+                            text(pygift.markupRendering(answer.answer,
+                                                        self.question.markup))
+
 
 pygift.ChoicesSet.possibleAnswersIMS = cspossiblesAnswersIMS
 
-def cstoIMSFB(self,doc,tag,text):
+
+def cstoIMSFB(self, doc, tag, text):
     for id_a, answer in enumerate(self.answers):
         with tag('itemfeedback', ident='feedb_'+str(id_a)):
             with tag('flow_mat'):
                 with tag('material'):
                     with tag('mattext', texttype='text/html'):
                         if answer.feedback:
-                            text(pygift.markupRendering(answer.feedback,self.question.markup))
-                        else :
+                            text(pygift.markupRendering(answer.feedback,
+                                                        self.question.markup))
+                        else:
                             text('')
+
 
 pygift.ChoicesSet.toIMSFB = cstoIMSFB
 
 
-############
-##ShortSet##
-############
+# ############
+# ##ShortSet##
+# ############
 pygift.ShortSet.cc_profile = 'MISSINGWORD'
 
-def shortsownEDX(self,doc):
-    with doc.tag('stringresponse', answer = self.answers[0].answer, type = 'ci'):
+
+def shortsownEDX(self, doc):
+    with doc.tag('stringresponse',
+                 answer = self.answers[0].answer,
+                 type = 'ci'):
         if len(self.answers) > 1:
-            for i,a in enumerate(self.answers):
-                if i > 0 :
-                    doc.asis('<additional_answer answer="'+ a.answer +'"></additional_answer>')
+            for i, a in enumerate(self.answers):
+                if i > 0:
+                    doc.asis('<additional_answer answer="' +
+                             a.answer +
+                             '"></additional_answer>')
         doc.asis("<textline size='20' />")
+
 
 pygift.ShortSet.ownEDX = shortsownEDX
 
 
-
-#############
-##SelectSet##
-#############
+# #############
+# ##SelectSet##
+# #############
 pygift.SelectSet.cc_profile = 'MULTICHOICE'
 
-def ssownEDX(self,doc):
+
+def ssownEDX(self, doc):
     with doc.tag("multiplechoiceresponse"):
         with doc.tag("choicegroup", type="MultipleChoice"):
             for a in self.answers:
-                if a.fraction>0:
+                if a.fraction > 0:
                     korrect = 'true'
-                else :
+                else:
                     korrect = 'false'
                 with doc.tag("choice", correct=korrect):
                     doc.text(a.answer)
-                    if (a.feedback) and (len(a.feedback)> 1):
+                    if (a.feedback) and (len(a.feedback) > 1):
                         doc.asis("<choicehint>"+a.feedback+"</choicehint>")
+
 
 pygift.SelectSet.ownEDX = ssownEDX
 
@@ -361,33 +422,38 @@ pygift.SelectSet.ownEDX = ssownEDX
 pygift.SelectSet.possiblesAnswersIMS = cspossiblesAnswersIMS
 
 
-#########################
-##  MultipleChoicesSet ##
-#########################
+# #########################
+# ##  MultipleChoicesSet ##
+# #########################
 pygift.MultipleChoicesSet.cc_profile = 'MULTIANSWER'
 
-def mcsetownEDX(self,doc):
+
+def mcsetownEDX(self, doc):
     with doc.tag("choiceresponse", partial_credit="EDC"):
         with doc.tag("checkboxgroup"):
             for a in self.answers:
-                if a.fraction>0:
+                if a.fraction > 0:
                     korrect = 'true'
-                else :
+                else:
                     korrect = 'false'
                 with doc.tag("choice", correct=korrect):
                     doc.text(a.answer)
-                    if (a.feedback) and (len(a.feedback)> 1):
+                    if (a.feedback) and (len(a.feedback) > 1):
                         with doc.tag("choicehint", selected="true"):
                             doc.text(a.answer+" : "+a.feedback)
 
+
 pygift.MultipleChoicesSet.ownEDX = mcsetownEDX
 
-def mcspossiblesAnswersIMS(self,doc,tag,text):
-    cspossiblesAnswersIMS(self,doc,tag,text,'Multiple')
+
+def mcspossiblesAnswersIMS(self, doc, tag, text):
+    cspossiblesAnswersIMS(self, doc, tag, text, 'Multiple')
+
 
 pygift.MultipleChoicesSet.possiblesAnswersIMS = mcspossiblesAnswersIMS
 
-def mcslistInteractionsIMS(self,doc,tag,text):
+
+def mcslistInteractionsIMS(self, doc, tag, text):
     with tag('respcondition', title="Correct", kontinue='No'):
         with tag('conditionvar'):
             with tag('and'):
@@ -399,39 +465,62 @@ def mcslistInteractionsIMS(self,doc,tag,text):
                         pass
                     if score <= 0:
                         with tag('not'):
-                            with tag('varequal', case='Yes', respident='response_'+str(self.question.id)): # respoident is id of response_lid element
-                                text('answer_'+str(self.question.id)+'_'+str(id_a))
+                            with tag('varequal',
+                                     case='Yes',
+                                     respident='response_' +
+                                     str(self.question.id)):
+                                text('answer_'+str(self.question.id) +
+                                     '_'+str(id_a))
                     else:
-                        with tag('varequal', case='Yes', respident='response_'+str(self.question.id)): # respoident is id of response_lid element
+                        with tag('varequal',
+                                 case='Yes',
+                                 respident='response_' +
+                                 str(self.question.id)):
                             text('answer_'+str(self.question.id)+'_'+str(id_a))
         with tag('setvar', varname='SCORE', action='Set'):
             text('100')
-        doc.stag('displayfeedback', feedbacktype='Response', linkrefid='general_fb')
+        doc.stag('displayfeedback',
+                 feedbacktype='Response',
+                 linkrefid='general_fb')
     for id_a, answer in enumerate(self.answers):
         with tag('respcondition', kontinue='No'):
             with tag('conditionvar'):
-                with tag('varequal', respident='response_'+str(self.question.id), case="Yes"):
+                with tag('varequal',
+                         respident='response_'+str(self.question.id),
+                         case="Yes"):
                     text('answer_'+str(self.question.id)+'_'+str(id_a))
-            doc.stag('displayfeedback', feedbacktype='Response', linkrefid='feedb_'+str(id_a))
+            doc.stag('displayfeedback',
+                     feedbacktype='Response',
+                     linkrefid='feedb_'+str(id_a))
+
 
 pygift.MultipleChoicesSet.listInteractionsIMS = mcslistInteractionsIMS
 
-#######################
-##NumericAnswerMinMax##
-#######################
+
+# #######################
+# ##NumericAnswerMinMax##
+# #######################
 def numMinMaxownEDX(self, doc):
-    with doc.tag('numericalresponse', answer = "["+str(self.mini)+","+str(self.maxi)+"]"):
+    with doc.tag('numericalresponse',
+                 answer="["+str(self.mini) +
+                 "," +
+                 str(self.maxi)+"]"):
         doc.asis("<formulaequationinput />")
+
 
 pygift.NumericAnswerMinMax.ownEDX = numMinMaxownEDX
 
-#################
-##NumericAnswer##
-#################
+
+# #################
+# ##NumericAnswer##
+# #################
 def naownEDX(self, doc):
-        with doc.tag('numericalresponse', answer = str(self.value)):
+        with doc.tag('numericalresponse',
+                     answer=str(self.value)):
             if self.tolerance != 0.0:
-                doc.asis("<responseparam type='tolerance' default='"+str(self.tolerance)+"' />")
+                doc.asis("<responseparam type='tolerance' default='" +
+                         str(self.tolerance)+"' />")
             doc.asis("<formulaequationinput />")
+
 
 pygift.NumericAnswer.ownEDX = naownEDX

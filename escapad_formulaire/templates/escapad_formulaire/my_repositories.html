@@ -5,36 +5,41 @@
 {%  load static %}
 
 {% block content %}
-  <h1>Mes cours</h1>
+  <h1>Dépôts de {{ user }}</h1>
 
   {% if user.is_authenticated %}
 
     <table>
       <tr>
-        <th>Nom du cours</th>
-        <th>Nombre Modules</th>
-        <th>Contributeurs</th>
-        <th>Modification</th>
+        <th>Nom du dépot</th>
+        <th>Utilisateur git</th>
+        <th>Feedback</th>
+        <th>Archive du cours</th>
+        <th>Site généré</th>
         <th>Suppression</th>
+
       </tr>
-    {% for cours in profil.cours.all %}
+    {% for repo in repositories.all %}
       <tr>
-        <td>{{ cours.nom_cours }}</td>
-        <td>{{ cours.module_set.all.count}} Module(s) </td>
-        <td>{{ cours.profil_set.all.count }} Contributeur(s) </td>
-        <td><a href="{% url 'cours' cours.id_cours %}">Voir le cours</a></td>
-        <td><a href="{% url 'delete_course' cours.id_cours %}">Supprimer le cours</a></td>
+        <td>{{ repo.git_name }}</td>
+        <td>{{ repo.git_username }} </td>
+        <td>{{ repo.show_feedback }} </td>
+        <td><a href="{% url 'build_zip_repo' repo.slug %}">Générer le zip</a></td>
+        <td><a href="{% url 'visit_site' repo.slug %}">Accéder au site</a></td>
+        <td><a href="{% url 'delete_repository' repo.slug %}">Supprimer le dépôt</a></td>
+
 
       </tr>
     {% endfor %}
     </table>
 
+
     <br>
 
-    <form action="{% url 'mes_cours' %}" method="post"  enctype="multipart/form-data">
+    <form action="{% url 'my_repositories' %}" method="post"  enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset id="home">
-          <legend>Créer un nouveau cours</legend>
+          <legend>Ajouter un dépôt</legend>
           {{ form.as_p}}
         </fieldset>
 

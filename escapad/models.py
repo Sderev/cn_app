@@ -67,3 +67,6 @@ class Repository(models.Model):
     repo_synced = models.BooleanField(default=False)
     show_feedback = models.BooleanField(default=False)
     provider = models.URLField(max_length=200, blank=True, null=True)
+
+    def __str__(self):
+        return "Repository: {0} (user: {1})".format(self.git_name, self.git_username)

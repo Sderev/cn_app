@@ -12,19 +12,48 @@ _ = pygift.i18n.language.gettext
 MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
 
 
-def mdToHtml(text,doc=None):
+"""
+    This module add methods to the module pygiftparser with a monkey patch
+    For this project, if you want to rewrite method, write your new method
+    in this file like:
+
+    >>> def myNewMethod(param1, param2):
+        >>> code
+
+    >>> pygift.newMethod = myNewMethod
+
+    If you want add a Class method :
+
+    >>> def myNewMethod(self, param1, param2):
+        >>> code
+
+    >>> pygift.[class_name].newMethod = myNewMethod
+
+    for apply patch, import pygift and fromGift in your file.
+
+"""
+
+
+def mdToHtml(text, doc=None):
     """
     Transform txt in markdown to html
+
+    :param doc: yattag.doc()
+
+    :return: HTML text
+    :rtype: String
+
     """
     if not (text.isspace()):
         # text = re.sub(r'\\n','\n',text)
-        html_text = markdown.markdown(text, MARKDOWN_EXT, output_format='xhtml')
-        text = re.sub(r'\\n','\n',text)
-        if doc :
+        html_text = markdown.markdown(text, MARKDOWN_EXT,
+                                      output_format='xhtml')
+        text = re.sub(r'\\n', '\n', text)
+        if doc:
             doc.asis(html_text)
             doc.text(' ')
             return
-        else :
+        else:
             return html_text
 
 
@@ -34,7 +63,10 @@ def mdToHtml(text,doc=None):
 
 def toEDX(self):
     """
-    produces an XML fragment for EDX
+    produces an XML fragment for EDX, use toEDX from AnswerSet
+
+    :return: The doc value of XML text problem
+    :rtype: String
     """
     if not self.valid:
         logging.warning(pygift.INVALID_FORMAT_QUESTION)
@@ -57,14 +89,26 @@ pygift.AnswerSet.max_att = '1'
 
 # IMS
 def aslistInteractionsIMS(self, doc, tag, text):
+    """
+    return the list interactions in IMS form the class Answer
+    (example : When someone have the good answer, or the bad.)
+    Add XML in the yattag.doc
+    """
     pass
 
 
 pygift.AnswerSet.listInteractionsIMS = aslistInteractionsIMS
 
 
-def aspossiblesAnswersIMS(self, doc, tag, text,
-                          rcardinality='Single'):
+def aspossiblesAnswersIMS(self, doc, tag, text, rcardinality='Single'):
+    """
+    Return the list of possible responses, example for
+    SelectSet(unique good answer) and
+    MultipleChoicesSet (one or many good answer(s)).
+
+    :param rcardinality: represent number of good answer(s)
+    :type rcardinality: String
+    """
     with doc.tag('response_str', rcardinality=rcardinality,
                  ident='response_'+str(self.question.id)):
         doc.stag('render_fib', rows=5, prompt='Box', fibtype="String")
@@ -74,6 +118,9 @@ pygift.AnswerSet.possiblesAnswersIMS = aspossiblesAnswersIMS
 
 
 def astoIMSFB(self, doc, tag, text):
+    """
+    return the feedback for each answer.
+    """
     pass
 
 
@@ -83,7 +130,8 @@ pygift.AnswerSet.toIMSFB = astoIMSFB
 # EDX
 def astoEDX(self):
     """
-    transform object answer in XML problem for EDX
+    transform object question in XML problem for EDX,
+    depends to Answer type
 
     :return: The doc value of XML text problem
     :rtype: String
@@ -107,6 +155,9 @@ pygift.AnswerSet.toEDX = astoEDX
 
 
 def asownEDX(self, doc):
+    """
+    Transforms the answers into XML EDX according to their type
+    """
     pass
 
 
@@ -114,6 +165,10 @@ pygift.AnswerSet.ownEDX = asownEDX
 
 
 def asscriptEDX(self, doc):
+    """
+    In EDX, we can add a python or javascript script.
+    This method allow to add script in XML EDX.
+    """
     pass
 
 
@@ -123,7 +178,7 @@ pygift.AnswerSet.scriptEDX = asscriptEDX
 # #########
 # ##Essay##
 # #########
-pygift.Essay.max_att = ''
+# pygift.Essay.max_att = ''
 
 
 def escriptEDX(self, doc):
@@ -144,7 +199,8 @@ def checkAnswerEssay(expect, ans):
     var elem = $("#"""+str(self.question.id)+"""")
         .closest("div.problem")
         .find(":text");
-    /* There's CSS in the LMS that controls the height, so we have to override here */
+    /* There's CSS in the LMS that controls the height,
+    so we have to override here */
     var textarea = $('<textarea style="height:150px" rows="20" cols="70"/>');
     console.log(elem);
     console.log(textarea);
@@ -382,8 +438,8 @@ pygift.ShortSet.cc_profile = 'MISSINGWORD'
 
 def shortsownEDX(self, doc):
     with doc.tag('stringresponse',
-                 answer = self.answers[0].answer,
-                 type = 'ci'):
+                 answer=self.answers[0].answer,
+                 type='ci'):
         if len(self.answers) > 1:
             for i, a in enumerate(self.answers):
                 if i > 0:

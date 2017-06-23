@@ -3,6 +3,8 @@
 import yattag
 import logging
 import random
+import re
+import markdown
 from pygiftparser import parser as pygift
 
 _ = pygift.i18n.language.gettext
@@ -90,14 +92,14 @@ def astoEDX(self):
     with doc.tag("problem", display_name=self.question.title,
                  max_attempts=self.max_att):
         with doc.tag("legend"):
-            pygift.mdToHtml(self.question.text, doc)
+            mdToHtml(self.question.text, doc)
         self.scriptEDX(doc)
         self.ownEDX(doc)
         # FIXME : Ajouter un warning ici si rien n'est renvoyé
         if (len(self.question.generalFeedback) > 1):
             with doc.tag("solution"):
                 with doc.tag("div", klass="detailed-solution"):
-                    pygift.mdToHtml(self.question.generalFeedback, doc)
+                    mdToHtml(self.question.generalFeedback, doc)
     return doc.getvalue()
 
 
@@ -304,7 +306,7 @@ def msownEDX(self, doc):
             doc.asis("<optioninput label=\"" + a.question + "\" options=" +
                      options + "  correct=\"" + a.answer+"\" ></optioninput>")
 
-            
+
 pygift.MatchingSet.ownEDX = msownEDX
 
 

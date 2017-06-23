@@ -17,7 +17,7 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(40)
 
-from src import model, utils, fromGift
+from src import model, utils, fromGift, toEDX
 
 """
     Test File for Project Esc@pad : Model.py
@@ -286,10 +286,9 @@ Par contre moi oui !
                 self.videos = [newVideoObject]
 
         testvideo = TestVideoIframe()
-        testvideo.videoIframeList()
+        listevideo = testvideo.videoIframeList()
 
-        #TODO : ases
-
+        self.assertTrue('<iframe src=src_link width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>' in listevideo)
 
 
     def testSubsections(self):
@@ -372,6 +371,80 @@ Je suis une AnyActivity {
         self.assertIsNone(model.goodActivity(matchN))
 
         print("[FctParserTestCase]-- anyactivity check --")
+
+    def testCourseProgram(self):
+
+        cp = model.CourseProgram('repository')
+        self.assertEqual('repository', cp.repository)
+        self.assertEqual([], cp.modules)
+        self.assertEqual('Culture Numérique', cp.title)
+        self.assertEqual('logo.png', cp.logo_path)
+
+    def testtoVideoList(self):
+            """
+            test the parsing of video links
+            """
+
+            io_video = StringIO("""# Title 0\n
+## Cours\n
+Blabla
+[MaVideo](https://vimeo.com/0123456789){: .cours_video }\n
+[Video2](https://vimeo.com/9876543210){: .cours_video }
+            """)
+            mod = model.Module(io_video, 'test')
+            self.assertEqual(mod.sections[0].subsections[0].videoIframeList()+'\n\n', mod.toVideoList())
+
+    def testtoGift(self):
+        """
+
+        """
+
+        io_gift = StringIO(u"""# Title 0
+```comprehension
+::q1::
+question1
+{#### GeneralFeedback}
+
+::q2::
+question2{
+= Yes
+~ No
+~ NO
+}
+
+::q3::
+ok
+```
+""")
+        mod = model.Module(io_gift, 'test')
+        gift_src = "$CATEGORY: $course$/Quiz Bank '1-1 Compréhension'"
+        for q in mod.sections[0].subsections[0].questions:
+            gift_src += q.source
+        self.assertEqual(gift_src.replace('\n','').strip(),mod.toGift().replace('\n','').strip())
+
+    def testtoEdxProblemList(self):
+        io_test = StringIO(u"""# Title 0
+```comprehension
+::q1::
+question1
+{#### GeneralFeedback}
+
+::q2::
+question2{
+= Yes
+~ No
+~ NO
+}
+
+::q3::
+ok
+```
+""")
+        mod = model.Module(io_test, 'test')
+        edx_list = ''
+        for q in mod.sections[0].subsections[0].questions:
+            edx_list += toEDX.toEdxProblemXml(q)
+        self.assertEqual(edx_list.replace('\n','').strip(),mod.sections[0].subsections[0].toEdxProblemsList().replace('\n','').strip())
 
 
 # Main

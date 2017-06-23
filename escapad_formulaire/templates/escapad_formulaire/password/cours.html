@@ -28,7 +28,7 @@
       <h5>Plan du cours</h5>
       <table>
         <tr>
-          <th>{{ cours.nb_module }} Module(s) </th>
+          <th>{{ len(cours.module_set.all())) }} Module(s) </th>
           <th>Modification</th>
           <th>Suppression</th>
         </tr>

@@ -9,6 +9,8 @@ Page for dealing with a course
 
 {% extends "app.html" %}
 
+{%  load static %}
+
 {% if userFound %}
   <p> Partage du projet effectué avec succès ! </p>
 {% endif %}
@@ -33,7 +35,7 @@ Page for dealing with a course
       <h5>Plan du cours</h5>
       <table>
         <tr>
-          <th>{{ cours.nb_module }} Module(s) </th>
+          <th>{{ cours.module_set.all.count}} Module(s) </th>
           <th>Modification</th>
           <th>Suppression</th>
         </tr>
@@ -65,7 +67,7 @@ Page for dealing with a course
             <td><input type="submit" value="Créer un module" /></td>
             <td>
               <button type="button" class="popup" onclick="showPopUp('popup3')">
-                <img src="/static/img/help.png" height="20" width="20"/>
+                <img src="{% static 'img/help.png' %}" height="20" width="20"/>
                 <span class="popuptext" id="popup3">
                   Générer un nouveau module pour ce cours:<br/>
                   Créé un nouveau pad collaboratif.
@@ -88,7 +90,7 @@ Page for dealing with a course
           <td><input type="submit" value="Partager"/></td>
           <td>
             <button type="button" class="popup" onclick="showPopUp('popup1')">
-              <img src="/static/img/help.png" height="20" width="20"/>
+              <img src="{% static 'img/help.png' %}" height="20" width="20"/>
               <span class="popuptext" id="popup1">Veuillez entrer un nom d'utilisateur valide
                 pour partager le cours avec celui-ci.
                 <br>(Note: Il deviendra aussi propriétaire du cours et travaillera sur la même copie.)
@@ -115,7 +117,7 @@ Page for dealing with a course
       <input type="submit" value="Générer l'archive" />
 
       <button type="button" class="popup" onclick="showPopUp('popup2')">
-        <img src="/static/img/help.png" height="20" width="20"/>
+        <img src="{% static 'img/help.png' %}" height="20" width="20"/>
         <span class="popuptext" id="popup2">Architecture de l'archive medias:<br>
           Pour chaque module, créer un dossier moduleX (module1, module2...)<br>
           Insérer ces médias à l'intérieur en fonction de leurs apparitions dans les modules.<br><br>

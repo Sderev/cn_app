@@ -19,7 +19,6 @@ from .models import Repository
 from .utils import run_shell_command
 logger = logging.getLogger(__name__)
 
-
 class BuildView(View):
     """
     A view for generating site from Repository

@@ -57,6 +57,16 @@ class UploadFormLight(forms.Form):
             return
         return self.cleaned_data['archive']
 
+class ReUploadForm(forms.Form):
+    archive=forms.FileField()
+
+    def clean_archive(self): # check if the archive is a tar.gz archive
+        archiveName=self.cleaned_data['archive'].name
+        if not re.match(isTarFile,archiveName) and not re.match(isZipFile,archiveName):
+            raise forms.ValidationError("Veuillez utiliser une archive tar.gz ou zip!")
+            return
+        return self.cleaned_data['archive']
+
 class UploadFormEth(forms.Form):
     nom_cours = forms.CharField(max_length=100)
     logo = forms.ImageField(required=False)
@@ -77,6 +87,33 @@ class GenerateCourseForm(forms.Form):
 
 class ModuleFormEth(forms.Form):
     media_1 = forms.FileField(required=False)
+
+class CreateRepository(forms.Form):
+    git_url = forms.CharField(label="Url git", max_length=50)
+    default_branch = forms.CharField(label="Branche par défaut", max_length=30, initial="master")
+    feedback = forms.BooleanField(required=False)
+
+    def clean(self):
+        success = True
+        if self.cleaned_data['git_url']:
+            # check git_url returns 200
+            try:
+                res = requests.get(self.cleaned_data['git_url'])
+                if not (res.status_code == 200):
+                    success = False
+            except Exception as e:
+                logger.error("Error when checking url \n\t %s" % (e))
+                success = False
+            # retrieve
+            if not success:
+                raise forms.ValidationError(
+                    _('Git URL invalide %(url)s '),
+                    code='invalid_url',
+                    params={'url': self.cleaned_data['git_url']},
+                )
+            else:
+                return
+
 
 class ConnexionForm(forms.Form):
     username = forms.CharField(label="Nom d'utilisateur", max_length=30)

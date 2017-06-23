@@ -37,7 +37,7 @@ Reference to a js file making DOM manipulation, in order to add dynamically new 
         <input type="button" value="Retirer un module" onclick="removeModule()">
 
         <button type="button" class="popup" onclick="showPopUp('popup2')">
-          <img src="/static/img/help.png" height="20" width="20"/>
+          <img src="{% static 'img/help.png' %}" height="20" width="20"/>
           <span class="popuptext" id="popup2">Chaque module doit être écrit en Markdown/Gift.<br>
             Pour chaque module, On peut insérer des medias.<br>
             Les medias doivent être dans une archive zip ou tar.gz à la racine.<br><br>

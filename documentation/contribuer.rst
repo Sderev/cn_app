@@ -196,6 +196,13 @@ En effet, coverage utilise ce fichier pour vérifier le taux de couverture des l
 Pistes d'améliorations de l'application
 ---------------------------------------
 
+Fichier d'erreur pour l'utilisateur
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Insérer des médias
+~~~~~~~~~~~~~~~~~~
+
 Il réside encore certains problèmes sur l'application Esc@pad. Nous
 souhaitons notamment permettre à l'utilisateur de disposer d'archive
 d'import EDX/IMS qui contiendrait des médias. Ces médias pourraient être

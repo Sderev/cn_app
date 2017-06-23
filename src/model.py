@@ -407,18 +407,18 @@ class Section:
             sub.toHTML(feedback_option)
 
 
-    # FIXME: is this usefull ??
-    def toCourseHTML(self):
-        """Loops through Cours subsections only.
-
-        :rtype: a string concatenating subsections HTML output
-        """
-        courseHTML = ""
-        for sub in self.subsections:
-            if isinstance(sub, Cours):
-                courseHTML += "\n\n<!-- Subsection "+sub.num+" -->\n"
-                courseHTML += markdown.markdown(sub.src, MARKDOWN_EXT)
-        return courseHTML
+    # # FIXME: is this usefull ??
+    # def toCourseHTML(self):
+    #     """Loops through Cours subsections only.
+    #
+    #     :rtype: a string concatenating subsections HTML output
+    #     """
+    #     courseHTML = ""
+    #     for sub in self.subsections:
+    #         if isinstance(sub, Cours):
+    #             courseHTML += "\n\n<!-- Subsection "+sub.num+" -->\n"
+    #             courseHTML += markdown.markdown(sub.src, MARKDOWN_EXT)
+    #     return courseHTML
 
     def toGift(self):
         """Returns a concatenation (text string) of the GIFT source code of all questions of all activities in this section"""
@@ -539,15 +539,15 @@ class Module:
         for s in self.sections:
             s.toHTML(feedback_option)
 
-    def toCourseHTML(self):
-        """Loops through all sections.
-
-        :rtype: Returns a string of the concatenation of their HTML output"""
-        courseHTML = ""
-        for sec in self.sections:
-            courseHTML += "\n\n<!-- Section "+sec.num+" -->\n"
-            courseHTML += sec.toCourseHTML()
-        return courseHTML
+    # def toCourseHTML(self):
+    #     """Loops through all sections.
+    #
+    #     :rtype: Returns a string of the concatenation of their HTML output"""
+    #     courseHTML = ""
+    #     for sec in self.sections:
+    #         courseHTML += "\n\n<!-- Section "+sec.num+" -->\n"
+    #         courseHTML += sec.toCourseHTML()
+    #     return courseHTML
 
     def toGift(self):
         """Returns a text string with all questions of all the activities of this modules object.

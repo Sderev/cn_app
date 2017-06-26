@@ -7,6 +7,7 @@ import json
 from lxml import etree
 import shutil
 from bs4 import BeautifulSoup
+from zipfile import ZipFile
 import unittest
 from collections import namedtuple
 from six.moves import StringIO
@@ -22,7 +23,7 @@ logger.setLevel(40)
 
 from pygiftparser import parser as pygift
 
-from src import model, toEDX, fromGift
+from src import model, toEDX, fromGift, cnExportLight
 
 
 TEST_EDX_DIR = "./testEDX"
@@ -33,7 +34,6 @@ def setUp():
     Build EDX folder based on coursTest
     """
     with open("coursTest/module1/module_test.md", encoding='utf-8') as sample_file:
-        global m
         m = model.Module(sample_file, "tests", "http://culturenumerique.univ-lille3.fr")
         m.toHTML()
         m_json = json.loads(m.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
@@ -477,6 +477,23 @@ What is the color of the white horse of Henri IV ?
 
         print("[EDXArchiveTestCase]-- check_problem_to_edx OK --")
 
+    def testgenerateEDXLight(self):
+        #FIRST STEP
+        with open("coursTest/module1/module_test.md", encoding='utf-8') as sample_file:
+            m = model.Module(sample_file, "tests", "http://culturenumerique.univ-lille3.fr")
+        m.toHTML()
+        m_json = json.loads(m.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+
+        inMemoryOutputFile = StringIO()
+        zipFile = ZipFile(inMemoryOutputFile, 'w')
+        zipFile = toEDX.generateEDXArchiveLight(m, TEST_EDX_DIR, zipFile)
+        self.assertTrue('tests/tests_edx.tar.gz' in zipFile.namelist())
+        list_file = zipFile.namelist()
+        print(list_file)
+        self.assertTrue(TEST_EDX_DIR+'/EDX/course.xml' in list_file)
+        self.assertTrue(TEST_EDX_DIR+'/EDX/assets/assets.xml' in list_file)
+        self.assertTrue(TEST_EDX_DIR+'/EDX/info/updates.html' in list_file)
+        # TODO : continuous
 
 
 # Main

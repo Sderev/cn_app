@@ -85,6 +85,7 @@ pygift.Question.toEDX = toEDX
 # #############
 pygift.AnswerSet.cc_profile = 'ESSAY'
 pygift.AnswerSet.max_att = '1'
+#Fixed maximal essay to 1 in EDX and Moodle, change this attribut if you want more
 
 
 # IMS

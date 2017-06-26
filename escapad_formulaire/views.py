@@ -641,9 +641,21 @@ def my_repositories(request):
         default_branch = form_new_repo.cleaned_data['default_branch']
         feedback = form_new_repo.cleaned_data['feedback']
 
-        repo = Repository(git_url=git_url, default_branch=default_branch, show_feedback=feedback)
-        repo.save()
-        profil.repositories.add(repo)
+        # Check if the repository exists, create it if not
+        try:
+            repo = Repository.objects.get(git_url=git_url)
+        except Repository.DoesNotExist:
+            repo = Repository(git_url=git_url, default_branch=default_branch, show_feedback=feedback)
+            repo.save()
+
+        # Check if the repository belong to the user.
+        try:
+            profil.repositories.get(git_url=git_url)
+            repo = Repository.objects.get(git_url=git_url)
+        except Repository.DoesNotExist:
+            profil.repositories.add(repo)
+
+
 
     return render(request, 'escapad_formulaire/my_repositories.html', {
         'repositories': repositories,
@@ -651,6 +663,37 @@ def my_repositories(request):
         'profil': profil,
         'form': form_new_repo
     })
+
+def repository(request, slug):
+    if not request.user.is_authenticated:
+        return redirect(connexion)
+
+    # Check if the course exists
+    try:
+        repo = Repository.objects.get(slug=slug)
+        request.user.profil.repositories.get(slug=slug)
+    except Repository.DoesNotExist:
+        return redirect(connexion)
+
+    repo = Repository.objects.get(slug=slug)
+
+    form_repo = ModifyRepository(request.POST or None, instance=repo)
+
+    if form_repo.is_valid() :
+        def_branch = form_repo.cleaned_data['default_branch']
+        feedbk = form_repo.cleaned_data['show_feedback']
+
+        repo = Repository.objects.get(slug=slug)
+        repo.default_branch = def_branch
+        repo.show_feedback = feedbk
+        repo.save()
+
+    return render(request, 'escapad_formulaire/repository.html', {
+        'repository' : repo,
+        'form' : form_repo,
+    })
+
+
 
 
 def delete_repository(request, slug):
@@ -665,7 +708,13 @@ def delete_repository(request, slug):
     except Cours.DoesNotExist:
         return redirect(connexion)
 
-    repo.delete()
+    # Only one contributor to the course: We delete it entirely.
+    if len(repo.profil_set.all()) == 1:
+        repo.delete()
+    # More than one contributor: We remove the link between the current user and the course.
+    else:
+        profil=request.user.profil
+        repo.profil_set.remove(profil)
 
     return redirect(my_repositories)
 

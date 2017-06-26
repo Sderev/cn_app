@@ -8,6 +8,7 @@ from django.utils.translation import ugettext as _
 
 from .models import User
 from .models import Cours, Profil
+from escapad.models import Repository
 
 import re
 
@@ -114,6 +115,12 @@ class CreateRepository(forms.Form):
             else:
                 return
 
+
+class ModifyRepository(forms.ModelForm):
+    class Meta:
+        model = Repository
+        fields = '__all__'
+        fields = ('default_branch','show_feedback',)
 
 class ConnexionForm(forms.Form):
     username = forms.CharField(label="Nom d'utilisateur", max_length=30)

@@ -473,6 +473,7 @@ def extractMediaArchive(mediasData, mediasType):
                 for member in tar.getnames():
                     media = StringIO.StringIO()
                     media.write(tar.extractfile(member).read())
+                    media.seek(0)
                     mediaDataObj.append(media)
                     mediaNom.append(member)
                 tar.close()

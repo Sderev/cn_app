@@ -9,27 +9,29 @@ from django.contrib import admin
 
 urlpatterns = [
 
+    # Form views
     url(r'^form_upload/$', escapad_formulaire.views.form_upload, name='form_upload'),
     url(r'^form_upload_light/$', escapad_formulaire.views.form_upload_light, name='form_upload_light'),
+    url(r'^reupload/$', escapad_formulaire.views.form_reupload, name='form_reupload'),
     url(r'^apercu_module/(?P<id_export>[-a-zA-Z\d]+)/(?P<feedback>[0-9])$', escapad_formulaire.views.apercu_module, name='apercu_module'),
     url(r'^apercu_home/(?P<id_export>[-a-zA-Z\d]+)$', escapad_formulaire.views.apercu_home, name='apercu_home'),
-    url(r'^connexion/$', escapad_formulaire.views.connexion, name='connexion'),
-    url(r'^deconnexion/$', escapad_formulaire.views.deconnexion, name='deconnexion'),
-    url(r'^inscription/$', escapad_formulaire.views.inscription, name='inscription'),
 
-    url(r'^reupload/$', escapad_formulaire.views.form_reupload, name='form_reupload'),
-
+    # Course views
     url(r'^cours/$', escapad_formulaire.views.mes_cours, name='mes_cours'),
     url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)$', escapad_formulaire.views.cours, name='cours'),
     url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)/delete$', escapad_formulaire.views.delete_course, name='delete_course'),
     url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)/(?P<url>[-a-zA-Z\d]+)$', escapad_formulaire.views.cours_edition, name='cours_edition'),
     url(r'^cours/(?P<id_cours>[-a-zA-Z\d]+)/(?P<url>[-a-zA-Z\d]+)/delete$', escapad_formulaire.views.delete_module, name='delete_module'),
 
+    # Repository views
     url(r'^repo/$', escapad_formulaire.views.my_repositories, name='my_repositories'),
+    url(r'^repo/(?P<slug>[\w-]+)/$', escapad_formulaire.views.repository, name='repository'),
     url(r'^repo/(?P<slug>[\w-]+)/delete$', escapad_formulaire.views.delete_repository, name='delete_repository'),
 
-
-
+    # User views
+    url(r'^connexion/$', escapad_formulaire.views.connexion, name='connexion'),
+    url(r'^deconnexion/$', escapad_formulaire.views.deconnexion, name='deconnexion'),
+    url(r'^inscription/$', escapad_formulaire.views.inscription, name='inscription'),
 
     url(r'^change_password/$', auth_views.password_change,
     {'template_name' : 'escapad_formulaire/password/password_change_form.html','post_change_redirect' : '/password_changed/'},

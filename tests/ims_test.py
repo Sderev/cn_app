@@ -13,6 +13,7 @@ import unittest
 from collections import namedtuple
 from six.moves import StringIO
 from jinja2 import Template, Environment, FileSystemLoader
+import unidecode
 # Path hack for getting access to src python modules
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
@@ -226,6 +227,7 @@ Blablablabla {
           <material>
             <mattext texttype="text/html">&lt;p&gt; What two people are entombed in Grant's tomb?&lt;/p&gt;</mattext>
           </material>""".strip() in imsmulti.strip())
+        imstree = etree.fromstring(unidecode.unidecode(imsmulti))
         # self.assertTrue("""<material>
         #           <mattext texttype="text/html">&lt;p&gt;No one&lt;/p&gt;</mattext>
         #         </material>""".strip() in imsmulti.strip())
@@ -290,11 +292,6 @@ Blablablabla {
 
         #SINGLEANSWER
         # print(imssglans)
-        self.assertTrue("""<rubric>
-      <material label="Summary">
-        <mattext texttype="text/html"></mattext>
-      </material>
-    </rubric>""".strip() in imssglans.strip())
         self.assertTrue("""<section ident="section_1_test_4">
       <item ident="q_0" title="SINGLEANSWER">
         <itemmetadata>
@@ -354,6 +351,125 @@ Blablablabla {
     </section>
   </assessment>
 </questestinterop>""".strip() in imssglans.strip())
+
+        #TRUE FALSE FEEDBACK
+        # print(imstrfl)
+        self.assertTrue("""<section ident="section_1_test_2">
+      <item ident="q_0" title="TRUEFALSE1">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.multiple_choice.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank trfl</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        """.strip() in imstrfl.strip())
+
+        self.assertTrue("""<presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; Vrai ou Faux?&lt;/p&gt;</mattext>
+        """.strip() in imstrfl.strip())
+
+        self.assertTrue("""<resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition continue="Yes" title="General feedback">
+            <conditionvar>
+              <other />
+            </conditionvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>
+        """)
+
+        self.assertTrue("""<itemfeedback ident="general_fb">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt; MEGA COMMENT&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+    </section>
+  </assessment>
+</questestinterop>
+        """.strip() in imstrfl.strip())
+
+        #TRUE FALSE WITHOU feedback
+        # print(imstrfl2)
+        self.assertTrue("""<section ident="section_1_test_3">
+      <item ident="q_0" title="TRUEFALSE2">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.multiple_choice.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank trfl2</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        <presentation>
+          <material>
+            <mattext texttype="text/html">&lt;p&gt; Faux ou Vrai?&lt;/p&gt;</mattext>
+          </material>
+        """.strip() in imstrfl2.strip())
+
+        self.assertTrue("""</presentation>
+        <resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition title="">
+        """.strip() in imstrfl2.strip())
+
+        self.assertTrue("""<setvar action="Set" varname="SCORE">100</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="feedb_1" />
+          </respcondition>
+        </resprocessing>
+      </item>
+    </section>
+  </assessment>
+</questestinterop>
+        """.strip() in imstrfl2.strip())
+
+        #ESSAY
+        # print(imsessay)
+        self.assertTrue("""<section ident="section_1_test_5">
+      <item ident="q_0" title="ESSAY">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.essay.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank essay</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        """.strip() in imsessay.strip())
+
+        self.assertTrue("""<itemfeedback ident="general_fb">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt; MEGA COMMENT&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+    </section>
+  </assessment>
+</questestinterop>
+        """.strip() in imsessay.strip())
 
 # Main
 if __name__ == '__main__':

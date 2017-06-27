@@ -11,7 +11,7 @@ from escapad.models import Repository
 class Cours(models.Model):
     nom_cours = models.CharField(max_length=30)
     id_cours = models.CharField(max_length=30, primary_key=True)
-    url_home = models.CharField(max_length=30, primary_key=True)
+    url_home = models.CharField(max_length=30)
     def __str__(self):
         #return "Cours nomme {0}, Profil associe: {1}".format(self.nom_cours, self.profil_set.all())
         return "Cours: {0} ({1} module(s), {2} contributeur(s))".format(self.nom_cours, len(self.module_set.all()),len(self.profil_set.all()))

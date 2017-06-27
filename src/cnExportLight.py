@@ -549,13 +549,14 @@ def generateArchiveLight(archiveData, archiveType, feedback):
 
         :param archiveData: InMemoryUploadedFile containing a tar.gz archiveData
         :param feedback: do we want a feedback on the HTML website generated?
-        :return: zipfile containing the course generated
+        :return: zipfile containing the course generated, erreurs containing list of string errors, and the title in a string
 
     """
     modulesData = []
     mediasData = []
     mediasNom = []
     erreurs = []
+    titleData = ''
 
     if archiveType == "application/octet-stream":
 
@@ -563,7 +564,6 @@ def generateArchiveLight(archiveData, archiveType, feedback):
         tarArchiveIO.write(archiveData.read())
         tarArchiveIO.seek(0)
 
-        titleData = ''
         homeData = StringIO.StringIO()
 
         # We open the tar archive inside of the StringIO instance
@@ -627,7 +627,7 @@ def generateArchiveLight(archiveData, archiveType, feedback):
         zipArchiveIO.seek(0)
 
 
-        titleData = ''
+
         homeData = StringIO.StringIO()
 
         # We open the tar archive inside of the StringIO instance
@@ -701,4 +701,9 @@ def generateArchiveLight(archiveData, archiveType, feedback):
                                     mediasNom, homeData,
                                     titleData.read(), logoData, '')
 
-    return outputFile, erreurs
+    # Process the title data into a 1 line string, in order to give the name to the archive.
+    titleData.seek(0)
+    title = titleData.read()
+    title = re.sub(r"\n", r"", title)
+
+    return outputFile, title ,erreurs

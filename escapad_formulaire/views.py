@@ -109,7 +109,7 @@ def form_upload(request):
 
         response= HttpResponse(zip)
         response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = "attachment; filename=\"site.zip\""
+        response['Content-Disposition'] = "attachment; filename=\""+titleData+".zip\""
         return response
 
     return render(request, 'escapad_formulaire/form.html', {
@@ -144,14 +144,14 @@ def form_upload_light(request):
             archiveType = "application/zip"
 
 
-        zip,erreurs=cn.generateArchiveLight(archiveData, archiveType, feedback)
+        zip,title,erreurs=cn.generateArchiveLight(archiveData, archiveType, feedback)
 
         sauvegarde = True
 
         if not erreurs:
             response= HttpResponse(zip)
             response['Content-Type'] = 'application/octet-stream'
-            response['Content-Disposition'] = "attachment; filename=\"site.zip\""
+            response['Content-Disposition'] = "attachment; filename=\""+title+".zip\""
             return response
 
     return render(request, 'escapad_formulaire/formlight.html', {
@@ -311,7 +311,7 @@ def apercu_module(request,id_export,feedback):
             home_html += "\n\n<h2>"+sub.num+". "+sub.title+" </h2>\n"
             home_html += sub.toHTML(feedback)
 
-    return render(request, 'escapad_formulaire/apercu.html', {
+    return render(request, 'escapad_formulaire/apercu_module.html', {
         'res': home_html
     })
 
@@ -334,7 +334,7 @@ def apercu_home(request,id_export):
     MARKDOWN_EXT = ['markdown.extensions.extra', 'superscript']
     home_html = markdown.markdown(moduleData, MARKDOWN_EXT)
 
-    return render(request, 'escapad_formulaire/apercu.html', {
+    return render(request, 'escapad_formulaire/apercu_home.html', {
         'res': home_html
     })
 

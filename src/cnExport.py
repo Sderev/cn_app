@@ -191,7 +191,6 @@ if __name__ == "__main__":
     logging.basicConfig(filename=args.logfile,
                         filemode='a',
                         level=getattr(logging, args.logLevel))
-    # FIXME : PACKAGE LOGGING POUR LA GESTION D'ERREUR !
 
     # ** Paths and directories **
     if os.path.isabs(args.repository):

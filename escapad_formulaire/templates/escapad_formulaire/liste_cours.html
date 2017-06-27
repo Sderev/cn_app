@@ -2,6 +2,8 @@
 
 {% extends "app.html" %}
 
+{%  load static %}
+
 {% block content %}
   <h1>Mes cours</h1>
 
@@ -18,7 +20,7 @@
     {% for cours in profil.cours.all %}
       <tr>
         <td>{{ cours.nom_cours }}</td>
-        <td>{{ cours.nb_module }} Module(s) </td>
+        <td>{{ cours.module_set.all.count}} Module(s) </td>
         <td>{{ cours.profil_set.all.count }} Contributeur(s) </td>
         <td><a href="{% url 'cours' cours.id_cours %}">Voir le cours</a></td>
         <td><a href="{% url 'delete_course' cours.id_cours %}">Supprimer le cours</a></td>
@@ -39,7 +41,7 @@
         <input type="submit" value="Commencer à créer" />
 
         <button type="button" class="popup" onclick="showPopUp('popup1')">
-          <img src="/static/img/help.png" height="20" width="20"/>
+          <img src="{% static 'img/help.png' %}" height="20" width="20"/>
           <span class="popuptext" id="popup1">
             Générer un nouveau cours:<br>
             Un cours dispose d'un ensemble de module et une page d'accueil. <br>

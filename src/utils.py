@@ -27,13 +27,16 @@ VIDEO_THUMB_API_URL = 'http://vimeo.com/api/v2/video/'
 
 
 def fetch_vimeo_thumb(video_link):
-    """ fetch video thumbnail for vimeo videos """
+    """ fetch video thumbnail for vimeo videos
+
+    :param video_link: url
+    :type video_link: String
+    """
     # get video id
     video_id = video_link.rsplit('/', 1)[1]
     logging.info("== video ID = %s" % video_id)
     try:
-        response = requests.request('GET',
-                                    VIDEO_THUMB_API_URL+video_id+'.json')
+        response = requests.request('GET',VIDEO_THUMB_API_URL+video_id+'.json')
         data = response.json()[0]
         image_link = data['thumbnail_large']
         image_link = image_link.replace('wepb', 'jpg')
@@ -46,6 +49,8 @@ def fetch_vimeo_thumb(video_link):
 def get_embed_code_for_url(url):
     """
     parses a given url and retrieve embed code.
+
+    :param url: url
     """
     hostname = url and urlparse(url).hostname
     # VIMEO case
@@ -99,7 +104,7 @@ def add_target_blank(html_src):
     return soup.prettify()
 
 
-# FIXME: it is usefull ?
+# # FIXME: it is usefull ?
 def iframize_video_anchors(htmlsrc, anchor_class):
     """ given a piece of html code, scan for video anchors
         filtered by given class and add corresponding video
@@ -207,6 +212,9 @@ def prepareDestination(BASE_PATH, outDir):
     for d in STATIC_FOLDERS:
         """ build absolute path independant of current working dir """
         source = os.path.join(BASE_PATH, d)
+        if (not(os.path.isdir(source))):
+            logging.error("dir %s don't exist", d)
+            return
         dest = os.path.join(outDir, d)
         try:
             shutil.copytree(source, dest)

@@ -168,9 +168,9 @@ Blablablabla {
         imssglans = toIMS.create_ims_test([sglans],'4','sglans')
         imsessay = toIMS.create_ims_test([essay],'5','essay')
 
-        #MULTI
-        self.assertTrue('<?xml version="1.0" encoding="UTF-8"?>'.strip() in imsmulti.strip())
-        self.assertTrue("""<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.imsglobal.org/xsd/ims_qtiasiv1p2 http://www.imsglobal.org/profile/cc/ccv1p1/ccv1p1_qtiasiv1p2p1_v1p0.xsd">""".strip() in imsmulti.strip())
+        #ALL
+        self.assertTrue('<?xml version="1.0" encoding="UTF-8"?>'.strip() in ims.strip())
+        self.assertTrue("""<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.imsglobal.org/xsd/ims_qtiasiv1p2 http://www.imsglobal.org/profile/cc/ccv1p1/ccv1p1_qtiasiv1p2p1_v1p0.xsd">""".strip() in ims.strip())
         self.assertTrue("""<qtimetadata>
       <qtimetadatafield>
         <fieldlabel>qmd_scoretype</fieldlabel>
@@ -200,12 +200,14 @@ Blablablabla {
         <fieldlabel>qmd_solutionspermitted</fieldlabel>
         <fieldentry>Yes</fieldentry>
       </qtimetadatafield>
-    </qtimetadata>""".strip() in imsmulti.strip())
+    </qtimetadata>""".strip() in ims.strip())
         self.assertTrue("""<rubric>
       <material label="Summary">
         <mattext texttype="text/html"></mattext>
       </material>
-    </rubric>""".strip() in imsmulti.strip())
+    </rubric>""".strip() in ims.strip())
+
+        #MULTI
         self.assertTrue("""<section ident="section_1_test_1">
       <item ident="q_0" title="MULTIANSWER">""".strip() in imsmulti.strip())
         self.assertTrue("""<itemmetadata>
@@ -224,23 +226,135 @@ Blablablabla {
           <material>
             <mattext texttype="text/html">&lt;p&gt; What two people are entombed in Grant's tomb?&lt;/p&gt;</mattext>
           </material>""".strip() in imsmulti.strip())
-        self.assertTrue("""<material>
-                  <mattext texttype="text/html">&lt;p&gt;No one&lt;/p&gt;</mattext>
-                </material>""".strip() in imsmulti.strip())
-        self.assertTrue("""<material>
-                  <mattext texttype="text/html">&lt;p&gt;Grant&lt;/p&gt;</mattext>
-                </material>""".strip() in imsmulti.strip())
-        self.assertTrue("""<material>
-                  <mattext texttype="text/html">&lt;p&gt;Grant's wife&lt;/p&gt;</mattext>
-                </material>""".strip() in imsmulti.strip())
-        self.assertTrue("""<material>
-                  <mattext texttype="text/html">&lt;p&gt;Grant's father&lt;/p&gt;</mattext>
-                </material>
-              </response_label>
-            </render_choice>
-          </response_lid>
-        </presentation>""".strip() in imsmulti.strip())
-        
+        # self.assertTrue("""<material>
+        #           <mattext texttype="text/html">&lt;p&gt;No one&lt;/p&gt;</mattext>
+        #         </material>""".strip() in imsmulti.strip())
+        # self.assertTrue("""<material>
+        #           <mattext texttype="text/html">&lt;p&gt;Grant&lt;/p&gt;</mattext>
+        #         </material>""".strip() in imsmulti.strip())
+        # self.assertTrue("""<material>
+        #           <mattext texttype="text/html">&lt;p&gt;Grant's wife&lt;/p&gt;</mattext>
+        #         </material>""".strip() in imsmulti.strip())
+        # self.assertTrue("""<material>
+        #           <mattext texttype="text/html">&lt;p&gt;Grant's father&lt;/p&gt;</mattext>
+        #         </material>
+        #       </response_label>
+        #     </render_choice>
+        #   </response_lid>
+        # </presentation>""".strip() in imsmulti.strip())
+        self.assertTrue("""<resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition continue="No" title="Correct">
+            <conditionvar>
+              <and>""".strip() in imsmulti.strip())
+        self.assertTrue("""<setvar action="Set" varname="SCORE">100</setvar>
+            <displayfeedback feedbacktype="Response" linkrefid="general_fb" />
+          </respcondition>""".strip() in imsmulti.strip())
+        self.assertTrue("""<displayfeedback feedbacktype="Response" linkrefid="feedb_3" />
+          </respcondition>
+        </resprocessing>
+        <itemfeedback ident="feedb_0">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html"></mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_1">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt;One comment&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_2">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html"></mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_3">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html"></mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+    </section>
+  </assessment>
+</questestinterop>""".strip() in imsmulti.strip())
+
+        #SINGLEANSWER
+        # print(imssglans)
+        self.assertTrue("""<rubric>
+      <material label="Summary">
+        <mattext texttype="text/html"></mattext>
+      </material>
+    </rubric>""".strip() in imssglans.strip())
+        self.assertTrue("""<section ident="section_1_test_4">
+      <item ident="q_0" title="SINGLEANSWER">
+        <itemmetadata>
+          <qtimetadata>
+            <qtimetadatafield>
+              <fieldlabel>cc_profile</fieldlabel>
+              <fieldentry>cc.multiple_choice.v0p1</fieldentry>
+            </qtimetadatafield>
+            <qtimetadatafield>
+              <fieldlabel>cc_question_category</fieldlabel>
+              <fieldentry>Quiz Bank sglans</fieldentry>
+            </qtimetadatafield>
+          </qtimetadata>
+        </itemmetadata>
+        <presentation>""".strip() in imssglans.strip())
+        self.assertTrue("""<resprocessing>
+          <outcomes>
+            <decvar varname="SCORE" vartype="Decimal" maxvalue="100" minvalue="0" />
+          </outcomes>
+          <respcondition title="Correct">""".strip() in imssglans.strip())
+        self.assertTrue("""<itemfeedback ident="feedb_0">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html"></mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_1">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt;A response to wrong&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_2">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt;A response to wrong&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_3">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt;A response to wrong&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+        <itemfeedback ident="feedb_4">
+          <flow_mat>
+            <material>
+              <mattext texttype="text/html">&lt;p&gt;A response to wrong&lt;/p&gt;</mattext>
+            </material>
+          </flow_mat>
+        </itemfeedback>
+      </item>
+    </section>
+  </assessment>
+</questestinterop>""".strip() in imssglans.strip())
+
 # Main
 if __name__ == '__main__':
     setUp()

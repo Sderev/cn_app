@@ -190,7 +190,7 @@ def form_reupload(request):
     erreurs = []
     modules_obj=[]
 
-    form = UploadFormLight(request.POST or None, request.FILES or None)
+    form = ReUploadForm(request.POST or None, request.FILES or None)
 
     if form.is_valid() :
         repoDir=settings.BASE_DIR
@@ -210,12 +210,11 @@ def form_reupload(request):
                 # Get the course infos
                 cours=tree.xpath("/cours")[0]
                 nom=cours.getchildren()[0].text
-                nb_module=cours.getchildren()[1].text
 
                 # Generate the course and associate with the current user
                 id_cours = id_generator()
                 url_home = 'home-'+id_generator()
-                cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home, nb_module=nb_module)
+                cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home)
 
                 try:
                     # Generate home
@@ -373,7 +372,7 @@ def mes_cours(request):
     if form.is_valid() :
         url_home='home-'+id_generator()
         id_cours=id_generator()
-        cours=Cours(id_cours=id_cours, nom_cours=form.cleaned_data['nom'], nb_module=0, url_home=url_home)
+        cours=Cours(id_cours=id_cours, nom_cours=form.cleaned_data['nom'], url_home=url_home)
         cours.save()
         profil.cours.add(cours)
 
@@ -426,7 +425,6 @@ def cours(request, id_cours):
         nom=request.POST['nom']
         module = Module(nom_module=nom, url=url, cours=cours)
         module.save()
-        cours.nb_module=cours.nb_module+1
         cours.save()
 
     # Adding a user to the course
@@ -583,7 +581,6 @@ def delete_module(request, id_cours, url):
     # Delete the module model and update the course model
     module.delete()
     c= Cours.objects.get(id_cours=id_cours)
-    c.nb_module=c.nb_module-1
     c.save()
     return redirect(cours,id_cours=id_cours)
 
@@ -622,6 +619,104 @@ def delete_course(request, id_cours):
         profil=request.user.profil
         course.profil_set.remove(profil)
     return redirect(mes_cours)
+
+#################################
+#                               #
+#     REPOSITORIES INTERFACE    #
+#                               #
+#################################
+
+def my_repositories(request):
+    if not request.user.is_authenticated:
+        return redirect(connexion)
+
+    form_new_repo = CreateRepository(request.POST or None)
+
+    myUser=request.user
+    profil = Profil.objects.get(user=myUser)
+    repositories=profil.repositories
+
+    if form_new_repo.is_valid() :
+        git_url = form_new_repo.cleaned_data['git_url']
+        default_branch = form_new_repo.cleaned_data['default_branch']
+        feedback = form_new_repo.cleaned_data['feedback']
+
+        # Check if the repository exists, create it if not
+        try:
+            repo = Repository.objects.get(git_url=git_url)
+        except Repository.DoesNotExist:
+            repo = Repository(git_url=git_url, default_branch=default_branch, show_feedback=feedback)
+            repo.save()
+
+        # Check if the repository belong to the user.
+        try:
+            profil.repositories.get(git_url=git_url)
+            repo = Repository.objects.get(git_url=git_url)
+        except Repository.DoesNotExist:
+            profil.repositories.add(repo)
+
+
+
+    return render(request, 'escapad_formulaire/my_repositories.html', {
+        'repositories': repositories,
+        'user': myUser,
+        'profil': profil,
+        'form': form_new_repo
+    })
+
+def repository(request, slug):
+    if not request.user.is_authenticated:
+        return redirect(connexion)
+
+    # Check if the course exists
+    try:
+        repo = Repository.objects.get(slug=slug)
+        request.user.profil.repositories.get(slug=slug)
+    except Repository.DoesNotExist:
+        return redirect(connexion)
+
+    repo = Repository.objects.get(slug=slug)
+
+    form_repo = ModifyRepository(request.POST or None, instance=repo)
+
+    if form_repo.is_valid() :
+        def_branch = form_repo.cleaned_data['default_branch']
+        feedbk = form_repo.cleaned_data['show_feedback']
+
+        repo = Repository.objects.get(slug=slug)
+        repo.default_branch = def_branch
+        repo.show_feedback = feedbk
+        repo.save()
+
+    return render(request, 'escapad_formulaire/repository.html', {
+        'repository' : repo,
+        'form' : form_repo,
+    })
+
+
+
+
+def delete_repository(request, slug):
+
+    if not request.user.is_authenticated:
+        return redirect(connexion)
+
+    # Check if the course exists
+    try:
+        repo = Repository.objects.get(slug=slug)
+        request.user.profil.repositories.get(slug=slug)
+    except Cours.DoesNotExist:
+        return redirect(connexion)
+
+    # Only one contributor to the course: We delete it entirely.
+    if len(repo.profil_set.all()) == 1:
+        repo.delete()
+    # More than one contributor: We remove the link between the current user and the course.
+    else:
+        profil=request.user.profil
+        repo.profil_set.remove(profil)
+
+    return redirect(my_repositories)
 
 
 #################################

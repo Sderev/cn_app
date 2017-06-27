@@ -199,8 +199,8 @@ def writeXMLCourse(cours):
     coursXML = etree.Element("cours")
     nom = etree.SubElement(coursXML, "nom")
     nom.text = cours.nom_cours
-    nbModule = etree.SubElement(coursXML, "nbModule")
-    nbModule.text = str(cours.nb_module)
+    #nbModule = etree.SubElement(coursXML, "nbModule")
+    #nbModule.text = str(cours.nb_module)
 
     for module in cours.module_set.all():
         moduleXML = etree.SubElement(coursXML, "module")
@@ -473,6 +473,7 @@ def extractMediaArchive(mediasData, mediasType):
                 for member in tar.getnames():
                     media = StringIO.StringIO()
                     media.write(tar.extractfile(member).read())
+                    media.seek(0)
                     mediaDataObj.append(media)
                     mediaNom.append(member)
                 tar.close()

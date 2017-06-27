@@ -5,7 +5,7 @@ import urllib2
 import requests
 import shutil
 import exceptions
-from mock import MagicMock
+from mock import patch, Mock, MagicMock
 
 from urlparse import urlparse
 
@@ -17,21 +17,23 @@ logger.setLevel(40)
 
 from src import utils
 
-BASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
-
 def connection_error():
     raise requests.exceptions.ConnectionError
+
+def oserror():
+    raise OSError(2, 'message')
+
+osErrorMock= Mock(side_effect = OSError)
 
 class UtilsTestCase(unittest.TestCase):
 
     def test_fetch_vimeo_thumb(self):
         video1 = 'https://vimeo.com/68856967'
-        req = urllib2.Request('http://www.google.fr')
         try:
+            req = urllib2.Request('http://www.google.fr')
             urllib2.urlopen(req)
             self.assertTrue('http://i.vimeocdn.com/video/441364174_640.jpg' in utils.fetch_vimeo_thumb(video1))
-        except e:
-            print "Connect Error:", e.reason[1]
+        except Exception:
             self.assertTrue('https://i.vimeocdn.com/video/536038298_640.jpg' in utils.fetch_vimeo_thumb(video1))
         # FIXME : Simulate an error connection to test the part Exception of fetch_vimeo_thumb
         # requests.get = MagicMock(side_effect=connection_error)
@@ -86,16 +88,53 @@ class UtilsTestCase(unittest.TestCase):
         #EXCEPT
         # TODO
 
-    # def test_createDirs(self):
-    #     folders = ['d1', 'd2', 'd3']
-    #
-    # def test_fetchMarkdownFile(self):
-    #     self.assertTrue('./coursTest/module1/module_test.md' in utils.fetchMarkdownFile('./coursTest/module1'))
-    #     self.assertFalse(utils.fetchMarkdownFile('./'))
-    #
-    # def test_prepareDestination(self):
-    #
-    #     utils.prepareDestination('BASE_PATH','testUtils')
+    def test_createEmptyFile(self):
+        new_file = "./new_file"
+        #CREATE FILE
+        utils.create_empty_file_if_needed(new_file)
+        self.assertTrue(os.path.isfile(new_file))
+        #FILE ALREADY EXISTED
+        utils.create_empty_file_if_needed(new_file)
+        self.assertTrue(os.path.isfile(new_file))
+        if os.path.isfile(new_file):
+            os.remove(new_file)
+        #TODO : base
+
+
+    def test_fetchMarkdownFile(self):
+        self.assertTrue('./coursTest/module1/module_test.md' in utils.fetchMarkdownFile('./coursTest/module1'))
+        self.assertFalse(utils.fetchMarkdownFile('./'))
+
+    def test_prepareDestination(self):
+        rep1 = './testUtils'
+        utils.prepareDestination('./../', rep1)
+        for d in utils.STATIC_FOLDERS:
+            self.assertTrue(d,('./..'+d))
+        shutil.rmtree(rep1)
+
+    def test_prepareDestinationError(self):
+        rep1 = './testUtils'
+        utils.STATIC_FOLDERS.append('static/css')
+        # with patch('shutil.copytree', new=Mock(side_effect=OSError())):
+        utils.prepareDestination('./..', rep1)
+        utils.prepareDestination('./dpzoq', rep1)
+        shutil.rmtree(rep1)
+
+    def test_createDirs(self):
+        rep1 = '../testUtils'
+        folders = utils.STATIC_FOLDERS
+        utils.createDirs(rep1, folders)
+        for f in folders:
+            self.assertTrue(os.path.isdir(rep1+'/'+f))
+        shutil.rmtree(rep1)
+
+    def test_copyMediaDirs(self):
+        utils.copyMediaDir('./coursTest', './outdir', 'module1')
+        self.assertTrue(os.path.isfile('./outdir/media/Logo_cercle_vert.svg'))
+        utils.copyMediaDir('./coursTest', './outdir', 'module1')
+        self.assertTrue(os.path.isfile('./outdir/media/Logo_cercle_vert.svg'))
+        if (os.path.isfile('./outdir/media/Logo_cercle_vert.svg')):
+            shutil.rmtree('./outdir')
 
 # Main
 if __name__ == '__main__':

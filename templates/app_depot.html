@@ -16,6 +16,8 @@ Most of the template inherits this template.
 
     <!-- onepage css -->
     <link href="{% static 'css/app.css' %}" rel="stylesheet">
+    <link href="{% static 'css/onepage.css' %}" rel="stylesheet">
+
 
     <!-- Icones -->
     <link href="{% static 'css/icons.css' %}" rel="stylesheet">
@@ -81,7 +83,7 @@ Most of the template inherits this template.
     </ol>
     <div class="container">
       <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
           {% block content %}{% endblock %}
         </div>
       </div>

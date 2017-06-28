@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'^reupload/$', escapad_formulaire.views.form_reupload, name='form_reupload'),
     url(r'^apercu_module/(?P<id_export>[-a-zA-Z\d]+)/(?P<feedback>[0-9])$', escapad_formulaire.views.apercu_module, name='apercu_module'),
     url(r'^apercu_home/(?P<id_export>[-a-zA-Z\d]+)$', escapad_formulaire.views.apercu_home, name='apercu_home'),
+    url(r'^accueil/$', escapad_formulaire.views.accueil, name='accueil'),
+
 
     # Course views
     url(r'^cours/$', escapad_formulaire.views.mes_cours, name='mes_cours'),
@@ -32,6 +34,7 @@ urlpatterns = [
     url(r'^connexion/$', escapad_formulaire.views.connexion, name='connexion'),
     url(r'^deconnexion/$', escapad_formulaire.views.deconnexion, name='deconnexion'),
     url(r'^inscription/$', escapad_formulaire.views.inscription, name='inscription'),
+
 
     url(r'^change_password/$', auth_views.password_change,
     {'template_name' : 'escapad_formulaire/password/password_change_form.html','post_change_redirect' : '/password_changed/'},

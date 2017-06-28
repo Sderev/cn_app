@@ -4,7 +4,7 @@ Get from the models is_home, base_url, and url_module,
 which are necessary to get the course preview.
 -->
 
-{% extends "app.html" %}
+{% extends "app_cours.html" %}
 
 {% block titre %}Formulaire{% endblock %}
 
@@ -36,8 +36,8 @@ which are necessary to get the course preview.
           <input type="checkbox" id="feedback" value="feedback" onclick="setValue()">
           Afficher le feedback
           <br>
-          <iframe id="framehome" name="framehome" src="{{ full_url }}" width="45%" height="500px"></iframe>
-          <iframe id="frametest" name="frametest" src="" width="45%" height="500px"></iframe>
+          <iframe id="framehome" name="framehome" src="{{ full_url }}" width="48%" height="500px"></iframe>
+          <iframe id="frametest" name="frametest" src="" width="50%" height="500px"></iframe>
 
           <br>
           <a href="{% url 'cours' id_cours %}"><button>Retourner au cours </button></a>

@@ -46,12 +46,14 @@ import re
 from cn_app.settings import ETHERPAD_URL
 from cn_app.settings import API_KEY
 
+def accueil(request):
+    return render(request, 'escapad_formulaire/accueil.html', {
+    })
 #################################
 #                               #
 #        SIMPLE FORMS VIEWS     #
 #                               #
 #################################
-
 
 def form_upload(request):
     """
@@ -730,6 +732,10 @@ def connexion(request):
     """
         Connexion View
     """
+
+    if request.user.is_authenticated:
+        return redirect(accueil)
+
     error = False
     if request.method == "POST":
         form = ConnexionForm(request.POST)
@@ -739,8 +745,10 @@ def connexion(request):
             user = authenticate(username=username, password=password)  # Nous vérifions si les données sont correctes
             if user:  # Si l'objet renvoyé n'est pas None
                 login(request, user)  # nous connectons l'utilisateur
+                redirect(accueil)
             else: # sinon une erreur sera affichée
                 error = True
+
     else:
         form = ConnexionForm()
 

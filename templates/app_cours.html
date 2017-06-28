@@ -16,7 +16,6 @@ Most of the template inherits this template.
 
     <!-- onepage css -->
     <link href="{% static 'css/app.css' %}" rel="stylesheet">
-    <link href="{% static 'css/onepage.css' %}" rel="stylesheet">
 
     <!-- Icones -->
     <link href="{% static 'css/icons.css' %}" rel="stylesheet">
@@ -31,7 +30,7 @@ Most of the template inherits this template.
     {% endblock %}
 
 
-   <title>{% block title %}Esc@pad{% endblock %}</title>
+   <title>{% block title %}Esc@pad - Editeur de cours{% endblock %}</title>
 
 </head>
 
@@ -47,6 +46,7 @@ Most of the template inherits this template.
 	      </div>
 	      <div id="navbar" class="collapse navbar-collapse">
             <ul class ="nav navbar-nav">
+              <li><a href="{% url "form_reupload" %}"> Importer un cours </a></li>
               {% if request.user.username %}
                 <li><a>Bonjour {{ request.user.username }} </a></li>
                 <li><a href="{% url "deconnexion" %}"> Déconnexion </a></li>
@@ -56,6 +56,7 @@ Most of the template inherits this template.
               {% endif %}
             </ul>
 	      </div>
+
 
        {% endblock %}
    </nav>
@@ -67,7 +68,7 @@ Most of the template inherits this template.
     </ol>
     <div class="container">
       <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
           {% block content %}{% endblock %}
         </div>
       </div>

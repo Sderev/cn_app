@@ -329,14 +329,15 @@ def buildSiteLight(course_obj, modulesData,
     for module, mediaData, mediaNom in zip(course_obj.modules,
                                            mediasData,
                                            mediasNom):
-        zipFile = toEDX.generateEDXArchiveLight(module, module.module, zipFile)
-        zipFile = toIMS.generateImsArchiveLight(module, module.module, zipFile)
+        zipFile = toEDX.generateEDXArchiveLight(module, module.module, zipFile, mediaData, mediaNom)
+        zipFile = toIMS.generateImsArchiveLight(module, module.module, zipFile, mediaData, mediaNom)
 
         # write html, XML, and JSon files
         file_path = module.module
 
         if mediaData:
             for media, nom in zip(mediaData, mediaNom):
+                media.seek(0)
                 zipFile.writestr(file_path+'/media/'+nom, media.read())
 
         zipFile.writestr(file_path+'/'+module.module+'.questions_bank.gift.txt',

@@ -447,6 +447,34 @@ ok
         self.assertEqual(edx_list.replace('\n','').strip(),mod.sections[0].subsections[0].toEdxProblemsList().replace('\n','').strip())
 
 
+    def testMediaLinks(self):
+        io_media = StringIO("""# Titre 1
+## Titre 2
+### Titre 3
+Bienvenue sur le cours [!image](media/monimage.png)
+## Titre 2
+blabla
+        """)
+        m = model.Module(io_media, 'module1')
+        subsec = m.sections[0].subsections[0]
+        self.assertTrue('(http://culturenumerique.univ-lille3.fr/module1/media/monimage.png)' in subsec.src)
+
+    def testParseMedia(self):
+        io_media = StringIO("""# Titre 1
+## Titre 2
+### Titre 3
+Bienvenue sur le cours [!image](media/monimage3.png)
+## Titre 2
+blabla [!image](media/monimage2.png)
+bloublou [!image](media/monimage3.png)
+        """)
+        m = model.Module(io_media, 'module1')
+        subsec = m.sections[0].subsections[1]
+        self.assertTrue(subsec.parseMediaLinks())
+        self.assertEqual(subsec.medias[0], {'media_id': 'img1-2_0', 'media_name': 'monimage2.png'})
+        self.assertEqual(subsec.medias[1], {'media_id': 'img1-2_1', 'media_name': 'monimage3.png'})
+
+
 # Main
 if __name__ == '__main__':
     unittest.main(verbosity=1)

@@ -157,7 +157,7 @@ blabla
         subsec2 = m2.sections[0].subsections[0]
         m2.toHTML()
         subsec2.EDXMediaLinks()
-        print(subsec2.html_src)
+        # print(subsec2.html_src)
         # self.assertTrue('[!image](/static/monimage.png)' in subsec2.src)
 
     def testProblem(self):

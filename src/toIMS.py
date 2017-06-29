@@ -175,6 +175,7 @@ def create_ims_test(questions, test_id, test_title):
     doc.asis('</questestinterop>\n')
     doc_value = indent(doc.getvalue().replace('\n', '')) #pre-escaping new lines because of a bug in moodle that turn them in <br>
     doc_value = doc_value.replace('kontinue', 'continue')
+    doc_value = re.sub(re.compile('/\w*/media/'), '../static/', doc_value) # Change la source du media vers le dossier static
     return doc_value
 
 def create_empty_ims_test(id, num, title, max_attempts):

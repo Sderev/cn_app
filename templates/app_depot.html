@@ -18,6 +18,7 @@ Most of the template inherits this template.
     <link href="{% static 'css/app.css' %}" rel="stylesheet">
     <link href="{% static 'css/onepage.css' %}" rel="stylesheet">
 
+
     <!-- Icones -->
     <link href="{% static 'css/icons.css' %}" rel="stylesheet">
     <link href="{% static 'css/common.css' %}" rel="stylesheet">
@@ -31,7 +32,7 @@ Most of the template inherits this template.
     {% endblock %}
 
 
-   <title>{% block title %}Esc@pad{% endblock %}</title>
+   <title>{% block title %}Esc@pad - Gestionnaire de dépôts{% endblock %}</title>
 
 </head>
 
@@ -56,9 +57,24 @@ Most of the template inherits this template.
               {% endif %}
             </ul>
 	      </div>
-
        {% endblock %}
    </nav>
+
+   <!--
+   <div class="menugauche navmenu navmenu-default navmenu-fixed-left offcanvas-sm" role="navigation" id="menugauche">
+      <h1 class="icon-web">Fonctionnalités</h1>
+
+      <ul class="nav panel-group" id="accordion">
+
+         <li class="panel panel-default"><a href="{% url "mes_cours" %}admin/"><h4 class="panel-title">Création de cours hors-ligne</h4></a></li>
+         <li class="panel panel-default"><a href="{% url "my_repositories" %}"><h4 class="panel-title">Editeur de cours collaboratif</h4></a></li>
+         <li class="panel panel-default"><a href="{% url "form_upload" %}"><h4 class="panel-title">Gestion de cours par dépôts</h4></a></li>
+
+
+      </ul>
+
+   </div>
+  -->
 
    <section id="content2">
      <ol class="breadcrumb">
@@ -67,7 +83,7 @@ Most of the template inherits this template.
     </ol>
     <div class="container">
       <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
           {% block content %}{% endblock %}
         </div>
       </div>

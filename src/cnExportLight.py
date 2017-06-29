@@ -362,6 +362,8 @@ def buildSiteLight(course_obj, modulesData,
         # <img alt="hiragana" src="/module2/media/hira.gif">
         # We just need to add . to create the relative path.
 
+        # FIXME : We should deal with the image link in another way...
+        # Essayer: Module(ModuleData, 'nom_module', '') au lieu de Module(ModuleData, 'nom_module')
         absoluteMedia = re.compile(r"/module(?P<num_module>[0-9]+)/media")
         toRelative = r"./module\g<num_module>/media"
         html = re.sub(absoluteMedia, toRelative, html)

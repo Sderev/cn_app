@@ -492,23 +492,23 @@ What is the color of the white horse of Henri IV ?
 
         print("[EDXArchiveTestCase]-- check_problem_to_edx OK --")
 
-    # def testgenerateEDXLight(self):
-    #     #FIRST STEP
-    #     with open("coursTest/module1/module_test.md", encoding='utf-8') as sample_file:
-    #         m = model.Module(sample_file, "tests", "http://culturenumerique.univ-lille3.fr")
-    #     m.toHTML()
-    #     m_json = json.loads(m.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-    #
-    #     inMemoryOutputFile = StringIO()
-    #     zipFile = ZipFile(inMemoryOutputFile, 'w')
-    #     zipFile = toEDX.generateEDXArchiveLight(m, TEST_EDX_DIR, zipFile)
-    #     self.assertTrue('tests/tests_edx.tar.gz' in zipFile.namelist())
-    #     list_file = zipFile.namelist()
-    #     print(list_file)
-    #     self.assertTrue(TEST_EDX_DIR+'/EDX/course.xml' in list_file)
-    #     self.assertTrue(TEST_EDX_DIR+'/EDX/assets/assets.xml' in list_file)
-    #     self.assertTrue(TEST_EDX_DIR+'/EDX/info/updates.html' in list_file)
-    #     # TODO : continuous
+    def testgenerateEDXLight(self):
+        #FIRST STEP
+        with open("coursTest/module1/module_test.md", encoding='utf-8') as sample_file:
+            m = model.Module(sample_file, "tests", "http://culturenumerique.univ-lille3.fr")
+        m.toHTML()
+        m_json = json.loads(m.toJson(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+
+        inMemoryOutputFile = StringIO()
+        zipFile = ZipFile(inMemoryOutputFile, 'w')
+        zipFile = toEDX.generateEDXArchiveLight(m, TEST_EDX_DIR, zipFile, [], '')
+        self.assertTrue('tests/tests_edx.tar.gz' in zipFile.namelist())
+        list_file = zipFile.namelist()
+        print(list_file)
+        self.assertTrue(TEST_EDX_DIR+'/EDX/course.xml' in list_file)
+        self.assertTrue(TEST_EDX_DIR+'/EDX/assets/assets.xml' in list_file)
+        self.assertTrue(TEST_EDX_DIR+'/EDX/info/updates.html' in list_file)
+        # TODO : continuous
 
 
 # Main

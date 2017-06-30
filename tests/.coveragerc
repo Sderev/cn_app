@@ -2,8 +2,8 @@
 [run]
 branch = True
 
-omit = ../../cnappenv/lib/*,../src/cnExportLight.py,../src/cnExport.py,../src/fromGIFT.py
-source = ../src/,../../cnappenv/src
+omit = ../../cnappenv/lib/*,../src/cnExportLight.py
+source = ../src/
 
 [report]
 # Regexes for lines to exclude from consideration

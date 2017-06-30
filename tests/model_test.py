@@ -4,6 +4,7 @@
 from io import open
 import json
 import mock
+from bs4 import BeautifulSoup
 import unittest
 from collections import namedtuple
 from StringIO import StringIO
@@ -18,6 +19,9 @@ logger = logging.getLogger()
 logger.setLevel(40)
 
 from src import model, utils, fromGift, toEDX
+
+BASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
+TEMPLATES_PATH = os.path.join(BASE_PATH, 'templates')
 
 """
     Test File for Project Esc@pad : Model.py
@@ -471,8 +475,214 @@ bloublou [!image](media/monimage3.png)
         m = model.Module(io_media, 'module1')
         subsec = m.sections[0].subsections[1]
         self.assertTrue(subsec.parseMediaLinks())
-        self.assertEqual(subsec.medias[0], {'media_id': 'img1-2_0', 'media_name': 'monimage2.png'})
-        self.assertEqual(subsec.medias[1], {'media_id': 'img1-2_1', 'media_name': 'monimage3.png'})
+        self.assertEqual(subsec.medias[0], {'media_id': 'img1-20', 'media_name': 'monimage2.png'})
+        self.assertEqual(subsec.medias[1], {'media_id': 'img1-21', 'media_name': 'monimage3.png'})
+
+    def testModuleToHtml(self):
+        """
+        test module html
+        """
+        io_html = StringIO(u"""# Titre 1
+## Titre 2
+### Titre 3
+Bienvenue sur le cours
+```Comprehension
+```
+```Activite
+```
+```ActiviteAvancee
+```
+## Titre 22
+Fin
+""")
+        jenv = Environment(loader=FileSystemLoader(TEMPLATES_PATH))
+        jenv.filters['slugify'] = utils.cnslugify
+        module = model.Module(io_html, 'module')
+        module_template = jenv.get_template("module.html")
+        module_html_content = module_template.render(module=module)
+        resultat= ("""<!-- Menu gauche -->
+<div class="menugauche navmenu navmenu-default navmenu-fixed-left offcanvas-sm" role="navigation" id="menugauche">
+    <h1 class="icon-web">Titre</h1>
+
+    <ul class="nav panel-group" id="accordion">
+
+        <!-- Copier ici un item déployable -->
+        <li class="panel panel-default">
+            <h4 class="panel-title">
+                <a href="#sec_1">
+                    <span class="sec-num">1</span>
+                    <span class="sec-title">Titre 1</span>
+                </a>
+            </h4>
+            <ul class="nav list-group">
+
+                    <li class="list-group-item">
+                        <a class="icon-webcontent" href="#subsec_1_1">1.1 Titre 2</a>
+                    </li>
+
+                    <li class="list-group-item">
+                        <a class="icon-comprehension" href="#subsec_1_2">1.2 Compréhension</a>
+                    </li>
+
+                    <li class="list-group-item">
+                        <a class="icon-activite" href="#subsec_1_3">1.3 Activité</a>
+                    </li>
+
+                    <li class="list-group-item">
+                        <a class="icon-webcontent" href="#subsec_1_4">1.4 Cours</a>
+                    </li>
+
+                    <li class="list-group-item">
+                        <a class="icon-webcontent" href="#subsec_1_5">1.5 Titre 22</a>
+                    </li>
+
+            </ul>
+        </li>
+
+        <!-- Stop ici un item déployable -->
+        <!-- Link to Annexe  -->
+        <div class="annex-sep"></div>
+        <li class="panel panel-default">
+            <h4 class="panel-title">
+                <a href="#sec_A">
+                    <span class="sec-num icon-cc"></span>
+                    <span class="sec-title">Réutiliser ce module</span>
+                </a>
+            </h4>
+            <ul class="nav list-group">
+                <li class="list-group-item" style="display:none">
+                    <a class="icon" href="#subsec_A1"></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <!--  bouton chevron "gauche" pour replier menu gauche-->
+    <button type="button" class="navmenu-fixed-left navmenu-fixed-left navbar-offcanvas-toggle menugauchebtn collapsed hidden-md hidden-lg" data-toggle="offcanvas"  data-canvas="div.content" data-target="#menugauche"  id="menugauche-sm-left">
+    	<span class="icon-chevron-left"> </span>
+    </button>
+</div>
+<!-- Fin menu gauche classique -->
+
+<div id="content">
+    <!--  bouton chevron "droit" pour déplier menu gauche-->
+    <button type="button" class="navmenu-fixed-left navmenu-fixed-left navbar-offcanvas-toggle menugauchebtn collapsed hidden-md hidden-lg" data-toggle="offcanvas"  data-canvas="div.content" data-target="#menugauche"  id="menugauche-sm">
+	       <span class="icon-chevron-right"> </span>
+    </button>
+    <!-- Margin top 4 em -->
+    <!-- Début contenu droite -->
+    <ol class="breadcrumb">
+        <li>
+            <a href="#">
+                <span class="icon-home"></span>
+            </a>
+        </li>
+        <li><a href="#">Titre</a></li>
+        <li class="active">Cours</li>
+    </ol>
+
+    <div class="contenudroite">
+
+
+            <section  id="sec_1">
+            <h1 class="icon-section title blue">1. Titre 1</h1>
+
+                    <section id="subsec_1_1">
+                        <h2 class="icon-webcontent title">1.1. Titre 2</h2>
+
+
+
+                        <!-- teaser: first 5 lines -->
+    					<div class="collapse hidden-text">
+                            <span data-toggle="collapse" data-target="#subsec_1_1 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+
+                            <span data-toggle="collapse" data-target="#subsec_1_1 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+    					</div>
+                                <!--  -->
+                        <div class="teaser" data-toggle="collapse" data-target="#subsec_1_1 .hidden-text">
+                            <span  class="icon-plus-circled teaser-button"><i>(Montrer la suite)</i></span>
+                            <div class="tease"></div>
+
+                        </div>
+                        <!-- rest with a collapse -->
+
+                </section>
+
+                    <section id="subsec_1_2">
+                        <h2 class="icon-comprehension title">1.2. Compréhension</h2>
+
+
+
+
+
+                </section>
+
+                    <section id="subsec_1_3">
+                        <h2 class="icon-activite title">1.3. Activité</h2>
+
+
+
+
+
+                </section>
+
+                    <section id="subsec_1_4">
+                        <h2 class="icon-webcontent title">1.4. Cours</h2>
+
+
+
+                        <!-- teaser: first 5 lines -->
+    					<div class="collapse hidden-text">
+                            <span data-toggle="collapse" data-target="#subsec_1_4 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+
+                            <span data-toggle="collapse" data-target="#subsec_1_4 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+    					</div>
+                                <!--  -->
+                        <div class="teaser" data-toggle="collapse" data-target="#subsec_1_4 .hidden-text">
+                            <span  class="icon-plus-circled teaser-button"><i>(Montrer la suite)</i></span>
+                            <div class="tease"></div>
+
+                        </div>
+                        <!-- rest with a collapse -->
+
+                </section>
+
+                    <section id="subsec_1_5">
+                        <h2 class="icon-webcontent title">1.5. Titre 22</h2>
+
+
+
+                        <!-- teaser: first 5 lines -->
+    					<div class="collapse hidden-text">
+                            <span data-toggle="collapse" data-target="#subsec_1_5 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+
+                            <span data-toggle="collapse" data-target="#subsec_1_5 .hidden-text" class="icon-minus-circled teaser-button"><i>(Réduire le cours)</i></span>
+    					</div>
+                                <!--  -->
+                        <div class="teaser" data-toggle="collapse" data-target="#subsec_1_5 .hidden-text">
+                            <span  class="icon-plus-circled teaser-button"><i>(Montrer la suite)</i></span>
+                            <div class="tease"></div>
+
+                        </div>
+                        <!-- rest with a collapse -->
+
+                </section>
+
+        </section>
+
+        <!-- download section here -->
+        <section  id="sec_A">
+            <h1 class="icon-section title blue">Annexe : réutiliser ce module</h1>
+
+
+        </section>
+
+    </div>
+    <!-- Fin contenu droite -->
+
+</div>
+<!--Content -->""".strip() in module_html_content.strip())
+
+
 
 
 # Main

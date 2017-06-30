@@ -175,6 +175,7 @@ def create_ims_test(questions, test_id, test_title):
     doc.asis('</questestinterop>\n')
     doc_value = indent(doc.getvalue().replace('\n', '')) #pre-escaping new lines because of a bug in moodle that turn them in <br>
     doc_value = doc_value.replace('kontinue', 'continue')
+    doc_value = re.sub(re.compile('/\w*/media/'), '../static/', doc_value) # Change la source du media vers le dossier static
     return doc_value
 
 def create_empty_ims_test(id, num, title, max_attempts):
@@ -267,8 +268,13 @@ def generateIMSManifest(m):
                 href = subsection.folder+'/'+subsection.filename
                 if subsection.folder in ['Activite', 'ActiviteAvancee', 'Comprehension']:
                     href = href.replace('html', 'xml')
+                for media in subsection.medias: # Add in ressource pictures
+                    with tag('resource', identifier=media['media_id'], type=file_type):
+                        doc.stag('file', href="static/"+media['media_name'])
                 with tag('resource', identifier=doc_id, type=file_type, href=href):
                      doc.stag('file', href=href)
+                     for media in subsection.medias: # Add media dependency for each subsection
+                         doc.stag('dependency', identifierref=media['media_id'])
 
     doc.asis("</manifest>") # IMS footer
     return indent(doc.getvalue())
@@ -315,7 +321,7 @@ def generateImsArchive(module_object, module_name, module_directory):
     return fileout
 
 
-def generateImsArchiveLight(module, moduleOutDir, zipFile):
+def generateImsArchiveLight(module, moduleOutDir, zipFile, mediaData, mediaNom):
     # Prepare paths and directories
     #cur_dir = os.getcwd()
     #os.chdir(module_directory)
@@ -327,8 +333,9 @@ def generateImsArchiveLight(module, moduleOutDir, zipFile):
     for section in module.sections:
         for sub in section.subsections:
             if sub.folder == 'webcontent':
+                new_html = sub.IMSMediaLinks()
                 html_filename = os.path.join(ims_outdir,sub.folder,sub.getFilename())
-                zipFile.writestr(html_filename, sub.html_src.encode("UTF-8"))
+                zipFile.writestr(html_filename, new_html.encode("UTF-8"))
             else:
                 xml_filename = os.path.join(ims_outdir,sub.folder,sub.getFilename('xml'))
                 zipFile.writestr(xml_filename, sub.toXMLMoodle().encode("UTF-8"))
@@ -337,6 +344,11 @@ def generateImsArchiveLight(module, moduleOutDir, zipFile):
     # parse data and generate imsmanifest.xml
     ims_filename = os.path.join(ims_outdir, 'imsmanifest.xml')
     zipFile.writestr(ims_filename, generateIMSManifest(module).encode("UTF-8"))
+
+    if mediaData: # add media files in '/IMS/static'
+        for media, nom in zip(mediaData, mediaNom):
+            media.seek(0)
+            zipFile.writestr(ims_outdir+'/static/'+nom, media.read())
 
 
     #imsfile = open(imsfilename, 'w', encoding='utf-8')
@@ -351,6 +363,7 @@ def generateImsArchiveLight(module, moduleOutDir, zipFile):
 
     tab=zipFile.namelist()
     reEdxPath = re.compile('^'+module.module+'/IMS')
+
 
     zipArchiveIO = StringIO.StringIO()
 

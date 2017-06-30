@@ -87,6 +87,20 @@ class IMSArchiveTestCase(unittest.TestCase):
         self.assertEqual(len(list_files_acav), 2, "Not the same numbers of ActiviteAvancee's files")
         print("[IMSArchiveTestCase]-- check_creation_ActiviteAvancee OK --")
 
+    def testGenerateIms(self):
+        io_media = StringIO("""# Titre 1
+## Titre 2
+### Titre 3
+Bienvenue sur le cours [!image](media/monimage3.png)
+## Titre 2
+blabla [!image](media/monimage2.png)
+bloublou [!image](media/monimage3.png)
+        """)
+        m = model.Module(io_media, 'module1')
+        for subsec in (m.sections[0].subsections):
+            subsec.getFilename()
+        print(toIMS.generateIMSManifest(m))
+
     def testArchitectureManifest(self):
         """
         """
@@ -470,6 +484,7 @@ Blablablabla {
   </assessment>
 </questestinterop>
         """.strip() in imsessay.strip())
+
 
 # Main
 if __name__ == '__main__':

@@ -51,8 +51,14 @@ def loadJinjaEnv():
 
 def toEdxProblemXml(question):
     """ given a question object, return EDX Xml """
-    return question.toEDX()
+    edxXml = question.toEDX()
+    return edxXml
 
+def toEdxProblemXmlLight(question):
+    """ given a question object, return EDX Xml """
+    edxXml = question.toEDX()
+    edxXml = re.sub(re.compile('/\w*/media/'), '/static/', edxXml)
+    return edxXml
 
 def generateEDXArchive(module, moduleOutDir):
     """ Given a module object and destination dir, generate EDX archive """
@@ -104,7 +110,7 @@ def generateEDXArchive(module, moduleOutDir):
     return ('%s_edx.tar.gz' % module.module)
 
 
-def generateEDXArchiveLight(module, moduleOutDir, zipFile):
+def generateEDXArchiveLight(module, moduleOutDir, zipFile, mediaData, mediaNom):
     """ Given a module object and destination dir, generate EDX archive """
 
     # Module data
@@ -115,16 +121,22 @@ def generateEDXArchiveLight(module, moduleOutDir, zipFile):
     # generate content files: html/webcontent | problem/(Activite|ActiviteAvancee|Comprehension)
     for sec in module.sections:
         for sub in sec.subsections:
+            new_html = sub.EDXMediaLinks()
             if sub.folder == 'webcontent': # these go to EDX/html/
                 html_outdir = os.path.join(edx_outdir, 'html', sub.getFilename())
-                zipFile.writestr(html_outdir, sub.html_src.encode("UTF-8"))
+                zipFile.writestr(html_outdir, new_html.encode("UTF-8"))
                 #zipFile.writestr(module.module+'/EDX/html/'+sub.getFilename(), sub.html_src.encode("UTF-8"))
             elif sub.folder in ('Activite', 'ActiviteAvancee', 'Comprehension'):
                 for question in sub.questions:
                     fname =  ('%s.xml' % question.id)
                     problem_outdir = os.path.join(edx_outdir,'problem', fname)
-                    zipFile.writestr(problem_outdir, toEdxProblemXml(question).encode("UTF-8"))
+                    zipFile.writestr(problem_outdir, toEdxProblemXmlLight(question).encode("UTF-8"))
                     #zipFile.writestr(module.module+'/EDX/problem/'+fname, toEdxProblemXml(question).encode("UTF-8"))
+
+    if mediaData: # add media files in '/EDX/static'
+        for media, nom in zip(mediaData, mediaNom):
+            media.seek(0)
+            zipFile.writestr(edx_outdir+'/static/'+nom, media.read())
 
 
     # Add other files

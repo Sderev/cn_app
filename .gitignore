@@ -19,5 +19,6 @@ tests/Test.imscc.zip
 tests/testEDX
 tests/testGIFT
 tests/IMS
+tests/dirmodule
 tests/.coverage
 tests/coverage_html_report

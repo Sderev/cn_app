@@ -32,7 +32,10 @@ def writeHtml(module, outModuleDir, html):
 
 
 def processModule(args, repoDir, outDir, module):
-    """ given input paramaters, process a module  """
+    """ given input paramaters, process a module
+
+        :param args: result of parser.parse_args
+    """
 
     moduleDir = os.path.join(repoDir, module)
     moduleOutDir = os.path.join(outDir, module)

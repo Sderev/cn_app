@@ -18,9 +18,22 @@ def setUp():
     except :
         pass
     with open("coursTest/module1/module_test.md", encoding='utf-8') as sample_file:
-        global m
         m = model.Module(sample_file, "tests", "http://culturenumerique.univ-lille3.fr")
-        global parser
+
+class CnExportTestCase(unittest.TestCase):
+
+    def test_writeHtml(self):
+        html = u"<p>Text</p>"
+        m = 'module'
+        cnExport.writeHtml(m, TEST_CNEXPORT_DIR, html)
+        self.assertTrue(os.path.isdir(TEST_CNEXPORT_DIR))
+        self.assertTrue(os.path.exists(TEST_CNEXPORT_DIR+'/'+m+'.html'))
+        html_file = open(TEST_CNEXPORT_DIR+'/'+m+'.html')
+        lines = html_file.readlines()
+        self.assertTrue(html in lines[0])
+
+    def test_processModule(self):
+        # SET UP
         parser = argparse.ArgumentParser(description="Parses markdown files and generates a website using index.tmpl in the current directory. Default is to process and all folders 'module*'.")
         group = parser.add_mutually_exclusive_group()
         group.add_argument("-m", "--modules", help="module folders", nargs='*')
@@ -50,19 +63,6 @@ def setUp():
                             help="Also generate EDX archive for each module",
                             default=False)
 
-class CnExportTestCase(unittest.TestCase):
-
-    def test_writeHtml(self):
-        html = u"<p>Text</p>"
-        m = 'module'
-        cnExport.writeHtml(m, TEST_CNEXPORT_DIR, html)
-        self.assertTrue(os.path.isdir(TEST_CNEXPORT_DIR))
-        self.assertTrue(os.path.exists(TEST_CNEXPORT_DIR+'/'+m+'.html'))
-        html_file = open(TEST_CNEXPORT_DIR+'/'+m+'.html')
-        lines = html_file.readlines()
-        self.assertTrue(html in lines[0])
-
-    def test_processModule(self):
         args = parser.parse_args(['--edx', '--ims'])
 
     # def test_processModule(self):

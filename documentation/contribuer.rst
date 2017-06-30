@@ -199,19 +199,29 @@ En effet, coverage utilise ce fichier pour vérifier le taux de couverture des l
 Pistes d'améliorations de l'application
 ---------------------------------------
 
+Tests
+~~~~~
+Voir plus haut.
+
+Résoudre le problème des accents dans les gifts 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Pour Compréhension, Activité et Activitée Avancée, les accents ne passent plus dans.
+Problème dans l'ouverture du fichier qu'il faudra ouvrir en `UTF-8` mais
+cela semble poser des soucis (voir dans `processModuleLight` ou ``generateArchive`).
+
 Fichier d'erreur pour l'utilisateur
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Lorsque l'utilisateur upload ses cours sur Esc@pad, il se peut qu'il y ait des erreurs de syntaxe.
+Pour informer l'utilisateur, un logging a été mis en place pour repertorier ses erreurs. Toutes
+les erreurs n'ont pas été répertoriées et il faudrait lui rappeler la hiérarchie de son cours 
+pour qu'il puisse rapidement vérifier que la génération de son cours n'a pas posé de soucis.
 
-Insérer des médias
-~~~~~~~~~~~~~~~~~~
+Pour l'instant les erreurs répertoriées (dans `model.py` grâce à la ligne `logging.warning(String)` :
 
-Il réside encore certains problèmes sur l'application Esc@pad. Nous
-souhaitons notamment permettre à l'utilisateur de disposer d'archive
-d'import IMS qui contiendrait des médias. Les images sont visibles
-dans les cours et les textes des questions, mais pas dans les images.
-Il faut essayer de trouver une solution pour ça.
-
+- Les cours sans titre de niveau 2 (##) sont placés automatique sous un titre `Cours`.
+- Il faut commencer son cours par un titre de niveau 1 (#).
+- L'utilisateur peut mettre une option dans le header qui n'existe pas (exemple -> Chicken: cotcot)
 
 Insérer des médias dans une archive imscc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -246,9 +256,7 @@ Insérer des médias dans une archive imscc
 
        <img alt="hiragana" src="../static/hira.gif"/>
 
-
-Comment fonctionne le code pour mettre des images dans l'archive IMS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Comment fonctionne le code ?**
 
 1. On copie tous les médias dans un dossier static à l'intérieur du dossier IMS
 dans `generateImsArchiveLight(module, moduleOutDir, zipFile, mediaData, mediaNom)`.
@@ -286,10 +294,28 @@ dans la fonction `generateIMSManifest` de `toIMS`.
 5. On modifie ainsi la source de l'image du `/nom_du_module/media/nom_image.ext` à `../static/nom_image.ext`
 dans `IMSMediaLinks()` de `model`.
 
-Problème
-~~~~~~~~
+**Problème**
 
 Cette solution semble fonctionner pour les images dans les cours et dans les questions
 de texte mais pas dans les feedbacks généraux. Pas de piste particulière.
 
+Sortir le dossier static de `cn_app`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sortir le dossier static contenant toutes les images, icônes, css, etc, de cn_app (Pour que ce soit plus modulable pour une utilisation ouverte à tous).
+Notamment grâce au header optionnel où on devrait pouvoir changer la CSS.
+
+Changement de vocabulaire
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Réfléchir au vocabulaire plus "métier"  et moins techno sur escapad : exemple repository ne me plaît pas
+
+Différencier certains templates de `cn_app` dans les cours
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Réfléchir à ce qui doit être dans les templates de cours ou les templates de cn_app. Exemples : Gérer la page contact, ...
+
+Passage à Python3
+~~~~~~~~~~~~~~~~~
+Il faut exécuter `cn_export` avec python3 et voir toutes les erreurs générées.
  

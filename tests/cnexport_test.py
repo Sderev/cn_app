@@ -3,6 +3,8 @@ sys.path.insert(0, os.path.abspath('..'))
 from io import open
 import unittest
 import argparse
+import os
+import shutil
 import logging
 import mock
 logger = logging.getLogger()
@@ -17,8 +19,6 @@ def setUp():
         os.makedirs(TEST_CNEXPORT_DIR)
     except :
         pass
-    with open("coursTest/module1/module_test.md", encoding='utf-8') as sample_file:
-        m = model.Module(sample_file, "tests", "http://culturenumerique.univ-lille3.fr")
 
 class CnExportTestCase(unittest.TestCase):
 
@@ -64,8 +64,12 @@ class CnExportTestCase(unittest.TestCase):
                             default=False)
 
         args = parser.parse_args(['--edx', '--ims'])
-
-    # def test_processModule(self):
+        # with open("coursTest/module1/module_test.md", encoding='utf-8') as sample_file:
+        #     m = model.Module(sample_file, "tests", "http://culturenumerique.univ-lille3.fr")
+        #     objct = cnExport.processModule(args, './coursTest', './dirmodule', './module1')
+        #     self.assertTrue(os.path.isdir('./dirmodule/module1'))
+        #     self.assertTrue(os.path.isdir('./dirmodule/media'))
+        #     self.assertTrue(os.path.exists('./dirmodule/module1.questions_bank.gift.txt'))
 
 
 

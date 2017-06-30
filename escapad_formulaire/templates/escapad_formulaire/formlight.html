@@ -5,6 +5,10 @@
 
 {% block titre %}Formulaire{% endblock %}
 
+{% block breadcrumb %}
+  <li><a href="{% url 'form_upload' %}"><span> Upload via archive</span></a></li>
+{% endblock %}
+
 {% block content %}
 
     <ul>

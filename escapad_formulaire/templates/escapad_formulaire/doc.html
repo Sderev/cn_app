@@ -1,0 +1,1382 @@
+
+<!--
+Preview Template
+Use jquery to keep the scroll when refreshing the page (we often refresh the preview when we edit the course)
+-->
+
+
+<!DOCTYPE html>
+
+<html lang="fr" >
+
+<head>
+    {%  load static %}
+
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/jasny-bootstrap.min.css' %}" rel="stylesheet" media="screen">
+    <!-- onepage css -->
+    <link href="{% static 'css/modules.css' %}" rel="stylesheet">
+
+    <!-- Icones -->
+    <link href="{% static 'css/icons.css' %}" rel="stylesheet">
+    <link href="{% static 'css/common.css' %}" rel="stylesheet">
+
+	<meta charset="UTF-8">
+
+
+    <script type="text/javascript" src="{% static 'js/process_preview.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery/jquery.min.js' %}"></script>
+    <script type="text/javascript">
+
+    // Keep the actual scroll when refreshing the page
+    $(window).scroll(function() {
+      sessionStorage.scrollTop = $(this).scrollTop();
+    });
+
+    $(document).ready(function() {
+      if (sessionStorage.scrollTop != "undefined") {
+        $(window).scrollTop(sessionStorage.scrollTop);
+      }
+    });
+
+    </script>
+
+
+    <style>
+      body {
+        padding-left: 50px;
+      }
+    </style>
+</head>
+
+<body onload="process()">
+
+
+  <!-- Display the content below -->
+
+
+<!-- Section 1 -->
+
+
+<h1> 1. Avant-Propos </h1>
+
+
+<!-- Subsection 1-1 -->
+
+
+<h2>1-1. Cours </h2>
+<p>
+ Ce module présente un tutoriel de prise en main de la chaîne éditoriale d'un cours sur Esc@pad. Nous vous présenterons les bases pour écrire votre cours en
+ <code>
+  Markdown
+ </code>
+ et en
+ <code>
+  Gift
+ </code>
+ . Pour plus d'informations sur ces 2 langages, veuillez vous référez au lien suivant:
+</p>
+<ul>
+ <li>
+  <a href="https://fr.wikipedia.org/wiki/Markdown" target="_blank">
+   Markdown
+  </a>
+ </li>
+ <li>
+  <a href="https://docs.moodle.org/2x/fr/Format_GIFT" target="_blank">
+   Gift
+  </a>
+ </li>
+</ul>
+
+<!-- Section 2 -->
+
+
+<h1> 2. Markdown </h1>
+
+
+<!-- Subsection 2-1 -->
+
+
+<h2>2-1. Introduction </h2>
+<p>
+ Markdown est un langage très simple pour écrire du
+ <strong>
+  HTML
+ </strong>
+ de manière détournée.
+Vous pouvez voir sur votre droite (pensez à affichez l'aperçu ci-dessus !) un aperçu de la syntaxe Markdown une fois interprétée. Vous pouvez vous entraîner sur ce cours dans la partie
+ <strong>
+  Entraînement
+ </strong>
+ située à la fin de ce cours.
+</p>
+
+<!-- Subsection 2-2 -->
+
+
+<h2>2-2. La syntaxe </h2>
+<p>
+ Nous allons maintenant débuter une rapide revue des élements de la syntaxe Markdown.
+</p>
+<h3>
+ Paragraphe
+</h3>
+<p>
+ Pour créer plusieurs paragraphes, il suffit de séparer les deux zones par une ligne vide.
+</p>
+<h4>
+ Exemple
+</h4>
+<pre><code>Je suis un premier paragraphe (je laisse ensuite une ligne vide).
+
+Je suis un second paragraphe.
+</code></pre>
+<h4>
+ Résultat
+</h4>
+<p>
+ Je suis un premier paragraphe (je laisse ensuite une ligne vide).
+</p>
+<p>
+ Je suis un second paragraphe.
+</p>
+<p>
+ <strong>
+  Attention
+ </strong>
+ ! Vous ne pouvez malheureusement pas sauté de ligne au sein d'un même paragraphe.
+</p>
+<h3>
+ Mise en valeur
+</h3>
+<p>
+ Pour mettre en valeur une portion de votre texte, il suffit d'entourer les mots de votre choix entre des étoiles
+ <code>
+  *
+ </code>
+ ou des traits de soulignement (underscore)
+ <code>
+  _
+ </code>
+ . Vous pouvez soit mettre votre texte en
+ <em>
+  italic
+ </em>
+ , soit en
+ <strong>
+  gras
+ </strong>
+ .
+</p>
+<h4>
+ Exemple
+</h4>
+<p>
+ Pour mettre en italic, vous pouvez:
+</p>
+<pre><code>Mettre votre *texte* ainsi ou comme _ceci_
+</code></pre>
+<p>
+ Pour mettre en gras :
+    Mettre votre
+ <strong>
+  texte
+ </strong>
+ ainsi ou comme
+ <strong>
+  ceci
+ </strong>
+</p>
+<h4>
+ Résultat
+</h4>
+<p>
+ Mettre votre
+ <em>
+  texte
+ </em>
+ ainsi ou comme
+ <em>
+  ceci
+ </em>
+</p>
+<p>
+ Mettre votre
+ <strong>
+  texte
+ </strong>
+ ainsi ou comme
+ <strong>
+  ceci
+ </strong>
+</p>
+<h3>
+ Les titres
+</h3>
+<p>
+ Pour créer vos titres sur
+ <code>
+  Esc@pad
+ </code>
+ il vous suffit de mettre un ou plusieurs
+ <code>
+  #
+ </code>
+ suivant le niveau de votre titre:
+</p>
+<pre><code># Titre de niveau 1
+## Titre de niveau 2
+### Titre de niveau 3
+</code></pre>
+<h4>
+ <strong>
+  Attention
+ </strong>
+</h4>
+<p>
+ Sur Esc@pad, votre document doit
+ <strong>
+  OBLIGATOIREMENT
+ </strong>
+ commencé par un
+ <strong>
+  titre de niveau 1
+ </strong>
+ sans quoi, votre texte ne sera pas pris en compte. Le texte situé en dessous d'un titre de niveau 1 est placé obligatoire dans une partie
+ <code>
+  Cours
+ </code>
+ si vous ne précisez pas de titre de niveau 2
+</p>
+<h4>
+ Exemple
+</h4>
+<pre><code># Titre de niveau 1
+## Titre de niveau 2
+### Titre de niveau 3
+Je suis un contenu
+
+# Titre de niveau 1
+Je suis un contenu automatiquement placé dans un **Cours**
+### Titre de niveau 3
+</code></pre>
+<h4>
+ Résultat
+</h4>
+<p>
+ Pour afficher le résultat, enlevez le
+ <code>
+  \
+ </code>
+ devant chaque
+ <code>
+  #
+ </code>
+</p>
+<p>
+ # Titre de niveau 1
+## Titre de niveau 2
+### Titre de niveau 3
+Je suis un contenu
+# Titre de niveau 1
+Je suis un contenu automatiquement placé dans un Cours
+### Titre de niveau 3
+</p>
+<h3>
+ Les listes
+</h3>
+<p>
+ Il existe deux types de listes gérés par Markdown :
+</p>
+<h3>
+ Listes à puces
+</h3>
+<h4>
+ Exemple
+</h4>
+<pre><code>* Une puce
+* Une autre puce
+* Et une dernière puce
+</code></pre>
+<h4>
+ Résultat
+</h4>
+<ul>
+ <li>
+  Une puce
+ </li>
+ <li>
+  Une autre puce
+ </li>
+ <li>
+  Et une dernière puce
+ </li>
+</ul>
+<h3>
+ Listes numérotés
+</h3>
+<h4>
+ Exemple
+</h4>
+<pre><code>1. Première partie
+2. Deuxième partie
+3. Troisième partie
+</code></pre>
+<h4>
+ Résultat
+</h4>
+<ol>
+ <li>
+  Première partie
+ </li>
+ <li>
+  Deuxième partie
+ </li>
+ <li>
+  Troisième partie
+ </li>
+</ol>
+<h3>
+ Les citations
+</h3>
+<p>
+ Fonctionne comme pour les e-mails avec
+ <code>
+  &gt;
+ </code>
+ ou
+ <code>
+  »
+ </code>
+ .
+</p>
+<h4>
+ Exemple
+</h4>
+<pre><code>&gt; Texte cité. Pour chaque
+&gt; nouvelle ligne il faut rajouter un
+&gt; chevron devant
+</code></pre>
+<h4>
+ Résultat
+</h4>
+<blockquote>
+ <p>
+  Texte cité. Pour chaque
+nouvelle ligne il faut rajouter un
+chevron devant
+ </p>
+</blockquote>
+<h3>
+ Code informatique
+</h3>
+<p>
+ Pour insérer du code source, il suffit de laisser un espace à la fin du paragraphe et d'indenter (en ajoutant 4 espaces ou une tabulation) avant d'écrire son texte.
+</p>
+<pre><code>def algo (i) :
+    i = i + 1
+    return i
+</code></pre>
+<h3>
+ Code en ligne
+</h3>
+<p>
+ Pour faire ressortir un morceau de code au milieu d'un paragraphe, il suffit d'entourer la portion de texte d'accent grave `
+</p>
+<h4>
+ Exemple
+</h4>
+<pre><code>L'agorithme précédent permet d'augmenter `i` de 1.
+</code></pre>
+<h4>
+ Résultat
+</h4>
+<p>
+ L'agorithme précédent permet d'augmenter
+ <code>
+  i
+ </code>
+ de 1.
+</p>
+<h3>
+ Caractère non interprété
+</h3>
+<p>
+ Pour que Markdown n'interprète pas certains symboles il suffit d'ajouter
+ <code>
+  \
+ </code>
+ devant le symbole en question
+</p>
+<pre><code>\` \* \** \{texte}
+</code></pre>
+<p>
+ ` * ** {texte}
+</p>
+<h3>
+ Les liens
+</h3>
+<p>
+ Pour ajouter un lien dans votre fichier, vous devez placer le texte du lien entre crochets suivis de l'URL entre parenthèses
+ <code>
+  [nom_affiché](http:adresse_du_site)
+ </code>
+ :
+</p>
+<h4>
+ Exemple
+</h4>
+<pre><code>[Mon lien](https://culturenumerique.univ-lille3.fr/index.html)
+</code></pre>
+<h4>
+ Résultat
+</h4>
+<p>
+ <a href="https://culturenumerique.univ-lille3.fr/index.html" target="_blank">
+  Mon lien
+ </a>
+</p>
+<p>
+ <em>
+  Info
+ </em>
+ Avec
+ <code>
+  Esc@pad
+ </code>
+ les liens s'ouvrent dans une nouvelle fenêtre.
+</p>
+<h3>
+ Les images
+</h3>
+<p>
+ Les images en Markdown s'ajoutent de la manière suivante:
+</p>
+<ul>
+ <li>
+  Lien vers une image hébergée sur internet
+ </li>
+</ul>
+<pre><code>![Mon image](https://culturenumerique.univ-lille3.fr/static/img/logo_plat_vert.svg)
+</code></pre>
+<ul>
+ <li>
+  Lien vers un media :
+Pour ajouter des images de votre cours depuis votre ordinateur, vous devez l'ajouter comme ceci.
+ </li>
+</ul>
+<pre><code>![Mon image](base/module/media/Logo_plat_vert.svg)
+</code></pre>
+<p>
+ Pour l'instant, une image par défault est affichée mais lorsque vous générerez votre cours (en suivant bien l'indication de la petite bulle d'aide avant de créer votre cours) votre image sera remplacée.
+</p>
+<p>
+ <img alt="Mon image" src="https://culturenumerique.univ-lille3.fr/static/img/logo_plat_vert.svg"/>
+</p>
+<h4>
+ <strong>
+  Attention
+ </strong>
+</h4>
+<p>
+ Évitez au maximum de mettre des accents dans le nom du fichier ou des majuscules dans l'extension de l'image.
+</p>
+<h3>
+ Les vidéos
+</h3>
+<p>
+ Pour l'instant, Esc@pad ne peut intégrer que les vidéos venant de
+ <a href="https://vimeo.com/" target="_blank">
+  Vimeo
+ </a>
+ . Pour intégrer directement votre vidéo dans votre cours il suffit de
+ <code>
+  {: .cours_video}
+ </code>
+ .
+</p>
+<h4>
+ Exemple
+</h4>
+<pre><code>[Nom de video]( https://vimeo.com/93350435 ){: .cours_video }
+</code></pre>
+<p>
+ <strong>
+  Attention
+ </strong>
+ ! Pas de prévisualisation pour les vidéos.
+</p>
+
+<!-- Section 3 -->
+
+
+<h1> 3. Les activités </h1>
+
+
+<!-- Subsection 3-1 -->
+
+
+<h2>3-1. Cours </h2>
+<p>
+ Les activités regroupent les questions de votre module. Les questions sont rédigées en format Gift, elles seront interprétées par Esc@pad.Il existe 3 types d'activités :
+</p>
+<ul>
+ <li>
+  Les
+  <strong>
+   Comprehensions
+  </strong>
+  : on y met généralement des questions très simple de cours sous forme de QCM.
+ </li>
+ <li>
+  Les
+  <strong>
+   Activités
+  </strong>
+  : [à compléter]
+ </li>
+ <li>
+  Les
+  <strong>
+   Activités-Avancées
+  </strong>
+  : [à compléter]
+ </li>
+</ul>
+
+<!-- Subsection 3-2 -->
+
+
+<h2>3-2. Intégrer une activité dans votre cours </h2>
+<p>
+ Les sous-sections contenant ces activités sont elles délimitées par 2 séries de
+ <code>
+  ```
+ </code>
+ placées en début de ligne et dont la première est suivie du type d'activité.
+</p>
+<pre><code>```comprehension ou active ou activite-avancee
+[questions]
+```
+</code></pre>
+
+<!-- Subsection 3-3 -->
+
+
+<h2>3-3. Syntaxe Gift </h2>
+<p>
+ (documentation très inspirée de celle de
+ <a href="https://docs.moodle.org/2x/fr/Format_GIFT" target="_blank">
+  moodle
+ </a>
+ )
+</p>
+<h3>
+ Memento Gift
+</h3>
+<p>
+ Voici un tableau pour les différents symboles utilisés dans Gift.
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    Symbole
+   </th>
+   <th align="center">
+    Utilité
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    ::Titre::
+   </td>
+   <td align="center">
+    Titre de la question (fortement conseillé)
+   </td>
+  </tr>
+  <tr>
+   <td>
+    [...Format...]
+   </td>
+   <td align="center">
+    Format du passage suivant de texte (
+    <em>
+     markdown
+    </em>
+    fortement conseillé)
+   </td>
+  </tr>
+  <tr>
+   <td>
+    {
+   </td>
+   <td align="center">
+    Début des réponses
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <code>
+     {T}
+    </code>
+    ou
+    <code>
+     {F}
+    </code>
+   </td>
+   <td align="center" true="TRUE">
+    Réponses vrai ou faux; aussi
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <code>
+     { ... =Bonne réponse ... }
+    </code>
+   </td>
+   <td align="center">
+    Bonne réponse pour les choix multiples ou les textes troués
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <code>
+     { ... ~Mauvaise réponse ... }
+    </code>
+   </td>
+   <td align="center">
+    Mauvaise réponse pour les choix multiples ou les textes troués
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <code>
+     { ... =Élément -&gt; réponse ... }
+    </code>
+   </td>
+   <td align="center">
+    Réponse pour les questions d'appariement
+   </td>
+  </tr>
+  <tr>
+   <td>
+    #FeedbackLocal
+   </td>
+   <td align="center">
+    Feedback pour une réponse
+   </td>
+  </tr>
+  <tr>
+   <td>
+    ####FeedbackGeneral
+   </td>
+   <td align="center">
+    Feedback pour la question
+   </td>
+  </tr>
+  <tr>
+   <td>
+    {#
+   </td>
+   <td align="center">
+    Début des questions numérique
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Réponse:marge d'erreur
+   </td>
+   <td align="center">
+    Réponse numérique acceptée à l'intérieur d'une marge d'erreur
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Limite inférieure..Limite supérieure
+   </td>
+   <td align="center">
+    marges de valeurs inférieure et supérieure acceptées dans une question à réponse numérique
+   </td>
+  </tr>
+  <tr>
+   <td>
+    =%n%réponse:marge d'erreur
+   </td>
+   <td align="center">
+    n pour cent accordé à une réponse numérique acceptée à l'intérieur d'une marge d'erreur
+   </td>
+  </tr>
+  <tr>
+   <td>
+    }
+   </td>
+   <td align="center">
+    Fin des réponses
+   </td>
+  </tr>
+  <tr>
+   <td>
+    \caractère
+   </td>
+   <td _="," align="center">
+    Une barre oblique inverse permet de bloquer la signification de ~, =, #,
+   </td>
+  </tr>
+  <tr>
+   <td>
+    \n
+   </td>
+   <td align="center">
+    Ajout un saut de ligne dans le texte de la question -- les lignes vides délimitent les questions
+   </td>
+  </tr>
+ </tbody>
+</table>
+
+<!-- Subsection 3-4 -->
+
+
+<h2>3-4. Les questions </h2>
+<h3>
+ Format d'une question
+</h3>
+<p>
+ Le format d'une question en GIFT est comme-suit:
+</p>
+<pre><code>::Titre::
+Texte de la question
+{les réponses
+####Feedback général}
+
+::Titre::
+Texte de la question
+{réponses}
+</code></pre>
+<p>
+ Pour certains types de questions, il est possible d'ajouter des feedbacks locaux pour chaque réponse.
+</p>
+<h3>
+ Réponse unique
+</h3>
+<p>
+ Une seule réponse est valide parmis les propositions.
+</p>
+<p>
+ Exemple très simple de réponse unique:
+</p>
+<pre><code>Qui repose dans la Grant's tomb ? {=Grant ~Personne ~Napoléon ~Churchill ~Mère Teresa}
+</code></pre>
+<p>
+ Exemple avec plus d'éléments de la syntaxe GIFT:
+</p>
+<pre><code>// Question : 1 Nom : Grant's tomb
+::Grant's tomb::Qui repose dans la Grant's tomb à New-York ? {
+=Grant
+~Personne #C'était vrai pendant 12 ans, mais la dépouille de Grant a été enterrée dans cette tombe en 1897.
+~Napoléon #Il a été enterré en France.
+~Churchill #Il a été enterré en Angleterre.
+~Mère Teresa #Elle a été enterrée en Inde. }
+</code></pre>
+<h3>
+ Choix multiple avec plusieurs bonnes réponses
+</h3>
+<p>
+ Plusieurs réponses vraies parmis un choix de réponses. Le pourcentage permet d'attribuer le bon nombre de points suivant la réponse donnée par l'utilisateur:
+</p>
+<ul>
+ <li>
+  <code>
+   ~%-100%
+  </code>
+  : Réponse fausse
+ </li>
+ <li>
+  <code>
+   ~%-50%
+  </code>
+  : La moitié des points
+ </li>
+</ul>
+<pre><code>Parmi ces personnes, nommez-en deux qui sont enterrées dans la Grant's tomb. {   ~%-100%Personne   ~%50%Grant   ~%50%L'épouse de Grant   ~%-100%Le père de Grant }
+</code></pre>
+<p>
+ Précisons que si le pourcentage n'est pas un nombre entier (par exemple pour 3 bonnes réponses) il faut écrire le nombre suivi de 5 chiffres après la virgule (le séparateur utilisé doit être le "point" et non la "virgule").
+</p>
+<pre><code>question {
+~%33.33333%Bonne réponse
+~%33.33333%Bonne réponse
+ ~%33.33333%Bonne réponse
+~%0%Mauvaise réponse
+~%0%Mauvaise réponse }
+</code></pre>
+<h3>
+ Vrai / Faux
+</h3>
+<pre><code>::Q1:: 1+1=2 {T}
+::Q2:: 1+1=3 {FALSE#Feedback si l'utilisateur s'est trompé#Feedback si l'utilisateur a bon}
+</code></pre>
+<h3>
+ Réponse courte
+</h3>
+<p>
+ Les réponses d'une question de type réponse courte sont toutes précédées d'un symbole d'égalité (=), indiquant que toutes ces réponses sont bonnes.
+</p>
+<pre><code>Deux plus deux égalent {=quatre =4 =IV}
+</code></pre>
+<h3>
+ Appariement
+</h3>
+<p>
+ Les différents appariements commencent par un symbole d'égalité (=) et sont séparés par ce symbole « -&gt; ». Il doit y avoir au moins trois appariements (au moins trois éléments différents d'un côté et au moins deux éléments différents de l'autre).
+</p>
+<pre><code>Appariez les pays suivants avec les capitales correspondantes. {
+=Canada -&gt; Ottawa
+=Italie -&gt; Rome
+=Japon -&gt; Tokyo
+=Inde -&gt; New Delhi }
+</code></pre>
+<h3>
+ Mot manquant
+</h3>
+<p>
+ Le format mot manquant insère automatiquement un trou au milieu d'une phrase. Pour utiliser le format mot manquant, mettez les réponses où vous voulez qu'un trou se crée dans le texte.
+</p>
+<pre><code>Il faut débourser { =rien} pour utiliser Esc@pad.
+</code></pre>
+<p>
+ <strong>
+  Attention
+ </strong>
+ ! On ne peut pas mettre plusieurs réponses à trou dans un seul texte, il faut pour cela créer une nouvelle question à chaque fois.
+</p>
+<h3>
+ Question à réponse numérique
+</h3>
+<p>
+ La section réponse pour les questions à réponse numérique doivent commencer par un dièse (
+ <code>
+  #
+ </code>
+ ). Les réponses numériques peuvent inclure une marge d'erreur, qui doit être mentionnée après le bonne réponse, et être précédée d'un deux-points (
+ <code>
+  :
+ </code>
+ ). Ainsi, par exemple, si la bonne réponse peut être n'importe quel nombre entre 1,5 et 2,5, alors elle sera écrite comme {
+ <code>
+  #2:0,5
+ </code>
+ }. Ceci indique que 2 avec une marge d'erreur de 0,5 est la bonne réponse (c'est-à-dire l'empan entre 1,5 et 2,5). Si aucune marge d'erreur n'est mentionnée, elle sera de zéro.
+</p>
+<p>
+ Voici un simple format de question à réponse numérique. Elle tolérera une marge de 5 ans.
+</p>
+<pre><code>En quelle année Ulysses S. Grant est-il né ? {#1822:5}
+</code></pre>
+<p>
+ C'est une bonne idée de vérifier les limites de la marge. Par exemple, dans le prochain exemple, 3,141 n'est pas une bonne réponse et 3,142 est une bonne réponse selon la marge.
+</p>
+<pre><code>Quelle est la valeur de pi (incluant 3 chiffres après la virgule) ? {#3,14159:0,0005}.
+</code></pre>
+<p>
+ Optionnellement, les réponses numériques peuvent être rédigées en tant qu'étendue comme dans cet exemple : {#valeur minimale..valeur maximale}.
+</p>
+<pre><code>Quelle est la valeur de pi (incluant 3 chiffres après la virgule) ? {#3,141..3,142}.
+</code></pre>
+<p>
+ <strong>
+  Attention
+ </strong>
+ !
+ <code>
+  Esc@pad
+ </code>
+ ne gère par les listes de réponses numérique.
+</p>
+<h3>
+ Composition
+</h3>
+<p>
+ Une question de type composition est tout simplement une question avec un champ de réponse vide. Les accolades indiquant les réponses doivent rester vides, puisque ce type de question ne peut pas être corrigé automatiquement.
+</p>
+<pre><code>Écrivez une courte biographie de Dag Hammarskjöld. {}
+</code></pre>
+<h3>
+ Description
+</h3>
+<p>
+ Une question de type Description n'a aucune réponse. Ce type de question ne sert qu'à insérer du texte fixe comme une consigne dans votre test.
+</p>
+<pre><code>Vous pouvez utiliser un crayon et un papier pour les questions d'appariement suivantes.
+</code></pre>
+
+<!-- Subsection 3-5 -->
+
+
+<h2>3-5. Mise en page avec Esc@pad </h2>
+<h3>
+ Création des activités
+</h3>
+<p>
+ Voici ce que donne la création des différentes activités dans
+ <code>
+  Esc@pad
+ </code>
+ :
+</p>
+
+<!-- Subsection 3-6 -->
+
+
+<h2>3-6. Compréhension </h2>
+
+
+<!-- Subsection 3-7 -->
+
+
+<h2>3-7. Activité </h2>
+
+
+<!-- Subsection 3-8 -->
+
+
+<h2>3-8. Activité avancée </h2>
+
+
+<!-- Subsection 3-9 -->
+
+
+<h2>3-9. Cours </h2>
+<h3>
+ Création des questions
+</h3>
+<p>
+ Et voici ce que donne avec Esc@pad les questions avec les exemples précédents:
+</p>
+
+<!-- Subsection 3-10 -->
+
+
+<h2>3-10. Activité </h2>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+ </h3>
+ <div class="questiontext">
+  <p>
+   Qui repose dans la Grant's tomb ?
+  </p>
+ </div>
+ <div class="groupedAnswer">
+  <ul class="multichoice">
+   <li>
+    <input name="name" type="radio"/>
+    <p>
+     Grant
+    </p>
+   </li>
+   <li>
+    <input name="name" type="radio"/>
+    <p>
+     Personne
+    </p>
+   </li>
+   <li>
+    <input name="name" type="radio"/>
+    <p>
+     Napoléon
+    </p>
+   </li>
+   <li>
+    <input name="name" type="radio"/>
+    <p>
+     Churchill
+    </p>
+   </li>
+   <li>
+    <input name="name" type="radio"/>
+    <p>
+     Mère Teresa
+    </p>
+   </li>
+  </ul>
+ </div>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+  Question
+ </h3>
+ <div class="questiontext">
+  <p>
+   Qui repose dans la Grant's tomb à New-York ?
+  </p>
+ </div>
+ <div class="groupedAnswer">
+  <ul class="multichoice">
+   <li>
+    <input name="name" type="radio"/>
+    <p>
+     Grant
+    </p>
+   </li>
+   <li>
+    <input name="name" type="radio"/>
+    <p>
+     Personne
+    </p>
+   </li>
+   <li>
+    <input name="name" type="radio"/>
+    <p>
+     Napoléon
+    </p>
+   </li>
+   <li>
+    <input name="name" type="radio"/>
+    <p>
+     Churchill
+    </p>
+   </li>
+   <li>
+    <input name="name" type="radio"/>
+    <p>
+     Mère Teresa
+    </p>
+   </li>
+  </ul>
+ </div>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+ </h3>
+ <div class="questiontext">
+  <p>
+   Parmi ces personnes, nommez-en deux qui sont enterrées dans la Grant's tomb.
+  </p>
+ </div>
+ <div class="groupedAnswer">
+  <ul class="multianswer">
+   <li>
+    <input name="Q139732672254896" type="checkbox"/>
+    <p>
+     Personne
+    </p>
+   </li>
+   <li>
+    <input name="Q139732672254896" type="checkbox"/>
+    <p>
+     Grant
+    </p>
+   </li>
+   <li>
+    <input name="Q139732672254896" type="checkbox"/>
+    <p>
+     L'épouse de Grant
+    </p>
+   </li>
+   <li>
+    <input name="Q139732672254896" type="checkbox"/>
+    <p>
+     Le père de Grant
+    </p>
+   </li>
+  </ul>
+ </div>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+ </h3>
+ <div class="questiontext">
+  <p>
+   question
+  </p>
+ </div>
+ <div class="groupedAnswer">
+  <ul class="multianswer">
+   <li>
+    <input name="Q139732673545496" type="checkbox"/>
+    <p>
+     Bonne réponse
+    </p>
+   </li>
+   <li>
+    <input name="Q139732673545496" type="checkbox"/>
+    <p>
+     Bonne réponse
+    </p>
+   </li>
+   <li>
+    <input name="Q139732673545496" type="checkbox"/>
+    <p>
+     Bonne réponse
+    </p>
+   </li>
+   <li>
+    <input name="Q139732673545496" type="checkbox"/>
+    <p>
+     Mauvaise réponse
+    </p>
+   </li>
+   <li>
+    <input name="Q139732673545496" type="checkbox"/>
+    <p>
+     Mauvaise réponse
+    </p>
+   </li>
+  </ul>
+ </div>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+  Q1
+ </h3>
+ <div class="questiontext">
+  <p>
+   1+1=2
+  </p>
+ </div>
+ <ul>
+  <li>
+   <input name="Q139732673544416" type="radio" value="True"/>
+   Vrai
+  </li>
+  <li>
+   <input name="Q139732673544416" type="radio" value="False"/>
+   Faux
+  </li>
+ </ul>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+  Q2
+ </h3>
+ <div class="questiontext">
+  <p>
+   1+1=3
+  </p>
+ </div>
+ <ul>
+  <li>
+   <input name="Q139732673546144" type="radio" value="True"/>
+   Vrai
+  </li>
+  <li>
+   <input name="Q139732673546144" type="radio" value="False"/>
+   Faux
+  </li>
+ </ul>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+ </h3>
+ <div class="questiontext">
+  <p>
+   Deux plus deux égalent
+  </p>
+ </div>
+ <input name="Q139732673548088" type="text"/>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+ </h3>
+ <div class="questiontext">
+  <p>
+   Appariez les pays suivants avec les capitales correspondantes.
+  </p>
+ </div>
+ <table>
+  <tr>
+   <td>
+    Canada
+   </td>
+   <td>
+    <select name="Q139732673545136Canada ">
+     <option>
+      Rome
+     </option>
+     <option>
+      Ottawa
+     </option>
+     <option>
+      New Delhi
+     </option>
+     <option>
+      Tokyo
+     </option>
+    </select>
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Italie
+   </td>
+   <td>
+    <select name="Q139732673545136Italie ">
+     <option>
+      Rome
+     </option>
+     <option>
+      Tokyo
+     </option>
+     <option>
+      New Delhi
+     </option>
+     <option>
+      Ottawa
+     </option>
+    </select>
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Japon
+   </td>
+   <td>
+    <select name="Q139732673545136Japon ">
+     <option>
+      New Delhi
+     </option>
+     <option>
+      Ottawa
+     </option>
+     <option>
+      Tokyo
+     </option>
+     <option>
+      Rome
+     </option>
+    </select>
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Inde
+   </td>
+   <td>
+    <select name="Q139732673545136Inde ">
+     <option>
+      Rome
+     </option>
+     <option>
+      Ottawa
+     </option>
+     <option>
+      New Delhi
+     </option>
+     <option>
+      Tokyo
+     </option>
+    </select>
+   </td>
+  </tr>
+ </table>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+ </h3>
+ <span class="questionTextInline">
+  <p>
+   Il faut débourser
+  </p>
+ </span>
+ <span class="questionAnswersInline">
+  <input name="Q139732673547800" type="text"/>
+ </span>
+ <p>
+  pour utiliser Esc@pad.
+ </p>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+ </h3>
+ <div class="questiontext">
+  <p>
+   En quelle année Ulysses S. Grant est-il né ?
+  </p>
+ </div>
+ <input name="Q139732673547512" step="any" type="number"/>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+ </h3>
+ <span class="questionTextInline">
+  <p>
+   Quelle est la valeur de pi (incluant 3 chiffres après la virgule) ?
+  </p>
+ </span>
+ <span class="questionAnswersInline">
+  <input name="Q139732673547080" step="any" type="number"/>
+ </span>
+ <p>
+  .
+ </p>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+ </h3>
+ <span class="questionTextInline">
+  <p>
+   Quelle est la valeur de pi (incluant 3 chiffres après la virgule) ?
+  </p>
+ </span>
+ <span class="questionAnswersInline">
+  <input name="Q139732672143440" step="any" type="number"/>
+ </span>
+ <p>
+  .
+ </p>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+ </h3>
+ <div class="questiontext">
+  <p>
+   Écrivez une courte biographie de Dag Hammarskjöld.
+  </p>
+ </div>
+ <textarea name="Q139732672146392" placeholder="Your answer here"></textarea>
+</form>
+<!-- New question -->
+<form class="question">
+ <h3 class="questiontitle">
+ </h3>
+ <div class="questiontext">
+  <p>
+   Vous pouvez utiliser un crayon et un papier pour les questions d'appariement suivantes.
+  </p>
+ </div>
+</form>
+
+<!-- Section 4 -->
+
+
+<h1> 4. Lancez-vous </h1>
+
+
+<!-- Subsection 4-1 -->
+
+
+<h2>4-1. Cours </h2>
+<p>
+ Vous avez maintenant tout les outils nécessaires pour vous lancer dans votre propre cours !
+</p>
+
+
+
+</body>
+</html>

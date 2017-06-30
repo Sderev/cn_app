@@ -17,6 +17,7 @@ Most of the template inherits this template.
 
     <!-- onepage css -->
     <link href="{% static 'css/app.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bouton.css' %}" rel="stylesheet">
 
     <!-- Icones -->
     <link href="{% static 'css/icons.css' %}" rel="stylesheet">
@@ -54,6 +55,8 @@ Most of the template inherits this template.
               {% else %}
                 <li><a> Bonjour Visiteur :</a></li>
                 <li><a href="/connexion">Connexion </a></li>
+                <li><a href="{% url "admin:index" %}"> admin </a></li>
+                <li><a href="{% static 'documentation' %}"> documentation </a></li>
               {% endif %}
             </ul>
 	      </div>
@@ -63,10 +66,11 @@ Most of the template inherits this template.
    </nav>
 
    <section id="content2">
-     <ol class="breadcrumb">
-        <li><a href="#"><span class="icon-home"></span></a></li>
-        <li><a href="#">{% block titre %}{% endblock %}</a></li>
-    </ol>
+     <ol class="breadcrumb ">
+        <li><a href="{% url 'accueil' %}"><span class="icon-home"> Accueil</span></a></li>
+        {% block breadcrumb %}{% endblock %}
+        <li><a href="#"></a></li>
+     </ol>
     <div class="container">
       <div class="row">
         <div class="col-md-10 col-md-offset-1">

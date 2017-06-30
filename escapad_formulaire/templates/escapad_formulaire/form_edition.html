@@ -26,21 +26,50 @@ which are necessary to get the course preview.
   onload="addlistener(); setValue();"
 {% endblock %}
 
+{% block breadcrumb %}
+  <li><a href="{% url 'mes_cours' %}"><span> Mes cours</span></a></li>
+  <li><a href="{% url 'cours' cours.id_cours %}"><span> {{ cours.nom_cours }} </span></a></li>
+  <li><a href="{% url 'cours_edition' cours.id_cours url %}"><span> Edition du module {{ name }}</span></a></li>
+{% endblock %}
+
 {% block content %}
 
     <h2>Modification du module : {{ name }}</h2>
 
         <fieldset id="home">
           <legend>Ecriture du cours</legend>
-          <input type="button" value="Afficher/Masquer l'aperçu" onclick="afficher_apercu()">
-          <input type="checkbox" id="feedback" value="feedback" onclick="setValue()">
-          Afficher le feedback
-          <br>
-          <iframe id="framehome" name="framehome" src="{{ full_url }}" width="48%" height="500px"></iframe>
-          <iframe id="frametest" name="frametest" src="" width="50%" height="500px"></iframe>
+
+
+          <div class="container">
+            <div class="row">
+              <!-- Button row -->
+              <div class="col-md-5">
+                <input type="button" value="Afficher/Masquer l'aperçu" onclick="afficher_apercu()">
+                <a href="{% url 'doc' %}">Accéder à la documentation</a>
+              </div>
+              <div class="col-md-5">
+                <input type="checkbox" id="feedback" value="feedback" onclick="setValue()">
+                Afficher le feedback
+                <br>
+              </div>
+            </div>
+
+            <!-- IFrame row-->
+            <div class="row">
+              <div id="col-framehome" class="col-md-5">
+                <iframe id="framehome" name="framehome" src="{{ full_url }}" width="100%" height="500px"></iframe>
+              </div>
+              <div id="col-frametest" class="col-md-5">
+                <iframe id="frametest" name="frametest" src="" width="100%" height="500px"></iframe>
+              </div>
+            </div>
+          </div>
+
+
+
 
           <br>
-          <a href="{% url 'cours' id_cours %}"><button>Retourner au cours </button></a>
+          <a href="{% url 'cours' cours.id_cours %}"><button>Retourner au cours </button></a>
         </fieldset>
 
 {% endblock %}

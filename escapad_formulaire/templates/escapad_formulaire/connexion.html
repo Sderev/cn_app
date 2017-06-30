@@ -2,6 +2,10 @@
 
 {% extends "app.html" %}
 
+{% block breadcrumb %}
+  <li><a href="{% url 'connexion' %}"><span> Connexion</span></a></li>
+{% endblock %}
+
 {% block content %}
   <h1>Se connecter</h1>
 

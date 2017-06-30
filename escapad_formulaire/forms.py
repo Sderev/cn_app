@@ -20,10 +20,10 @@ isZipFile = r'.*\.zip$'
 
 
 class CreateNew(forms.Form):
-    nom = forms.CharField(max_length=100)
+    nom = forms.CharField(label="", max_length=100)
 
 class SearchUser(forms.Form):
-    user = forms.CharField(max_length=100)
+    user = forms.CharField(label="", max_length=100)
 
     def clean_user(self): # check if username does not already exists
         try:
@@ -37,10 +37,10 @@ class SearchUser(forms.Form):
 #    url_media = forms.CharField(max_length=100)
 
 class UploadForm(forms.Form):
-    feedback = forms.BooleanField(required=False);
     nom_cours = forms.CharField(max_length=100)
     logo = forms.ImageField(required=False)
     home = forms.FileField()
+    feedback = forms.BooleanField(required=False)
 
 
 class ModuleForm(forms.Form):
@@ -48,8 +48,8 @@ class ModuleForm(forms.Form):
     media_1 = forms.FileField(required=False)
 
 class UploadFormLight(forms.Form):
-    feedback = forms.BooleanField(required=False);
     archive=forms.FileField()
+    feedback = forms.BooleanField(required=False);
 
     def clean_archive(self): # check if the archive is a tar.gz archive
         archiveName=self.cleaned_data['archive'].name
@@ -59,7 +59,7 @@ class UploadFormLight(forms.Form):
         return self.cleaned_data['archive']
 
 class ReUploadForm(forms.Form):
-    archive=forms.FileField()
+    archive=forms.FileField(label="")
 
     def clean_archive(self): # check if the archive is a tar.gz archive
         archiveName=self.cleaned_data['archive'].name
@@ -74,9 +74,9 @@ class UploadFormEth(forms.Form):
 
 # Used for creating a course in a course view
 class GenerateCourseForm(forms.Form):
-    feedback = forms.BooleanField(required=False)
     logo = forms.ImageField(required=False)
     medias = forms.FileField(required=False)
+    feedback = forms.BooleanField(required=False)
 
     def clean_medias(self):  # check if the archive is a tar.gz archive
         if self.cleaned_data['medias']:

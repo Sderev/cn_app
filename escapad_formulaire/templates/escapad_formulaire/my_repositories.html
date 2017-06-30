@@ -4,6 +4,10 @@
 
 {%  load static %}
 
+{% block breadcrumb %}
+  <li><a href="{% url 'my_repositories' %}"><span> Mes dépôts</span></a></li>
+{% endblock %}
+
 {% block content %}
   <h2>Dépôts de {{ user }}</h2>
 

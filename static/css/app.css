@@ -16,6 +16,44 @@
 .orange {
     color: #e8900c;
 }
+/*
+.button-escapad {
+  padding: 0.5em;
+}
+
+.button-escapad a:link, a:visited {
+    color: #447e9b;
+    text-decoration: none;
+}
+
+.button-escapad a, a:link, a:hover, a:active, a:visited {
+  outline: none;
+}
+
+.button-escapad a {
+  background-color: transparent;
+}
+
+
+.button-escapad * {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+.button-escapad *::after, *::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.button-escapad h2 {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.1;
+}
+
+*/
 
 .functionnalities {
   position: fixed;
@@ -381,7 +419,11 @@ span.sec-title{
 	margin-bottom: 1em;
 	padding-left:2em;
 	display: block;
-	z-index: 2;
+	z-index: 1;
+}
+
+.breadcrumb-bottom {
+  top:6.5em;
 }
 
 .breadcrumb > li + li::before {
@@ -413,7 +455,7 @@ span.sec-title{
 }
 
 #content2 {
-	padding-top: 3.2em;
+	padding-top: 4.2em;
 	padding-left:0em;
 }
 

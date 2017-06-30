@@ -114,10 +114,42 @@ def form_upload(request):
         response['Content-Disposition'] = "attachment; filename=\""+titleData+".zip\""
         return response
 
+    #form upload light
+    erreurs =[]
+    form2 = UploadFormLight(request.POST or None, request.FILES or None)
+
+    if form2.is_valid() :
+        repoDir = settings.BASE_DIR
+        outDir = settings.BASE_DIR
+        baseUrl = settings.BASE_DIR
+
+        archiveData = form2.cleaned_data["archive"]
+        archiveName = form2.cleaned_data["archive"].name
+        feedback = form2.cleaned_data["feedback"]
+
+        archiveType = "None"
+        if re.match(r"^.*\.tar\.gz",archiveName):
+            archiveType = "application/octet-stream"
+        elif re.match(r"^.*\.zip",archiveName):
+            archiveType = "application/zip"
+
+
+        zip,title,erreurs=cn.generateArchiveLight(archiveData, archiveType, feedback)
+
+        sauvegarde = True
+
+        if not erreurs:
+            response= HttpResponse(zip)
+            response['Content-Type'] = 'application/octet-stream'
+            response['Content-Disposition'] = "attachment; filename=\""+title+".zip\""
+            return response
+
     return render(request, 'escapad_formulaire/form.html', {
         'form': form,
         'formMod': formMod,
-        'sauvegarde': sauvegarde
+        'form2': form2,
+        'sauvegarde': sauvegarde,
+        'erreurs' : erreurs
     })
 
 
@@ -371,6 +403,8 @@ def mes_cours(request):
 
     #profil= Profil.objects.get(user=myUser)
     form = CreateNew(request.POST or None)
+    form2 = ReUploadForm(request.POST or None, request.FILES or None)
+
     if form.is_valid() :
         url_home='home-'+id_generator()
         id_cours=id_generator()
@@ -378,9 +412,94 @@ def mes_cours(request):
         cours.save()
         profil.cours.add(cours)
 
+    erreurs = []
+    modules_obj=[]
+
+
+
+    # form reupload
+    if form2.is_valid() :
+        repoDir=settings.BASE_DIR
+        outDir=settings.BASE_DIR
+        baseUrl=settings.BASE_DIR
+
+        tarArchiveIO = StringIO.StringIO(form2.cleaned_data["archive"].read())
+
+        # We open the tar archive inside of the StringIO instance
+        with tarfile.open(mode='r:gz', fileobj=tarArchiveIO) as tar:
+            #for each EDX element belonging to the module
+
+            try:
+                xmlFile = tar.extractfile("infos.xml")
+                tree = etree.parse(xmlFile)
+
+                # Get the course infos
+                cours=tree.xpath("/cours")[0]
+                nom=cours.getchildren()[0].text
+
+                # Generate the course and associate with the current user
+                id_cours = id_generator()
+                url_home = 'home-'+id_generator()
+                cours_obj = Cours(nom_cours=nom, id_cours=id_cours, url_home=url_home)
+
+                try:
+                    # Generate home
+                    homeFile= tar.extractfile("home.md")
+                    content=homeFile.read()
+                    # Prepare the string to be sent via curl to etherpad
+                    content=content.replace('\"','\\\"')
+                    content=content.replace('`','\\`')
+                    # Ask etherpad to create a new pad with the string
+                    os.system("curl -X POST -H 'X-PAD-ID:"+ url_home+"' " +ETHERPAD_URL+"post")
+                    os.system("curl -X POST --data \""+content+"\" -H 'X-PAD-ID:"+ url_home +"' " +ETHERPAD_URL+"post")
+                except KeyError:
+                    erreurs.append("Erreur de structure: Impossible de trouver home.md !");
+
+                # Generate each module
+                cpt=1
+                modules_obj=[]
+                for nomMod in zip(tree.xpath("/cours/module/nomModule")):
+                    try:
+                        moduleFile= tar.extractfile("module"+str(cpt)+".md")
+                        url = 'module-'+id_generator()
+                        nom_module = nomMod[0].text
+                        module_obj = Module(url=url, nom_module=nom_module, cours=cours_obj)
+                        modules_obj.append(module_obj)
+
+                        content=moduleFile.read()
+                        # Prepare the string to be sent via curl to etherpad
+                        content=content.replace('\"','\\\"')
+                        content=content.replace('`','\\`')
+                        # Ask etherpad to create a new pad with the string
+                        os.system("curl -X POST -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
+                        os.system("curl -X POST --data \""+content+"\" -H 'X-PAD-ID:"+ url +"' " +ETHERPAD_URL+"post")
+                    except KeyError:
+                        erreurs.append("Erreur de structure: Impossible de trouver module"+str(cpt)+".md ! \n")
+                    cpt+=1
+
+            except KeyError:
+                erreurs.append("Erreur de structure: Impossible de trouver infos.xml ! \n")
+
+
+            tar.close()
+        if not erreurs:
+
+            # we can save if there's no errors
+            cours_obj.save()
+            profil.cours.add(cours_obj)
+            profil.save()
+
+            for module_obj in modules_obj:
+                module_obj.save()
+
+            return redirect(mes_cours)
+
+
     return render(request, 'escapad_formulaire/liste_cours.html', {
         'profil' : profil,
-        'form' : form
+        'form' : form,
+        'form2' : form2,
+        'erreurs' : erreurs,
     })
 
 
@@ -544,7 +663,7 @@ def cours_edition(request, id_cours ,url):
     full_url = ETHERPAD_URL+'p/'+url
 
     return render(request, 'escapad_formulaire/form_edition.html', {
-        'id_cours': id_cours,
+        'cours': cours,
         'url': url,
         'full_url': full_url,
         'name': name,
@@ -780,3 +899,9 @@ def deconnexion(request):
     """
     logout(request)
     return redirect(reverse(connexion))
+
+def doc(request):
+    """
+        markdown/gift doc view
+    """
+    return render(request, 'escapad_formulaire/doc.html', locals())

@@ -54,6 +54,8 @@ Most of the template inherits this template.
                 <li><a> Bonjour Visiteur :</a></li>
                 <li><a href="/connexion">Connexion </a></li>
               {% endif %}
+              <li><a href="{% url "admin:index" %}"> admin </a></li>
+              <li><a href="{% static 'documentation' %}"> documentation </a></li>
             </ul>
 	      </div>
 
@@ -62,9 +64,10 @@ Most of the template inherits this template.
 
    <section id="content2">
      <ol class="breadcrumb">
-        <li><a href="#"><span class="icon-home"></span></a></li>
-        <li><a href="#">{% block titre %}{% endblock %}</a></li>
-    </ol>
+       <li><a href="{% url 'accueil' %}"><span class="icon-home"> Accueil</span></a></li>
+        {% block breadcrumb %}{% endblock %}
+        <li><a href="#"></a></li>
+     </ol>
     <div class="container">
       <div class="row">
         <div class="col-md-8 col-md-offset-2">

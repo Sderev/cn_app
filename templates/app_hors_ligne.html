@@ -17,6 +17,7 @@ Most of the template inherits this template.
     <!-- onepage css -->
     <link href="{% static 'css/app.css' %}" rel="stylesheet">
     <link href="{% static 'css/onepage.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bouton.css' %}" rel="stylesheet">
 
     <!-- Icones -->
     <link href="{% static 'css/icons.css' %}" rel="stylesheet">
@@ -54,50 +55,25 @@ Most of the template inherits this template.
                 <li><a> Bonjour Visiteur :</a></li>
                 <li><a href="/connexion">Connexion </a></li>
               {% endif %}
+              <li><a href="{% url "admin:index" %}"> admin </a></li>
+              <li><a href="{% static 'documentation' %}"> documentation </a></li>
             </ul>
 	      </div>
-        <div class="container">
-          <div class="row equal">
-            <div class="col-md-5 col-md-offset-1 functionnality">
-              <h3> Uploader avec un formulaire complet </h3>
-              <p> Plus simple, permet d'uploader fichier par fichier le cours.</p>
-              <a href="{% url 'form_upload' %}"> Accès </a>
-            </div>
-            <div class="col-md-5  functionnality">
-              <h3> Uploader une archive </h3>
-              <p>  Plus rapide, permet d'uploader directement une archive suivant l'arborescence d'escapad. </p>
-              <a href="{% url 'form_upload_light' %}"> Accès</a>
-            </div>
-          </div>
-        </div>
+
 
        {% endblock %}
    </nav>
 
-   <!--
-   <div class="menugauche navmenu navmenu-default navmenu-fixed-left offcanvas-sm" role="navigation" id="menugauche">
-      <h1 class="icon-web">Fonctionnalités</h1>
 
-      <ul class="nav panel-group" id="accordion">
-
-         <li class="panel panel-default"><a href="{% url "mes_cours" %}admin/"><h4 class="panel-title">Création de cours hors-ligne</h4></a></li>
-         <li class="panel panel-default"><a href="{% url "my_repositories" %}"><h4 class="panel-title">Editeur de cours collaboratif</h4></a></li>
-         <li class="panel panel-default"><a href="{% url "form_upload" %}"><h4 class="panel-title">Gestion de cours par dépôts</h4></a></li>
-
-
-      </ul>
-
-   </div>
-  -->
-
-   <section id="content">
+   <section id="content2">
      <ol class="breadcrumb">
-        <li><a href="#"><span class="icon-home"></span></a></li>
-        <li><a href="#">{% block titre %}{% endblock %}</a></li>
-    </ol>
+       <li><a href="{% url 'accueil' %}"><span class="icon-home"> Accueil</span></a></li>
+        {% block breadcrumb %}{% endblock %}
+        <li><a href="#"></a></li>
+     </ol>
     <div class="container">
       <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
           {% block content %}{% endblock %}
         </div>
       </div>

@@ -8,6 +8,9 @@ from django.contrib.auth import views as auth_views
 from django.contrib import admin
 
 urlpatterns = [
+    # miscellaneous
+    url(r'^accueil/$', escapad_formulaire.views.accueil, name='accueil'),
+    url(r'^doc/$', escapad_formulaire.views.doc, name='doc'),
 
     # Form views
     url(r'^form_upload/$', escapad_formulaire.views.form_upload, name='form_upload'),
@@ -15,7 +18,6 @@ urlpatterns = [
     url(r'^reupload/$', escapad_formulaire.views.form_reupload, name='form_reupload'),
     url(r'^apercu_module/(?P<id_export>[-a-zA-Z\d]+)/(?P<feedback>[0-9])$', escapad_formulaire.views.apercu_module, name='apercu_module'),
     url(r'^apercu_home/(?P<id_export>[-a-zA-Z\d]+)$', escapad_formulaire.views.apercu_home, name='apercu_home'),
-    url(r'^accueil/$', escapad_formulaire.views.accueil, name='accueil'),
 
 
     # Course views

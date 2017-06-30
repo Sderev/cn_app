@@ -7,6 +7,10 @@ We create new pad for each module, and we associate the course to the current us
 
 {% block titre %}Formulaire{% endblock %}
 
+{% block breadcrumb %}
+  <li><a href="{% url 'form_upload' %}"><span> Importer une archive </span></a></li>
+{% endblock %}
+
 {% block content %}
 
     <ul>

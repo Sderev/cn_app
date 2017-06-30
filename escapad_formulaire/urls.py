@@ -9,7 +9,7 @@ from django.contrib import admin
 
 urlpatterns = [
     # miscellaneous
-    url(r'^accueil/$', escapad_formulaire.views.accueil, name='accueil'),
+    url(r'^$', escapad_formulaire.views.accueil, name='accueil'),
     url(r'^doc/$', escapad_formulaire.views.doc, name='doc'),
 
     # Form views

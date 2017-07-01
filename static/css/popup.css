@@ -26,6 +26,24 @@
     padding-left: 15px;
 }
 
+/* The actual popup */
+.popup .popuptext-bottom {
+    visibility: hidden;
+    width: 325px;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 20px 0;
+    position: absolute;
+    z-index: 1;
+    top: 170%;
+    left: -50%;
+    margin-left: -30px;
+    padding-left: 15px;
+}
+
+
 /* Popup arrow */
 .popup .popuptext::after {
     content: "";

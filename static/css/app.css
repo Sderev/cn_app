@@ -1,4 +1,140 @@
-#contenudroite {
+/* Functionnalities (inspired by left menu) */
+
+
+.blue {
+    color: #0F6E96;
+}
+.green {
+    color: #AFA70E;
+}
+.red {
+    color: #C84B24;
+}
+.purple {
+    color: #802489;
+}
+.orange {
+    color: #e8900c;
+}
+/*
+.button-escapad {
+  padding: 0.5em;
+}
+
+.button-escapad a:link, a:visited {
+    color: #447e9b;
+    text-decoration: none;
+}
+
+.button-escapad a, a:link, a:hover, a:active, a:visited {
+  outline: none;
+}
+
+.button-escapad a {
+  background-color: transparent;
+}
+
+
+.button-escapad * {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+.button-escapad *::after, *::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.button-escapad h2 {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.1;
+}
+
+*/
+
+.functionnalities {
+  position: fixed;
+  margin-left: -50px;
+}
+
+.functionnality {
+  text-align: center;
+  margin: 0;
+	padding: 100;
+	background-color: #525A59;
+	color: #fff;
+  border: 1px solid white;
+  /*height: 140px;*/
+}
+
+.equal {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+}
+
+.functionnality p{
+  font-size: 90%;
+  color: #fff;
+}
+
+.functionnality h1{
+	margin-left:0.5em;
+	padding-bottom: 20px;
+	font-family: 'dynobold';
+	text-transform: capitalize;
+	font-size: 1.8em;
+	padding-top: 0.4em
+}
+
+.functionnality h3 {
+	/*font-weight:bold;*/
+	font-size:110%;
+	color: #AFA70E;
+}
+
+.functionnality .panel-default > .panel-heading {
+	border: none;
+	background-color: transparent !important;
+	color:#fff;
+}
+.functionnality .list-group-item {
+	border: none;
+	background-color: transparent !important;
+	margin-left:3.5em;
+	padding: 8px 8px;
+}
+.functionnality .panel {
+	border: none;
+	background-color: transparent !important;
+	box-shadow: 0 0px 0px rgba(0, 0, 0, 0.05);
+}
+.functionnality a {
+	color:#e8900c;
+	padding: 0 !important;
+}
+.functionnality a:active {
+	color:#C84B24;
+}
+.functionnality a:hover {
+	color:#fff;
+  background-color:transparent!important;
+}
+.functionnality h4{
+	/*font-weight:bold;*/
+	text-decoration:none;
+	margin-left:1.3em;
+}
+.functionnality h4:active{
+	color: #AFA70E;
+}
+
+/**/
+
+#contenu {
   padding-left: 20px;
 }
 
@@ -48,8 +184,8 @@ body {
 
 .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
   /*  min-height: 1px;*/
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 7px;
+    padding-right: 7px;
     position: relative;
 }
 
@@ -66,10 +202,10 @@ a, a:link, a:hover, a:active, a:visited {
 @media (min-width: 992px) {
 
 	body {
-	padding-left: 300px;
+	padding-left: 0px;
 	}
 
-	.contenudroite{
+	.contenu{
 		width: 800px;
 
 	}
@@ -144,6 +280,8 @@ iframe {
 }
 #menugauche h1{
 	direction: ltr;
+  font-family: 'dynobold';
+  color: #e8900c;
 }
 #accordion{
 	direction: ltr;
@@ -281,7 +419,11 @@ span.sec-title{
 	margin-bottom: 1em;
 	padding-left:2em;
 	display: block;
-	z-index: 2;
+	z-index: 1;
+}
+
+.breadcrumb-bottom {
+  top:6.5em;
 }
 
 .breadcrumb > li + li::before {
@@ -308,8 +450,13 @@ span.sec-title{
 /* ---------------------------------------------------------*/
 
 #content {
-	padding-top: 3.2em;
+	padding-top: 120px;
 	padding-left:1em;
+}
+
+#content2 {
+	padding-top: 4.2em;
+	padding-left:0em;
 }
 
 .menugauche {
@@ -321,9 +468,9 @@ span.sec-title{
 	vertical-align:top;
 }
 
-.contenudroite {
+.contenu {
 	padding-left:4em;
-	padding-top:2em;
+	padding-top:5em;
 	padding-right:2em;
 	padding-bottom:4em;
 	float: none;
@@ -331,7 +478,7 @@ span.sec-title{
 	margin: auto;
 }
 
-.contenudroite h2 {
+.contenu h2 {
 	margin-left: -1.4em;
 }
 

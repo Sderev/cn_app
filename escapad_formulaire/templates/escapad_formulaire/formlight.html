@@ -1,9 +1,13 @@
 
 <!-- Template Creating course from archive -->
 
-{% extends "app.html" %}
+{% extends "app_hors_ligne.html" %}
 
 {% block titre %}Formulaire{% endblock %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'form_upload' %}"><span> Upload via archive</span></a></li>
+{% endblock %}
 
 {% block content %}
 

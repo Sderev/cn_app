@@ -67,7 +67,7 @@ function give_link_to_iframe(etherpad_url, idFrame, idInput, nb_char, is_module)
 
 }
 
-
+/*
 function afficher_apercu(){
 	var frameHome=document.getElementById("framehome");
 	var frameTest=document.getElementById("frametest");
@@ -80,6 +80,26 @@ function afficher_apercu(){
 		apercu_visible=true;
 		frameHome.setAttribute("width","45%");
 		frameTest.setAttribute("width","45%");
+	}
+
+}*/
+
+
+function afficher_apercu(){
+	var frameHome=document.getElementById("col-framehome");
+	var frameTest=document.getElementById("col-frametest");
+  var frameTest2=document.getElementById("frametest");
+	if(apercu_visible) {
+		apercu_visible=false;
+		frameHome.setAttribute("class","col-md-10");
+    frameTest.setAttribute("class","col-md-1");
+		frameTest2.setAttribute("style","visibility: hidden");
+  }
+	else {
+		apercu_visible=true;
+    frameHome.setAttribute("class","col-md-5");
+    frameTest.setAttribute("class","col-md-5");
+		frameTest2.setAttribute("style","visibility: visible");
 	}
 
 }

@@ -104,7 +104,6 @@ def add_target_blank(html_src):
     return soup.prettify()
 
 
-# # FIXME: it is usefull ?
 def iframize_video_anchors(htmlsrc, anchor_class):
     """ given a piece of html code, scan for video anchors
         filtered by given class and add corresponding video

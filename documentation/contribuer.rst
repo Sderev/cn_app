@@ -180,7 +180,10 @@ Ajouter des tests
 *TODO*
 
 
-Test des web services développés en Django: dans ce cas il s'agit de contrôler la manipulation des fichiers et l'exécution des appels web.
+- Test des web services développés en Django: dans ce cas il s'agit de contrôler la manipulation des fichiers et l'exécution des appels web.
+- Test pour les méthodes utililées par escapad_formulaire ( `cnExportLight.py`, méthodes avec `Light` dans le nom des différents modules,
+à vérifier avec coverage)
+- Certains tests ont la mention `#TODO` car ils ont besoin d'être complété.
 
 *Warning*
 
@@ -196,32 +199,29 @@ En effet, coverage utilise ce fichier pour vérifier le taux de couverture des l
 Pistes d'améliorations de l'application
 ---------------------------------------
 
+Tests
+~~~~~
+Voir plus haut.
+
+Résoudre le problème des accents dans les gifts 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Pour Compréhension, Activité et Activitée Avancée, les accents ne passent plus dans.
+Problème dans l'ouverture du fichier qu'il faudra ouvrir en `UTF-8` mais
+cela semble poser des soucis (voir dans `processModuleLight` ou ``generateArchive`).
+
 Fichier d'erreur pour l'utilisateur
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Lorsque l'utilisateur upload ses cours sur Esc@pad, il se peut qu'il y ait des erreurs de syntaxe.
+Pour informer l'utilisateur, un logging a été mis en place pour repertorier ses erreurs. Toutes
+les erreurs n'ont pas été répertoriées et il faudrait lui rappeler la hiérarchie de son cours 
+pour qu'il puisse rapidement vérifier que la génération de son cours n'a pas posé de soucis.
 
-Insérer des médias
-~~~~~~~~~~~~~~~~~~
+Pour l'instant les erreurs répertoriées (dans `model.py` grâce à la ligne `logging.warning(String)` :
 
-Il réside encore certains problèmes sur l'application Esc@pad. Nous
-souhaitons notamment permettre à l'utilisateur de disposer d'archive
-d'import EDX/IMS qui contiendrait des médias. Ces médias pourraient être
-directement uploadés sur Moodle/Edx en même temps que le cours.
-
-Ce qui se faisait précédemment était que les médias étaient stockés sur
-le serveur Esc@pad et les cours Moodle/Edx accédaient à ces médias
-depuis l'instance Esc@pad.
-
-Insérer des médias dans une archive edx
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-1. Dans le dossier EDX, créer un dossier static et insérer ses images.
-2. Dans les fichiers HTML (dossier html) : faire référence aux images
-   avec src="/static/kata.png"
-
-   ::
-
-       <img alt="katakana" src="/static/kata.png"/>
+- Les cours sans titre de niveau 2 (##) sont placés automatique sous un titre `Cours`.
+- Il faut commencer son cours par un titre de niveau 1 (#).
+- L'utilisateur peut mettre une option dans le header qui n'existe pas (exemple -> Chicken: cotcot)
 
 Insérer des médias dans une archive imscc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -256,22 +256,14 @@ Insérer des médias dans une archive imscc
 
        <img alt="hiragana" src="../static/hira.gif"/>
 
-Piste de code pour EDX
-~~~~~~~~~~~~~~~~~~~~~~
+**Comment fonctionne le code ?**
 
-1. Copier les images dans un dossier static.
+1. On copie tous les médias dans un dossier static à l'intérieur du dossier IMS
+dans `generateImsArchiveLight(module, moduleOutDir, zipFile, mediaData, mediaNom)`.
 
-2. Modifier absolutizeMediaLinks / Créer relativeEDXMediaLinks Afin de
-   pouvoir effectuer le toHTML correctement ?
-
-Piste de code pour IMSCC
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-1. Copier les médias dans un dossier static.
-
-2. Créer fonction similaire a parseVideoLinks dans la classe cours
-   (model.py). Celle-ci créerait un dictionnaire de données pour chaque
-   média, on leur associerait des identifiants « mediaX ».
+2. Dans `model`, la fonction `parseMediaLinks()` dans la classe `Subsection`
+permet d'extraire toutes les images du texte en leur associant un ID unique.
+Place tous les médias dans l'attribut `medias`.
 
 3. Pour chaque image, on va créer une balise dans manifest.xml de la
    sorte :
@@ -282,8 +274,10 @@ Piste de code pour IMSCC
        <file href="static/nom_image1.png"/>
        </resource>
 
+dans la fonction `generateIMSManifest` de `toIMS`.
+
 4. Pour chaque fichier, on recherchera les médias qui leurs sont
-   associés, et on créerait dans le fichier manifest.xml les dépendances
+   associés, et on créera dans le fichier manifest.xml les dépendances
    dans le fichier en question :
 
    ::
@@ -295,5 +289,33 @@ Piste de code pour IMSCC
 
            </resource>
 
-5. Modifier absolutizeMediaLinks/ Créer relativeIMSMediaLinks Afin de
-   pouvoir effectuer le toHTML() correctement ?
+dans la fonction `generateIMSManifest` de `toIMS`.
+
+5. On modifie ainsi la source de l'image du `/nom_du_module/media/nom_image.ext` à `../static/nom_image.ext`
+dans `IMSMediaLinks()` de `model`.
+
+**Problème**
+
+Cette solution semble fonctionner pour les images dans les cours et dans les questions
+de texte mais pas dans les feedbacks généraux. Pas de piste particulière.
+
+Sortir le dossier static de `cn_app`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sortir le dossier static contenant toutes les images, icônes, css, etc, de cn_app (Pour que ce soit plus modulable pour une utilisation ouverte à tous).
+Notamment grâce au header optionnel où on devrait pouvoir changer la CSS.
+
+Changement de vocabulaire
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Réfléchir au vocabulaire plus "métier"  et moins techno sur escapad : exemple repository ne me plaît pas
+
+Différencier certains templates de `cn_app` dans les cours
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Réfléchir à ce qui doit être dans les templates de cours ou les templates de cn_app. Exemples : Gérer la page contact, ...
+
+Passage à Python3
+~~~~~~~~~~~~~~~~~
+Il faut exécuter `cn_export` avec python3 et voir toutes les erreurs générées.
+ 

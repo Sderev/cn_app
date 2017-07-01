@@ -70,9 +70,18 @@ Avec EDX il est possible de défninir :
 Tout ceci est défini dans le fichier de template
 `templates/toEDX/policies/course/grading_policy.json <../templates/toEDX/policies/course/grading_policy.json>`__
 
+
+Les images
+~~~~~~~~~~
+Toutes les images dans EDX sont stockées dans un dossier `static` privé pour chaque cours.
+Dans le cours, les images ont comme adresse `src = static/nom_de_image.ext`.
+Lors de la création d'une archive EDX, on met toutes les images du module dans un dossier static
+qui lui-même est dans le dossier EDX (dans `generateEDXArchiveLight` de `toEDX`).
+On change ensuite la source html de chaque sous-sections(subsections.html_src) pour changer
+la référence des images (voir `EDXMediaLinks()` dans `model.py`)
+
 Correspondance des modèles Escapad et Moodle/IMS
 ------------------------------------------------
-
 
 
 Limitations à l'import d'archives IMS dans Moodle
@@ -127,3 +136,32 @@ Commentaire:
 - Le découpage en section est identique
 - Les sous-section de Cours sont traduites en Resource Moodel de type "page"
 - les 3 types d'activités sont traduits en Activité Moodle de type Quiz.
+
+Les images
+~~~~~~~~~~
+Dans le dossier IMS, il y a un dossier static dans lequel on met ses images.
+Dans imsmanifest.xml:
+   1. Pour chaque image:
+
+      ::
+
+          <resource identifier="img1" type="webcontent">
+              <file href="static/nom_image1.png"/>
+          </resource>
+
+   2. Pour chaque ressource utilisant les images, il faut ajouter les
+      dépendances quand elles sont nécessaires.
+
+      ::
+
+          <resource href="webcontent/1-2presentation-des-deux-alphabets_webcontent.html" type="webcontent" identifier="doc_0_1">
+              <file href="webcontent/1-2presentation-des-deux-alphabets_webcontent.html"/>
+              <dependency identifierref="img1"/>
+              <dependency identifierref="img2"/>
+
+          </resource>
+
+Dans les fichiers html (dossier webcontent), il faut faire une référence avec src= "../static/image.png"
+   ::
+
+       <img alt="hiragana" src="../static/hira.gif"/>

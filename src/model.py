@@ -99,6 +99,7 @@ class Subsection:
         self.section = section
         self.num = self.section.num+'-'+str(Subsection.num) # mere string for display the subsection number
         self.videos = []
+        self.medias = []
         Subsection.num +=1
 
     def getFilename(self, term='html'):
@@ -123,6 +124,25 @@ class Subsection:
         """
         self.src = re.sub('\]\(\s*(\.\/)*\s*media/', ']('+self.section.base_url+'/'+self.section.module+'/media/', self.src)
         #print(self.src)
+
+    def EDXMediaLinks(self):
+        return re.sub(re.escape('/'+self.section.module+'/media/'), '/static/', self.html_src)
+
+    def IMSMediaLinks(self):
+        return re.sub(re.escape('/'+self.section.module+'/media/'), '../static/', self.html_src)
+
+    def parseMediaLinks(self):
+        """parse instance src  and search for video matches. In case of a match, creates a video object and assign it to self.videos list attribute.
+        return True if the number of videos found is above 0, False otherwise"""
+        media_findall = re.findall('/media/(?P<media_name>.*)\)', self.src, flags=re.M)
+        for (i,media_match) in enumerate(media_findall):
+            new_media = {
+                'media_name': media_match,
+                'media_id': 'img'+self.num+str(i)
+            }
+            self.medias.append(new_media)
+        return (len(media_findall) > 0)
+
 
 class Cours(Subsection):
     """
@@ -150,6 +170,7 @@ class Cours(Subsection):
             self.parse(file)
         self.parseVideoLinks()
         self.absolutizeMediaLinks()
+        self.parseMediaLinks()
 
 
     def parse(self,f):
@@ -220,6 +241,7 @@ class AnyActivity(Subsection):
         self.parse(f)
         self.absolutizeMediaLinks()
         self.questions = pygift.parseFile(iter(self.src.splitlines(True))) #need to transform String in File pointer with iter function
+        self.parseMediaLinks()
 
 
     def parse(self,f):
